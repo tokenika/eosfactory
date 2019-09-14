@@ -28,9 +28,9 @@ class SystemNewaccount(interface.Account, base_commands.Command):
     """
     def __init__(
             self, creator, name, owner_key, active_key,
-            stake_net, stake_cpu,
+            stake_net=0, stake_cpu=0,
             permission=None,
-            buy_ram_bytes=0, buy_ram_kbytes=0, buy_ram="",
+            buy_ram_bytes=0, buy_ram_kbytes=0, buy_ram=None,
             transfer=False,
             expiration_sec=None, 
             skip_sign=0, dont_broadcast=0, force_unique=0,
@@ -39,8 +39,6 @@ class SystemNewaccount(interface.Account, base_commands.Command):
             delay_sec=0,
             is_verbose = 1
             ):
-        stake_net = "{} EOS".format(stake_net)
-        stake_cpu = "{} EOS".format(stake_cpu)
         
         if name is None: 
             name = base_commands.account_name()
@@ -48,14 +46,16 @@ class SystemNewaccount(interface.Account, base_commands.Command):
 
         args = [
             interface.account_arg(creator), self.name, 
-                interface.key_arg(owner_key, is_owner_key=True, is_private_key=False), 
+                interface.key_arg(
+                            owner_key, is_owner_key=True, is_private_key=False), 
                 interface.key_arg(active_key, is_owner_key=False, is_private_key=False)
             ]
 
         args.append("--json")
-        args.extend([
-            "--stake-net", stake_net, 
-            "--stake-cpu", stake_cpu])
+        if stake_net:
+            args.extend(["--stake-net", "{} EOS".format(stake_net)])
+        if stake_cpu:
+            args.extend(["--stake-cpu", "{} EOS".format(stake_cpu)])
         if buy_ram_bytes:
             args.extend(["--buy-ram-bytes", str(buy_ram_bytes)])
         if buy_ram_kbytes:
@@ -113,6 +113,7 @@ class BuyRam(base_commands.Command):
         receiver (str or .interface.Account): The account receiving bought RAM.
         amount (int): The amount of EOS to pay for RAM, or number of kbytes 
             of RAM if ``buy_ram_kbytes`` is set.
+        buy_ram_bytes (bool): If set, buy ram in number of bytes,
         buy_ram_kbytes (bool): If set, buy ram in number of kbytes.
 
     See definitions of the remaining parameters: \
@@ -120,7 +121,7 @@ class BuyRam(base_commands.Command):
     """
     def __init__(
             self, payer, receiver, amount,
-            buy_ram_kbytes=0, 
+            buy_ram_bytes=False, buy_ram_kbytes=False,
             expiration_sec=None, 
             skip_sign=0, dont_broadcast=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
@@ -129,12 +130,15 @@ class BuyRam(base_commands.Command):
             is_verbose=1
             ):
 
-        self.payer = interface.account_arg(payer)
-        self.receiver = interface.account_arg(receiver)
-        self.amount = str(amount)
 
-        args = [self.payer, self.receiver, self.amount]
+        payer = interface.account_arg(payer)
+        receiver = interface.account_arg(receiver)
+        amount = str(amount)
 
+        args = [payer, receiver, amount]
+
+        if buy_ram_bytes:
+            args.extend(["--bytes"])
         if buy_ram_kbytes:
             args.extend(["--kbytes"])
         if expiration_sec:
@@ -185,15 +189,13 @@ class DelegateBw(base_commands.Command):
         delay_sec=0,
         is_verbose=1):
 
-        self.payer = interface.account_arg(payer)
-        self.receiver = interface.account_arg(receiver)
-        self.stake_net_quantity = stake_net_quantity
-        self.stake_cpu_quantity = stake_cpu_quantity
+        payer = interface.account_arg(payer)
+        receiver = interface.account_arg(receiver)
 
         args = [
-            self.payer, self.receiver,
-            "{} EOS".format(self.stake_net_quantity),
-            "{} EOS".format(self.stake_cpu_quantity),
+            payer, receiver,
+            "{} EOS".format(stake_net_quantity),
+            "{} EOS".format(stake_cpu_quantity),
             "--expiration", str(expiration_sec),
             "--json"]
 

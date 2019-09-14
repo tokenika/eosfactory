@@ -58,24 +58,28 @@ reboot()
 ```
 The command `reboot()` stops the local testnet and resets all the run-time settings of EOSFactory.
 
-First, we need to define a remote testnet and pass to *EOSFactory* the data of the account we control there. Here, we use hard-codded parameters of an account on a remote testnet. This setting may fail to work for you but you can find another one, as it is described in a [tutorial](../tutorials/05.InteractingWithPublicTestnet.md).
+First, we need to define a remote testnet and pass to *EOSFactory* the data of the account we control there. EOSFactory uses objects of the class `Testnet` and maintain a list of them that can be displayed with the command `python3 -m eosfactory.testnets`. The entries of the lis can be produced with the command `python3 -m eosfactory.register_testnet <node url> <testnet pseudo>` (for example: `python3 -m eosfactory.register_testnet http://145.239.133.201:8888 JUNGLE3 zero`).
+
+Here, we use hard-codded parameters of an account on a remote testnet. This setting may fail to work for you but you can find another one, as it is described in a [tutorial](../tutorials/05.InteractingWithPublicTestnet.md).
 
 ```python
 testnet = Testnet(
-    "yvngxrjzbf3w",
-    "5KCmAh23R9wZxm5m1BqRFePvAvw8fzYaDduACUg6DUAj9nmcZfQ",
-    "5JkC4oFPaPjWzj866x2rMygsnVZaZzDkqynzX6dBw92LqR63tcD",
+    "5jejduh2w2cb",
+    "5KGVA3efMr4rZEWUxWQzD4k11sApFrjYwVYfsVqvBYge1AppHdh",
+    "5KAkkZLZVQbhJL6JnxodcBScgLi1LNv8yEX5LRXaWvXyoH87DK8",
     "http://145.239.133.201:8888")
 
-testnet = reset(testnet)
-# resume(testnet.url)
+reset(testnet)
+# resume(testnet)
 ```
 
 We supply four parameters:
 
 - an URL of a public node offering access to the testnet, e.g. `http://145.239.133.201:8888` that is *Jungle Testnet*,
-- the name of an existing account on this testnet, here `yvngxrjzbf3w`,
+- the name of an existing account on this testnet, here `5jejduh2w2cb`,
 - the account's owner & active private keys.
+
+Note that here we expose private keys while they should be kept in wallets. We do this in order to allow for modification of these parameters. In fact, on testnet registration the keys go to a wallet named after the url of the testnet node. EOSFactory knows the name of the proper wallet from the `testnet` argument in the functions `reset(testnet)` and `resume(testnet)`.
 
 The command `reset(testnet)` starts a new wallet, named according to the testnet, and populates it with the private keys of the account. Note that the creation of the account could be made secretly, on side. Then, the account can be restored to the current session with the command `resume(testnet.url)` without revealing the secret keys.
 

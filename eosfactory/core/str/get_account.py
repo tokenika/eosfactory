@@ -238,6 +238,8 @@ class GetAccount():
             self.info = self.info + msg + "\n"
 
         def format_bytes(value):
+            value = int(value)
+
             if value == -1:
                 return "unlimited"
             
@@ -253,6 +255,9 @@ class GetAccount():
                 return "%0.0f %s" % (value, "bytes")
                 
         def format_time(micro):
+            if isinstance(micro, str):
+                micro = int(micro.replace(" us", ""))
+
             if micro == -1:
                 return "unlimited"
 
@@ -263,7 +268,9 @@ class GetAccount():
             elif micro > 1000000:
                 return "%0.1f %s" % (micro / 1000000, "sec")
             elif micro > 1000:
-                return "%0.1f %s" % (micro / 1000, "ms")            
+                return "%0.1f %s" % (micro / 1000, "ms")
+            else:
+                return "%0.1f %s" % (micro, "us")
 
 
         unstaking = None
@@ -363,7 +370,7 @@ class GetAccount():
                                 and not received_json["total_resources"] is None:
 
             net_total = Asset(received_json["total_resources"]["net_weight"])
-            if not net_total.symbol == unstaking.symbol:
+            if not unstaking or not net_total.symbol == unstaking.symbol:
                 unstaking = Asset(0, net_total.symbol)
                 staked = Asset(0, net_total.symbol)
 
@@ -406,13 +413,12 @@ class GetAccount():
         if "total_resources" in received_json \
                                 and not received_json["total_resources"] is None:
 
-            cpu_total = Asset(
-                            received_json["self_delegated_bandwidth"]["cpu_weight"])
+            cpu_total = Asset(received_json["total_resources"]["cpu_weight"])
 
             if "self_delegated_bandwidth" in received_json \
                     and not received_json["self_delegated_bandwidth"] is None:
 
-                cpu_own = Asset(received_json["total_resources"]["cpu_weight"])
+                cpu_own = Asset(received_json["self_delegated_bandwidth"]["cpu_weight"])
                 staked = staked.add(cpu_own)
                 cpu_others = cpu_total.add(cpu_own, -1)
                 addln(
@@ -430,12 +436,13 @@ class GetAccount():
                             "delegated", net_others, 
                             "(total staked delegated to account from others)"))
 
+        used = received_json["cpu_limit"]["used"]
         addln(GetAccount.INDENT + (GetAccount.FORMAT_LABEL + ": %s") % (
-                    "used", format_time(received_json["cpu_limit"]["used"])))      
+                    "used", format_time(used if used else "0 us")))
         addln(GetAccount.INDENT + (GetAccount.FORMAT_LABEL + ": %s") % (
                 "available", format_time(received_json["cpu_limit"]["available"])))      
         addln(GetAccount.INDENT + (GetAccount.FORMAT_LABEL + ": %s") % (
-                    "max", format_time(received_json["cpu_limit"]["max"])))
+                    "limit", format_time(received_json["cpu_limit"]["max"])))
 
         ##########################################################################
         # balances
@@ -460,18 +467,16 @@ class GetAccount():
         ##########################################################################
         # producers
         # ########################################################################      
-        add("### producers: ")
         if "voter_info" in received_json and received_json["voter_info"]:
             if received_json["voter_info"]["proxy"]:
                 prods = received_json["voter_info"]["producers"]
                 if prods:
+                    add("### producers: ")
                     addln()
                     for prod in prods:
                         addln(GetAccount.INDENT + GetAccount.FORMAT_LABEL % prod)
                 else:
                     addln("not voted")
-        else:
-            addln("not voted")
 
 
     def __str__(self):

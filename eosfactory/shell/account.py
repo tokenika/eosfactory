@@ -17,7 +17,7 @@ GET_COMMANDS = importlib.import_module(".get", setup.interface_package())
 SET_COMMANDS = importlib.import_module(".set", setup.interface_package())
 SYS_COMMANDS = importlib.import_module(".sys", setup.interface_package())
 import eosfactory.core.manager as manager
-import eosfactory.core.testnet as testnet
+import eosfactory.core.testnet as testnet_module
 import eosfactory.core.account as account
 import eosfactory.shell.wallet as wallet
 
@@ -36,21 +36,20 @@ def set_is_account(account_object):
     setattr(account_object, IS_ACCOUNT, True)
 
 
+def add_methods_and_put_on_stack(account_object_name, account):
+    # """Ascribes methodes to the given ``account``, and finalizes the creation 
+    # of this ``account``.
+    # """
+    account.account_object_name = account_object_name
+    if not isinstance(account, Account):
+        account.__class__.__bases__ += (Account,)
+
+    put_account_on_stack(account_object_name, account)
+
+
 class Account():
     """Methods to be ascribed to account objects.
     """
-    @classmethod
-    def add_methods_and_finalize(cls, account_object_name, account):
-        """Ascribes methodes to the given ``account``, and finalizes the creation 
-        of this ``account``.
-        """
-        account.account_object_name = account_object_name
-        if not isinstance(account, cls):
-            account.__class__.__bases__ += (cls,)
-
-        return put_account_on_stack(account_object_name, account)
-
-
     def stop_if_account_is_not_created(self):
         if not hasattr(self, IS_ACCOUNT):
             raise errors.Error("""
@@ -66,13 +65,12 @@ class Account():
 
     def actions(self, pos=None, offset=None, 
         json=False, full=False, pretty=False, console=False):
-        """Retrieve all actions with specific account name referenced in authorization or receiver.
+        """Retrieve all actions with the account name referenced in authorization or receiver.
 
         Note that available actions are filtered. By default, all actions are
         filered off. To see the actions, the node has to be restarted with the --filter-on option.
 
         Args:
-            account (str): Name of account to query on.
             pos (int): Sequence number of action for this account, -1 for last. 
                 Default is -1.
             offset (int): Get actions [pos,pos+offset] for positive offset or 
@@ -97,7 +95,7 @@ class Account():
 
         Args:
             code (str): If set, the name of the file to save the contract 
-                WAST/WASM to.
+                WASM to.
             abi (str): If set, the name of the file to save the contract ABI to.
             wasm (bool): Save contract as wasm.
         """
@@ -185,19 +183,19 @@ class Account():
         class :class:`.cleos.set.SetAccountPermission`, as the value of the ``account_permission`` attribute.
 
         Args:
-            permission_name (str or .Permission): The permission to set/delete an 
-                authority for (defaults to: "active").
-            parent_permission_name (str or .Permission): The permission name of 
+            permission_name (str or .Permission): The permission to set/delete
+                an authority for (defaults to: "active").
+            parent_permission_name (str or .Permission): The permission name of
                 this parents permission (defaults to: "active").
             authority (str or dict or filename):  None to delete.
-            add_code (bool): If set, add 'eosio.code' permission to specified 
+            add_code (bool): If set, add 'eosio.code' permission to specified
                 permission authority. Default is false.
-            remove_code (bool): If set, remove 'eosio.code' permission from 
+            remove_code (bool): If set, remove 'eosio.code' permission from
                 specified permission authority. Default is false.
 
         Exemplary values of the argument ``authority``::
 
-            # bob, carol are account objects created with 
+            # bob, carol are account objects created with
             # shell.account.create_account factory function
 
             str_value = "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"
@@ -257,16 +255,17 @@ class Account():
         ):
         """Set parameters dealing with account permissions.
 
-        Call ``EOSIO cleos`` with the ``set action permission`` command. Store the 
-        result, which is an object of the 
-        class :class:`.cleos.set.SetActionPermission`, as the value of the ``action_permission`` attribute.
+        Call ``EOSIO cleos`` with the ``set action permission`` command. Store
+        the result, which is an object of the
+        class :class:`.cleos.set.SetActionPermission`, as the value of the
+        ``action_permission`` attribute.
 
         Args:
             code (str or .interface.Account): The account that owns the code for \
                 the action.
             type (str): The type of the action.
-            requirement (str): The permission name require for executing the given 
-                action.
+            requirement (str): The permission name require for executing the
+            given action.
 
         See definitions of the remaining parameters: \
         :func:`.cleos.base.common_parameters`.
@@ -424,23 +423,29 @@ class Account():
         return result
 
     def buy_ram(
-            self, amount_kbytes, receiver=None,
+            self, amount, receiver=None,
+            buy_ram_bytes=False,
+            buy_ram_kbytes=False,
             expiration_sec=None, 
             skip_sign=0, dont_broadcast=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None):
 
         self.stop_if_account_is_not_created()
-        if manager.is_local_testnet():
-            return
+
+        # if manager.is_local_testnet():
+        #     logger.OUT("Testnet is local: statistics are irrelevant.")
+        #     return
+# eosfactory.core.errors.Error: ERROR:
+# error 2019-09-07T15:11:22.628 cleos     main.cpp:3940                 main                 ] Failed with error: Assert Exception (10)
+# !action_type.empty(): Unknown action buyrambytes in contract eosio
 
         if receiver is None:
             receiver = self
-
-        buy_ram_kbytes = 1
         
         result = SYS_COMMANDS.BuyRam(
-            self, receiver, amount_kbytes,
+            self, receiver, amount,
+            buy_ram_bytes,
             buy_ram_kbytes,
             expiration_sec,
             skip_sign, dont_broadcast, force_unique,
@@ -452,6 +457,8 @@ class Account():
         logger.INFO("""
             * Transfered RAM from {} to {} kbytes: {}
             """.format(result.payer, result.receiver, result.amount))
+        
+        return result
 
     def delegate_bw(
             self, stake_net_quantity, stake_cpu_quantity,
@@ -537,10 +544,10 @@ class Account():
 
 
 def new_master_account(
-            account_name=None, owner_key=None, active_key=None):
+            account_name=None, owner_key=None, active_key=None, testnet=None):
     """Create master account object in caller's global namespace.
 
-    Wraps the account factory function :func:`create_master_account` so that 
+    Wraps the account factory function :func:`create_master_account` so that
     the following statements are equivalent::
 
         MASTER = create_master_account("MASTER")
@@ -548,9 +555,9 @@ def new_master_account(
 
     NOTE::
 
-        With the `create_` syntax it is enough to state 
-        `create_master_account("MASTER")` in order to create the account object 
-        `MASTER`.        
+        With the `create_` syntax it is enough to state
+        `create_master_account("MASTER")` in order to create the account
+        object `MASTER`.        
 
     Args:
         account_name (str or .core.testnet.Testnet): The name of an valid EOSIO
@@ -559,271 +566,260 @@ def new_master_account(
             be set if the testnode is not local.
         active_key (str or .core.interface.Key): The active public key. Must 
             be set if the testnode is not local.
+        testnet (:class:`.core.testnet.Testnet`): If set, use is as the 
+            definition of the account.
     """
 
     return create_master_account(
             get_new_account_name(inspect.getframeinfo(
                                             inspect.currentframe()).function), 
-            account_name, owner_key, active_key)
+            account_name, owner_key, active_key, testnet)
         
 
 def create_master_account(
             account_object_name, account_name=None, 
-            owner_key=None, active_key=None):
+            owner_key_private=None, active_key_private=None, testnet=None):
     """Create master account object in caller's global namespace.
 
-    Start a singleton :class:`.shell.wallet.Wallet` object if there is no one 
-    in the global namespace already.
+    Start a singleton :class:`.shell.wallet.Wallet` object, if it is not
+    in the global namespace. Use this wallet object to keep private keys
+    of any account to be created.
 
     If a local testnet is running, create an account object representing 
-    the ``eosio`` account. Put the account into the wallet. Put the account
-    object into the global namespace of the caller, and return.
-
-    Otherwise, an outer testnet has to be defined with the function
-    :func:`.core.setup.set_nodeos_address`.
-
-    If the ``account_name`` argument is set, check the testnet for presence of the 
-    account. If present, create a corresponding object and put the account 
-    into the wallet, and put the account object into the global namespace of 
-    the caller, and return. 
+    ``eosio`` account. 
     
-    Otherwise start a registration procedure:    
-    
+    Otherwise, an outer testnet has to be defined (with the function :func:`.core.setup.set_nodeos_address`). Then, if ``account_name`` is set, 
+    check it for existence in the testnet. If it does not exist, raise an
+    error if ``account_object_name`` is not ``None``, otherwise start the
+    following registration procedure:
+
         - if the argument ``account_name`` is not set, make it random
-        - print registration data, namely:
-            - account name
-            - owner public key
-            - active public key
-            - owner private key
-            - active private key
-        - wait for the user to register the master account
-        - . . . . 
-        - detect the named account on the remote testnet
-        - put the account into the wallet
-        - put the account object into the global namespace of the caller and \
-            return
+        - loop:
+            - print registration data, namely:
+                - account name
+                - owner public key
+                - active public key
+                - owner private key
+                - active private key
+            - wait for the user to register the account
+            - . . .
+            - check the newly registered account for existence in the testnet
+            - DONE if the newly registered account exists in the testnet
+    
+    Finally, if the account object is successively defined then put it into the 
+    global namespace.
 
-    Note: Name conflict:
-        If a new account object, named as an existing one, is going to be added to 
-        the wallet, an error is reported. Then an offer is given to edith the 
+    Note:: 
+    
+        If a new account object, named as an existing one, is going to be added 
+        to the wallet, an error is reported. Then an offer is given to edith the 
         mapping file in order to resolve the conflict. When the conflict is 
-        resolved, the procedure finishes successfully.   
+        resolved, the procedure finishes successfully.
 
     Args:
-        account_object_name (str): The name of the account object returned.
+        account_object_name (str): The name of the account object to be created.
         account_name (str or .core.testnet.Testnet): A valid EOSIO
             account. Must be set if the testnode is not local.
-        owner_key (str or .core.interface.Key): The owner public key. Must 
-            be set if the testnode is not local.
-        active_key (str or .core.interface.Key): The active public key. Must 
-            be set if the testnode is not local.
+        owner_key_private (str): The owner private key. Must be
+            set if the testnode is not local and the account not in the wallet.
+        active_key_private (str): The active public key. Must be
+            set if the testnode is not local and the account is not in the 
+            wallet.
+        testnet (:class:`.core.testnet.Testnet`): If set, use is as the 
+            definition of the account.
     """
 
-    globals = inspect.stack()[1][0].f_globals
+    """
+    Start a singleton :class:`.shell.wallet.Wallet` object, if is not
+    in the global namespace.
+    """ 
 
-    if isinstance(account_name, testnet.Testnet):
-        owner_key = account_name.owner_key
-        active_key = account_name.active_key
-        account_name = account_name.account_name
+    if isinstance(account_name, testnet_module.Testnet):
+        testnet = account_name
 
-    if account_object_name: # account_object_name==None in register_testnet
-        """
-        Check the conditions:
-        * a ``Wallet`` object is defined.
-        * the account object name is not in use, already.    
-        """ 
-        if not is_wallet_defined(logger, globals):
-            return None
-            
+    if testnet:
+        account_name = testnet.account_name
+        owner_key_private = testnet.owner_key_private # Can be None
+        active_key_private = testnet.active_key_private # Can be None    
+        
+    globals = create_wallet_if_none(inspect.stack()[1][0].f_globals)
+
+    if account_object_name: # Not a ``register_testnet`` case:
+
+        # When the wallet object is created, it can be restored from an existing
+        # wallet file. Then the keys in the wallet are checked whether they
+        # refer to accounts in the testnet. If such an account is found,
+        # it is wrapped as an ``Account`` object and put into the global
+        # namespace. 
+
+        # Then, if the same object account is referred to by this object 
+        # factory, it is simply returned.
         if is_in_globals(account_object_name, globals):
             logger.INFO("""
                 ######## Account object ``{}`` restored from the blockchain.
                 """.format(account_object_name)) 
             return globals[account_object_name]
     
-
-    logger.INFO("""
-        ######### Create a master account object ``{}``.
-        """.format(account_object_name))                
-
-    """
-    If the local testnet is running, create an account object representing the 
-    ``eosio`` account. Put the account into the wallet. Put the account object into 
-    the global namespace of the caller, and return.
-    """
-    if setup.IS_LOCAL_ADDRESS:
-        account_object = account.Eosio(account_object_name)
-        if not put_keys_to_wallet(account_object):
-            return False
-
-        put_account_on_stack(
-            account_object_name, account_object)
-
-        if Account.add_methods_and_finalize(
-            account_object_name, account_object):
-            logger.TRACE("""
-                * The account ``{}`` is in the wallet.
-                """.format(account_object.name))
-                
-            set_is_account(account_object)
-            set_is_master_account(account_object)
-            return account_object
+        logger.INFO("""
+            ######### Create a master account object ``{}``.
+            """.format(account_object_name))
 
     """
-    Otherwise, an outer testnet has to be defined with 
-    ``setup.set_nodeos_address(<url>)``.
+    If a local testnet is running, create an account object representing 
+    ``eosio`` account. 
     """
-
     if manager.is_local_testnet():
-        if teos.is_local_node_process_running():
-            raise errors.Error("""
-    There is an local testnode process running, but its 'eosio` account is not like 
-    expected.
-            """)
-            sys.exit()
+        account_object = account.Eosio(account_object_name)
 
-            raise errors.Error("""
-    If the local testnet is not running, an outer testnet has to be defined with 
-    `setup.set_nodeos_address(<url>)`: use 'setup.set_nodeos_address(<URL>)'
-        """)
+        put_keys_to_wallet(account_object)
+        add_methods_and_put_on_stack(account_object_name, account_object)
 
-    """
-    If the ``account_name`` argument is not set, it is randomized. Check the 
-    testnet for presence of the account. If present, create the corresponding 
-    object and see whether it is in the wallets. If so, put the account object into 
-    the global namespace of the caller. and return. 
-    """
-    first_while = True
-    while True:
+        logger.TRACE("""
+            * The account ``{}`` is in the wallet.
+            """.format(account_object.name))
+            
+        set_is_account(account_object)
+        set_is_master_account(account_object)
+        return account_object
+
+    # If a remote testnet is set and if ``account_name`` is set then check 
+    # the account name for existence and verify the keys that can be in the 
+    # wallet or can be given as ``owner_key_private`` and 
+    # ``active_key_private``.
+    if account_name:
         account_object = account.GetAccount(
-            account_object_name, account_name, owner_key, active_key)
+                                        account_object_name, account_name, 
+                                        owner_key_private, active_key_private)
+        if account_object.exists:
+            # Verify the keys
+            put_keys_to_wallet(
+                account_name, 
+                account_object.owner_key, account_object.active_key)
 
-        if first_while and account_name and owner_key and active_key \
-                        and not account_object.exists:
+            if account_object_name:
+                set_is_master_account(account_object)
+                set_is_account(account_object)                    
+                add_methods_and_put_on_stack(
+                                    account_object_name, account_object)
+            else:
+                # The case of a call from the module ``eosfactory.register_testnet``
+                pass
+
+            return account_object
+        
+        elif account_object_name:
+            # Not the case of a call from the module ``eosfactory.register_testnet``
             raise errors.Error("""
-            There is no account named ``{}`` in the blockchain.
-            """.format(account_name))
+                There is no account named ``{}`` in blockchain {}.
+                """.format(account_name, setup.nodeos_address()))        
+    
+    # With a remote testnet, if ``account_name`` does not exist then it is to be
+    # register there. Wait for a confirmation from the user then check it for 
+    # existence.
+    
+    # With a remote testnet, if ``account_name`` is not set, randomize it and 
+    # process it.
+
+    while True:       
+        account_name_new = account_name if account_name \
+                                            else BASE_COMMANDS.account_name()
+        owner_key_new = BASE_COMMANDS.CreateKey(is_verbose=False)
+        active_key_new = BASE_COMMANDS.CreateKey(is_verbose=False)
+
+        def msg(account_name_new):
+            return """
+Use the following data to register a new account with a public testnet:
+    Account Name: {}
+    Owner Public Key: {}
+    Active Public Key: {}
+""".format(
+        account_name_new,
+        owner_key_new.key_public,
+        active_key_new.key_public
+    )
+        
+        # Save the keys before the account is created. Otherwise, if the 
+        # account exists in a blockchain and the computer system that has 
+        # ordered creation fails, the account is lost. It is better to have 
+        # an orphaned key in a wallet than to lose an account.
+        put_keys_to_wallet(
+                        account_name_new, owner_key_new, active_key_new)
+        while True:
+            is_ready = input(
+                """{}
+Enter 'go' when ready 
+    or enter another name within quotation marks, for example "foo"
+or 'q' to quit,  <<< """.format(msg(account_name_new)))
+            if is_ready == "q":
+                return
+            elif is_ready[0] == '"' and is_ready[-1] == '"':
+                account_name_new = is_ready.replace('"', "")
+                print()
+                continue
+            elif is_ready == "go":
+                break
+            else:
+                print()
+                print("   Wrong answer!")
+        
+        account_name = account_name_new
+        owner_key_private = owner_key_new.key_private
+        active_key_private = active_key_new.key_private
+
+        account_object = account.GetAccount(
+                                        account_object_name, account_name, 
+                                        owner_key_private, active_key_private)
 
         if account_object.exists:
-            if account_object.has_keys: # it is your account
-                logger.TRACE("""
-                    * Checking whether the wallet has keys to the account ``{}``
-                    """.format(account_object.name))
-
-                logger.TRACE("""
-                    * The account object is created.
-                    """)
-
+            logger.TRACE("""
+                * The account object is created.
+                """)
+            if account_object_name:
                 set_is_master_account(account_object)
-                set_is_account(account_object)
-
-                if account_object_name:
-                    if Account.add_methods_and_finalize(
-                        account_object_name, account_object):
-                        logger.TRACE("""
-                            * The account ``{}`` is in the wallet.
-                            """.format(account_object.name))
-                        return account_object
-                else:
-                    return account_object
-
-            else: # the name is taken by somebody else
-                logger.TRACE("""
-                ###
-                You can try another name. Do you wish to do this?
-                """)
-                decision = input("y/n <<< ")
-                if decision == "y":
-                    account_name = input(
-                        "enter the account name or nothing to make the name random <<< ")
-                else:
-                    return None
+                set_is_account(account_object)                    
+                add_methods_and_put_on_stack(
+                                    account_object_name, account_object)
+            else:
+                # The case of a call from the module ``eosfactory.register_testnet``
+                pass
+            
+            return account_object
         else:
-            if not first_while:
-                logger.OUT("""
-################################################################################
-                """)
-                logger.OUT("""
-                The account '{}' does not exist in the testnet. Has it been created on the testnet?
-                Try again.
-                """.format(account_name))
-            
-            owner_key_new = BASE_COMMANDS.CreateKey(is_verbose=False)
-            active_key_new = BASE_COMMANDS.CreateKey(is_verbose=False)
-
+            print()
+            logger.OUT("#" * 100)
             logger.OUT("""
-            Use the following data to register a new account on a public testnet:
-            Account Name: {}
-            Owner Public Key: {}
-            Active Public Key: {}
-
-            Owner Private Key: {}
-            Active Private Key: {}
-            """.format(
-                account_object.name,
-                owner_key_new.key_public,
-                active_key_new.key_public,
-                owner_key_new.key_private,
-                active_key_new.key_private
-                ))
-            
-            try:
-                if not put_keys_to_wallet(
-                        account_object.name, 
-                        owner_key=owner_key_new, active_key=active_key_new):
-                    break
-            except Exception as ex:
-                logger.OUT("""
-                Something is wrong, try again. The error message is
-                {}
-                """.format(str(ex)))
-                continue
-
-            while True:
-                is_ready = input("enter 'go' when ready or 'q' to quit <<< ")
-                if is_ready == "q":
-                    return None
-                else: 
-                    if is_ready == "go":
-                        break
-                        
-            account_name = account_object.name
-            owner_key = owner_key_new
-            active_key = active_key_new
-
-        first_while = False
+            The account '{}' does not exist in the testnet. Have you created on the testnet?
+            Try again.
+            """.format(account_name))
 
 
 def restore_account(account_object_name, testnet_account):
-    """Create a restored account object in caller's global namespace.
+    # """Create a restored account object in caller's global namespace.
 
-    Start a singleton :class:`.shell.wallet.Wallet` object if there is no one 
-    in the global namespace already.
+    # Start a singleton :class:`.shell.wallet.Wallet` object if there is no one 
+    # in the global namespace already.
 
-    If a local testnet is running, create an account object representing 
-    the ``eosio`` account. Put the account into the wallet. Put the account
-    object into the global namespace of the caller, and return.
+    # If a local testnet is running, create an account object representing 
+    # the ``eosio`` account. Put the account into the wallet. Put the account
+    # object into the global namespace, and return.
 
-    Otherwise, an outer testnet has to be defined with the function
-    :func:`.core.setup.set_nodeos_address`.
+    # Otherwise, an outer testnet has to be defined with the function
+    # :func:`.core.setup.set_nodeos_address`.
 
-    Args:
-        account_object_name (str): The name of the account object returned.
-        testnet_account (.core.testnet.Testnet): A testnet object defining the account to restore.
-    """
+    # Args:
+    #     account_object_name (str): The name of the account object returned.
+    #     testnet_account (.core.testnet.Testnet): A testnet object defining the account to restore.
+    # """
 
-    globals = inspect.stack()[1][0].f_globals
     """
     Check the conditions:
     * a ``Wallet`` object is defined.
     * the account object name is not in use, already.    
     """ 
-    if not is_wallet_defined(logger, globals):
-        return
+    globals = create_wallet_if_none(inspect.stack()[1][0].f_globals)
            
     account_name = testnet_account.account_name
-    owner_key = testnet_account.owner_key
-    active_key = testnet_account.active_key
+
     if not testnet_account.url:
         eosio = create_master_account("eosio")
         create_account(account_object_name, eosio, account_name)
@@ -837,14 +833,17 @@ def restore_account(account_object_name, testnet_account):
     the corresponding object and see that it is in the wallets.
     """
     account_object = account.GetAccount(
-                    account_object_name, account_name, owner_key, active_key)
+        account_object_name, account_name,
+        owner_key_private=testnet_account.owner_key_private,
+        active_key_private=testnet_account.active_key_private)
 
+    add_methods_and_put_on_stack(account_object_name, account_object)    
+    
     logger.TRACE("""
-        * The account object '{}' from testnet 
-            @ {} 
+        * The account object '{}' from testnet @ {} 
         is restored.
         """.format(account_name, testnet_account.url))
-    Account.add_methods_and_finalize(account_object_name, account_object)
+
     set_is_account(globals[account_object_name])
     return globals[account_object_name]
 
@@ -863,7 +862,7 @@ def new_account(
         buy_ram_kbytes=8, buy_ram="",
         transfer=False,
         restore=False):
-    """Create account object in caller's global namespace.
+    """Create account object in the global namespace.
 
     Wraps the account factory function :func:`create_account` so that the 
     following statements are equivalent::
@@ -874,7 +873,8 @@ def new_account(
     NOTE::
 
         With the `create_` syntax it is enough to state 
-        `create_account("foo", MASTER)` in order to create the account object `foo`.
+        `create_account("foo", MASTER)` in order to create the account object
+        `foo`.
 
     Args:
         creator (str or .core.interface.Account): The account creating the new 
@@ -929,7 +929,24 @@ def create_account(
         buy_ram_bytes=0, buy_ram_kbytes=0, buy_ram="",
         transfer=False,
         restore=False):
-    """Create account object in caller's global namespace.
+    """Create account object in the global namespace.
+
+    Start a singleton :class:`.shell.wallet.Wallet` object, if it is not
+    in the global namespace. Use this wallet object to keep private keys
+    of any account to be created.
+
+    Check it for existence in the testnet. If it is not set or it does not 
+    exist, create it.
+
+    Finally, if the account object is successively defined then put it into the 
+    global namespace.
+
+    Note:: 
+    
+        If a new account object, named as an existing one, is going to be added 
+        to the wallet, an error is reported. Then an offer is given to edith the 
+        mapping file in order to resolve the conflict. When the conflict is 
+        resolved, the procedure finishes successfully.
     
     Args:
         account_object_name (str): The name of the account object returned.
@@ -952,22 +969,22 @@ def create_account(
     See definitions of the remaining parameters: \
     :func:`.cleos.base.common_parameters`.
     """
-    globals = inspect.stack()[1][0].f_globals
-    """
-    Check the conditions:
-    * a ``Wallet`` object is defined;
-    * the account object name is not in use, already.
-    """
 
-    if not is_wallet_defined(logger):
-        return None
+    globals = create_wallet_if_none(inspect.stack()[1][0].f_globals)
 
+    # When the wallet object is created, it can be restored from an existing
+    # wallet file. Then the keys in the wallet are checked whether they
+    # refer to accounts in the testnet. If such an account is found,
+    # it is wrapped as an ``Account`` object and put into the global namespace. 
+
+    # Then, if the same object account is referred to by this object factory, it
+    # is simply returned.
     if is_in_globals(account_object_name, globals) \
                                         and globals[account_object_name].name:
         logger.INFO("""
             ######## Account object ``{}`` restored from the blockchain.
             """.format(account_object_name))
-        return globals[account_object_name]       
+        return globals[account_object_name]
 
     logger.INFO("""
         ######### Create an account object ``{}``.
@@ -1006,14 +1023,23 @@ def create_account(
             owner_key = BASE_COMMANDS.CreateKey(is_verbose=False)
             active_key = BASE_COMMANDS.CreateKey(is_verbose=False)
 
-        if not put_keys_to_wallet(account_name, owner_key, active_key):
-            return False
+        put_keys_to_wallet(account_name, owner_key, active_key)
 
-        if stake_net and not manager.is_local_testnet():
-            logger.INFO("""
-                        ... delegating stake to a new blockchain account ``{}`` mapped as ``{}``.
-                        """.format(account_name, account_object_name))
+        logger.INFO("""
+                    ... for a new blockchain account ``{}`` mapped as ``{}``.
+                    """.format(account_name, account_object_name))
 
+        if manager.is_local_testnet():
+            account_object = account.CreateAccount(
+                    creator, account_name, 
+                    owner_key, active_key,
+                    permission,
+                    expiration_sec, skip_sign, dont_broadcast, force_unique,
+                    max_cpu_usage, max_net_usage,
+                    ref_block,
+                    delay_sec
+                    )
+        else:
             try:
                 account_object = account.SystemNewaccount(
                         creator, account_name, owner_key, active_key,
@@ -1048,19 +1074,6 @@ def create_account(
                         ref_block,
                         delay_sec
                         )
-        else:
-            logger.INFO("""
-                        ... for a new blockchain account ``{}``.
-                        """.format(account_name))
-            account_object = account.CreateAccount(
-                    creator, account_name, 
-                    owner_key, active_key,
-                    permission,
-                    expiration_sec, skip_sign, dont_broadcast, force_unique,
-                    max_cpu_usage, max_net_usage,
-                    ref_block,
-                    delay_sec
-                    )
 
         account_object.account_object_name = account_object_name
         account_object.owner_key = owner_key
@@ -1069,13 +1082,13 @@ def create_account(
     logger.TRACE("""
         * The account object is created.
         """)
-    Account.add_methods_and_finalize(account_object_name, account_object)
+    add_methods_and_put_on_stack(account_object_name, account_object)
     set_is_account(account_object)
     return account_object
 
 def reboot():
-    """Reset the :mod:`.shell.account` module.
-    """
+    # """Reset the :mod:`.shell.account` module.
+    # """
     global wallet_singleton
     if wallet_singleton:
         wallet_singleton.delete_globals()
@@ -1089,27 +1102,39 @@ def reboot():
     setup.reboot()
 
 
-def is_wallet_defined(logger, globals=None):
+def create_wallet_if_none(globals):
     global wallet_globals   
-    if not wallet_globals is None:
-        return True
-    
-    global wallet_singleton
-    wallet_singleton = wallet.Wallet.wallet_single
-
-    if wallet_singleton is None:
-        wallet.create_wallet(wallet_globals=globals)
+    if not wallet_globals:
+        global wallet_singleton
         wallet_singleton = wallet.Wallet.wallet_single
 
         if wallet_singleton is None:
-            raise errors.Error("""
-                Cannot find any `Wallet` object.
-                """)
-    wallet_globals = wallet.Wallet.globals
-    return True
+            wallet.create_wallet(wallet_globals=globals)
+            wallet_singleton = wallet.Wallet.wallet_single
+
+            if wallet_singleton is None:
+                raise errors.Error("""
+                    Cannot find any `Wallet` object.
+                    """)
+        wallet_globals = wallet.Wallet.globals
+
+    return wallet_globals
 
 
 def put_keys_to_wallet(account_object, owner_key=None, active_key=None):
+    # """Make sure that the object keys are in a wallet.
+
+    # If the keys of the given account are not in a wallet import them. Verify 
+    # whether the imported private keys match their public counterparts.
+
+    # Args:
+    #     account_object (str or .interface.Account): The account that owns the
+    #         keys.
+    #     owner_key (.interface.Key): An owner key object, to be set if the
+    #         ``object_account`` is referenced with its native account name.
+    #     active_key (.interface.Key): An active key object, to be set if the
+    #         ``object_account`` is referenced with its native account name.
+    # """
     if account_object and not isinstance(account_object, str):
         owner_key = account_object.owner_key
         active_key = account_object.active_key
@@ -1118,17 +1143,25 @@ def put_keys_to_wallet(account_object, owner_key=None, active_key=None):
         active_key = owner_key
 
     global wallet_singleton
+    logger.TRACE("""
+        * Ensuring that the wallet has keys to the account ``{}``
+        """.format(interface.Account(account_object).name))
     if not wallet_singleton.keys_in_wallets(
                             [owner_key.key_public, active_key.key_public]):
         
         if not wallet_singleton.import_key(owner_key) \
                                 or not wallet_singleton.import_key(active_key):
-            logger.TRACE("""
-            Wrong or missing keys for the account ``{}`` in the wallets.
-            """.format(interface.Account(account_object)))
-            return False
+            raise errors.Error("""
+            Wrong or missing keys for the account ``{}`` in the wallet.
+            """.format(interface.Account(account_object).name))
 
-    return True
+        # See whether the imported private keys match their public counterparts.
+        if not wallet_singleton.keys_in_wallets(
+                            [owner_key.key_public, active_key.key_public]):
+
+            raise errors.Error("""
+            Wrong or missing keys for the account ``{}`` in the wallet.
+            """.format(interface.Account(account_object).name))
 
 
 def put_account_on_stack(account_object_name, account_object):
@@ -1136,7 +1169,6 @@ def put_account_on_stack(account_object_name, account_object):
     # export the account object to the globals in the wallet module:
     global wallet_globals      
     wallet_globals[account_object_name] = account_object
-    account_object.in_wallet_on_stack = True
 
     logger.TRACE("""
         * Cross-checked: account object ``{}`` mapped to an existing 

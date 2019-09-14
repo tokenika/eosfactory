@@ -46,7 +46,7 @@ class GetAccount(BASE_COMMANDS.GetAccount):
     def __init__(
             self,
             account_object_name, name=None, 
-            owner_key=None, active_key=None):
+            owner_key_private=None, active_key_private=None):
 
         self.account_object_name = account_object_name
         if name is None: 
@@ -54,12 +54,10 @@ class GetAccount(BASE_COMMANDS.GetAccount):
         else:
             self.name = name
 
-        if active_key is None:
-            active_key = owner_key
+        if active_key_private is None:
+            active_key_private = owner_key_private
 
         self.exists = False
-        self.in_wallet_on_stack = False
-        self.has_keys = not owner_key is None
         
         try:
             BASE_COMMANDS.GetAccount.__init__(
@@ -70,12 +68,9 @@ class GetAccount(BASE_COMMANDS.GetAccount):
             raise errors.Error(str(ex))
 
         self.exists = True
-        if owner_key: # an orphan account, private key is restored from cache
-            self.owner_key.key_private = interface.key_arg(
-                            owner_key, is_owner_key=True, is_private_key=True)
-        if active_key: # an orphan account, private key is restored from cache
-            self.active_key.key_private = interface.key_arg(
-                        active_key, is_owner_key=False, is_private_key=True)
+        if owner_key_private: 
+            self.owner_key.key_private = owner_key_private
+            self.active_key.key_private = active_key_private
 
         logger.TRACE("""
             * Account *{}* exists in the blockchain.
@@ -109,7 +104,7 @@ class CreateAccount(BASE_COMMANDS.CreateAccount):
 class SystemNewaccount(SYS_COMMANDS.SystemNewaccount):
     def __init__(
             self, creator, name, owner_key, active_key,
-            stake_net, stake_cpu,
+            stake_net=0, stake_cpu=0,
             permission=None,
             buy_ram_bytes=0, buy_ram_kbytes=0, buy_ram="",
             transfer=False,

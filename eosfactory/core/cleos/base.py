@@ -139,13 +139,9 @@ def common_parameters(
     Exemplary values of the argument ``permission``::
 
         eosio # eosio is interface.Account object
-
         "eosio@owner"
-
         ("eosio", "owner")
-
         (eosio, interface.Permission.ACTIVE)
-
         ["eosio@owner", (eosio, .Permission.ACTIVE)]
 
     Args:
@@ -328,8 +324,18 @@ class WalletImport(Command):
         key_private (str) The key imported.
     """
     def __init__(self, key, wallet="default", is_verbose=True):
+        if not key:
+            raise errors.Error("""
+                Private key is not defined.
+                """)
+        
         key_private = interface.key_arg(
             key, is_owner_key=True, is_private_key=True)
+        if not key_private:
+            raise errors.Error("""
+                Private key is not defined.
+                """)
+
         Command.__init__(
             self, 
             ["--private-key", key_private, "--name", 

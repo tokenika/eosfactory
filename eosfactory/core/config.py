@@ -1305,8 +1305,9 @@ There are undefined setting:
 
 def main():
     """
-    usage: config.py [-h] [--wsl_root] [--dependencies] [--json]
-                    [--workspace WORKSPACE]
+    usage:: 
+    
+        config.py [-h] [--wsl_root] [--dependencies] [--json] [--workspace WORKSPACE]
 
     Show the configuration of EOSFactory or set contract workspace.
 

@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""Build a contract"""
+"""Build a contract
+================
+"""
 
 import argparse
 import eosfactory.core.teos as teos
@@ -8,7 +10,9 @@ import eosfactory.core.teos as teos
 def main():
     """Build a contract.
 
-    usage: python3 -m eosfactory.build [-h] [--compile] [--silent] dir
+    usage::
+
+        python3 -m eosfactory.build [-h] [--compile] [--silent] dir
 
     The contract is determined with its project directory. The directory may be
     absolute or relative to the ``contract workspace`` directory as defined with

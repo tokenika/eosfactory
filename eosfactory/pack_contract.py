@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""Make a new contract project folder from a zip file produced with the 
-    function :func:`pack`.
+"""Make a contract project folder from a zip file
+=============================================
 """
 
 import os
@@ -286,7 +286,9 @@ def pack(contract_dir=None, zip_file=None):
 def main():
     """Pack or unpack a contract project folder.
 
-    usage: pack_contract.py [-h] [--unpack] [--dir DIR] [--zip ZIP] 
+    usage::
+    
+        pack_contract.py [-h] [--unpack] [--dir DIR] [--zip ZIP] 
 
     If an EOSIO contract project which is a VSCode folder is to be passed by 
     e-mail, it has to be compressed. However, this should not be done in 

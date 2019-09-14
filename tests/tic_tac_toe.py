@@ -54,7 +54,7 @@ def test(testnet, reset):
     are two players ``ALICE`` and ``CAROL``. We are testing that the moves of
     the game are correctly stored in the blockchain database.
     """)
-
+    import pdb; pdb.set_trace()
     if reset:
         manager.reset(testnet)
     else:
@@ -211,7 +211,9 @@ def test(testnet, reset):
         permission=(CAROL, Permission.ACTIVE))
 
     COMMENT("""
-    Demonstrate several properties of the ``Account`` object.
+    ################################################################################
+    ################################################################################
+    Demonstrate varies properties of the ``Account`` object.
     """)
 
     COMMENT("""
@@ -239,8 +241,17 @@ def test(testnet, reset):
     importlib.import_module(".get", setup.interface_package()).\
                                         GetAccounts(ALICE.active_key.key_public)
 
-    stop()
+    COMMENT("""
+    Buy RAM for ALICE:
+    """)
+    import pdb; pdb.set_trace()
     stats()
+    setup.IS_PRINT_COMMAND_LINES = True
+    MASTER.buy_ram(1, ALICE, buy_ram_kbytes=True)
+    stats()
+
+    stop()
+
 
 
 if __name__ == '__main__':
@@ -256,8 +267,8 @@ if __name__ == '__main__':
         help="Testnet alias")
 
     parser.add_argument(
-        "-table", "--testnet", nargs=4,
-        help="<url> <name> <owner key> <active key>")
+        "-t", "--testnet", nargs=4,
+        help="<account name> <owner key> <active key> <url>")
 
     parser.add_argument(
         "-r", "--reset", action="store_true",

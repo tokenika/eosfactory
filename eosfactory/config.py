@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""Driver for ``eosfactory.core.checklist.main()``."""
+"""Driver for ``eosfactory.core.checklist.main()``
+===============================================
+"""
 
 import eosfactory.core.checklist
 

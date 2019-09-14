@@ -222,13 +222,13 @@ class Wallet(BASE_COMMANDS.WalletCreate):
                     into the wallet ``{}``
                 """.format(account_name, self.name)
                 )
-        else:           
+        else:
             BASE_COMMANDS.WalletImport(
                 interface.key_arg(account_or_key, is_private_key=True), 
                 self.name, is_verbose=False)
 
             logger.TRACE("""
-                * Importing keys into the wallet ``{}``
+                * Importing key into the wallet ``{}``
                 """.format(self.name)
                         )
             return True

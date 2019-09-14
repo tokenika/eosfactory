@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""Set testnet interface."""
+"""Set testnet interface
+=====================
+"""
 
 import argparse
 import eosfactory.core.config as config

@@ -27,6 +27,7 @@ class Verbosity(enum.Enum):
     ERROR = ['white', 'on_blue', []]    
     OUT = [None, None, []]
     DEBUG = ['yellow', None, []]
+    WARNING = ['yellow', None, []]
     NONE = None
 
 
@@ -76,6 +77,12 @@ def TRACE(msg=None, verbosity=None, translate=True):
         __trace_buffer = msg        
         color = Verbosity.TRACE.value
         cprint(msg, color[0], color[1], attrs=color[2])
+
+
+def WARNING(msg):
+    msg = condition(msg, False)
+    color = Verbosity.WARNING.value
+    return colored(msg, color[0], color[1], attrs=color[2])
 
 
 __info_buffer = ""

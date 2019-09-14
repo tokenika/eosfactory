@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""Deploy a given contract to a given account."""
+"""Deploy a given contract to a given account
+==========================================
+"""
 
 import os
 import argparse
@@ -51,9 +53,9 @@ def deploy(
 
 def main():
     """
-    usage: python3 -m eosfactory.deploy.py [-h] [--dir DIR] 
-                                                [--c_cpp_prop C_CPP_PROP]
-                                                [--testnet TESTNET] [--silent]
+    usage::
+    
+        python3 -m eosfactory.deploy.py [-h] [--dir DIR] [--c_cpp_prop C_CPP_PROP] [--testnet TESTNET] [--silent]
 
     Deploy a given contract to a given account.
     

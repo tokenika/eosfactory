@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
-"""List saved testnets."""
+"""List saved testnets
+===================
+"""
 
 import argparse
 import eosfactory.core.testnet as testnet
-import eosfactory.core.manager as manager
 
 def main():
     """
-    usage: testnets.py [-h] [--name NAME] [--remove]
+    usage::
+    
+        testnets.py [-h] [--name NAME] [--remove]
 
     List saved testnets.
 

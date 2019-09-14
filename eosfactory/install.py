@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""Install EOSFactory"""
+"""Install EOSFactory
+==================
+"""
 
 import argparse
 import eosfactory.core.config as config

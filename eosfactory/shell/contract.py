@@ -178,7 +178,7 @@ class Contract(ContractBuilder):
             if not payer:
                 payer = self.account
 
-            payer.buy_ram(buy_ram_kbytes, self.account)
+            payer.buy_ram(buy_ram_kbytes, self.account, buy_ram_bytes=True)
         
             result = SET_COMMANDS.SetContract(
                 self.account, self.contract_dir, 

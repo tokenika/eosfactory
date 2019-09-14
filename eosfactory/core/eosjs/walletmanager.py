@@ -257,8 +257,17 @@ def list(is_verbose=True):
 def import_key(wallet, key, is_verbose=True):
     is_open_and_unlocked(wallet)
 
+    if not key:
+        raise errors.Error("""
+            Private key is not defined.
+            """)
+    
     name = interface.wallet_arg(wallet)
     key_private = interface.key_arg(key, is_owner_key=True, is_private_key=True)
+    if not key_private:
+            raise errors.Error("""
+                Private key is not defined.
+                """)
 
     with open(wallet_file(name), "a")  as out:
         out.write(encrypt(key_private, _OPEN_WALLETS[name].cipher_suite) + "\n")

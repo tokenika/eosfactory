@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""Use public faucet for the testnet, e.g. http://faucet.cryptokylin.io"""
+"""Use a public faucet for a testnet
+=================================
+"""
 
 from urllib.request import Request, urlopen
 import json
@@ -107,20 +109,21 @@ def register_testnet_via_faucet_(faucet, url, alias):
         """.format(account_name))
 
     testnet_module.add_to_mapping(
-        url, account_name, owner_key, active_key, alias)
+        account_name, owner_key, active_key, url, alias)
 
     testnet_module.testnets()
 
 
 def main():
     """
-    usage: python3 -m eosfactory.register_testnet_via_faucet [-h] \
-    faucet url [alias]
+    usage::
+    
+        python3 -m eosfactory.register_testnet_via_faucet [-h] faucet url [alias]
 
     Args:
-        faucet: An URL of a public faucet for the testnet, e.g.
+        faucet: An URL of a public faucet for a testnet, e.g.
             http://faucet.cryptokylin.io
-        url: An URL of a public node offering access to the testnet, e.g.
+        url: An URL of a public node offering access to a testnet, e.g.
             https://api.kylin.alohaeos.com
         alias: Testnet alias.
         -h: Show help message and exit.
@@ -129,11 +132,11 @@ def main():
 
     parser.add_argument(
         "faucet", 
-        help="An URL of a public faucet for the testnet, "
+        help="An URL of a public faucet for a testnet, "
             "e.g. http://faucet.cryptokylin.io")
     parser.add_argument(
         "url", 
-        help="An URL of a public node offering access to the testnet, "
+        help="An URL of a public node offering access to a testnet, "
             "e.g. https://api.kylin.alohaeos.com")
     parser.add_argument("alias", nargs="?", default=None, help="Testnet alias")
 

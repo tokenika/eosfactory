@@ -575,7 +575,7 @@ already exists. Cannot overwrite it.
 
     logger.INFO("""
 ######## Created contract project '{}', 
-    originated from template 
+    originated from the template 
     '{}'.
     """.format(project_dir, template_dir), verbosity)
 

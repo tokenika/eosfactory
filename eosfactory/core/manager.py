@@ -13,6 +13,7 @@ import eosfactory.core.config as config
 import eosfactory.core.errors as errors
 import eosfactory.core.logger as logger
 import eosfactory.core.interface as interface
+import eosfactory.core.testnet as testnet_module
 import eosfactory.core.setup as setup
 import eosfactory.core.teos as teos
 BASE_COMMANDS = importlib.import_module(".base", setup.interface_package())
@@ -34,6 +35,22 @@ def clear_testnet_cache():
     """ Remove persistence files (wallet, account-mapping, passwords) 
     associated with the current testnet.
     """
+    import pdb; pdb.set_trace()
+    if not is_local_testnet():
+        user_response = input(
+            logger.WARNING("""
+WARNING: The ``reset`` function will remove all persistance files associated 
+with the current testnet, namely: the default wallet, object name map, password 
+map. Moreover, the testnet will be lost if it does not include private keys. 
+(Testnet includes private keys if it is created with the command 
+``python3 -m eosfactory.register_testnet`` with `-p` switch.
+
+Do you want to continue? Enter Y or anything else to stop <<<"""
+            ) + " "
+        )
+
+        if not user_response == "Y":
+            exit(0)
     if not setup.file_prefix():
         return
 
@@ -195,7 +212,8 @@ def reset(
     understand a problem.
 
     Args:
-        testnet (:class:`.Testnet`): If set, resume the testnet listening at the ``url`` attribute of the argument.
+        testnet (:class:`.Testnet`): If set, resume the testnet listening at 
+            the ``url`` attribute of the argument.
         url (str): If set, resume the testnet listening at ``url``.
         nodeos_stdout (str): If set, a file where ``stdout`` stream of
             the local ``nodeos`` is send. Note that the file can be included to 
@@ -203,6 +221,7 @@ def reset(
             If the file is set with the configuration, and in the same time 
             it is set with this argument, the argument setting prevails. 
     """
+
     import eosfactory.shell.account as account
     account.reboot()
 
@@ -211,6 +230,9 @@ def reset(
         is_testnet_active()
         clear_testnet_cache()
         keosd_start()
+
+    if testnet and isinstance(testnet, str):
+        testnet = testnet_module.get_testnet(testnet, raise_exception=False)
 
     if url:
         verified_testnet(url)
@@ -221,9 +243,8 @@ def reset(
             logger.INFO("""
             No local nodeos is set: {}
             """.format(setup.nodeos_address()))
-            keosd_start()
+            keosd_start()    
 
-    clear_testnet_cache()
     node_start(clear=True, nodeos_stdout=nodeos_stdout)
 
 
@@ -243,6 +264,9 @@ def resume(testnet=None, url=None, nodeos_stdout=None, prefix=None):
         setup.set_nodeos_address(url, prefix)
         is_testnet_active()
         keosd_start()
+
+    if testnet and isinstance(testnet, str):
+        testnet = testnet_module.get_testnet(testnet, raise_exception=False)
 
     if url:
         verified_testnet(url)
@@ -275,7 +299,7 @@ def is_testnet_active(throw_error=True):
         if not throw_error:
             return ""
         raise errors.Error("""
-        {} testnet is not running or is not responding @ {}.
+        The {} testnet @ {} does not respond.
         """.format(domain, setup.nodeos_address()))
     
     logger.INFO("""
