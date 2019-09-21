@@ -81,7 +81,7 @@ class GetActions(base_commands.Command):
     def __str__(self):
         import eosfactory.core.str.get_actions
         return str(eosfactory.core.str.get_actions.GetActions(
-            self.json, self.as_json, self.full, self.pretty, self.console))
+                                                    self.json, self.console))
 
 
 class GetBlock(base_commands.Command):

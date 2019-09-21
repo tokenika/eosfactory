@@ -61,10 +61,10 @@ account_name: {}
 url: {}
 owner_key_private: {}
 active_key_private: {}""".format(
-            self.name, self.account_name, self.url, 
-            self.owner_key_private, self.active_key_private)
+                            self.name, self.account_name, self.url,
+                            self.owner_key_private, self.active_key_private)
 
-        
+
 def get_testnet(name=None, testnet=None, raise_exception=True):
     """Return a testnet.
 
@@ -90,18 +90,20 @@ def get_testnet(name=None, testnet=None, raise_exception=True):
                 mapping[name]["active_key_private"],
                 mapping[name]["url"],
                 mapping[name]["name"])
-        elif name == "JUNGLE":
-            return JUNGLE
-        elif name == "KYLIN":
-            return KYLIN
         else:
-            if raise_exception:
-                raise errors.Error("""
-                Testnet ``{}`` is not defined in the testnet mapping.
-                """.format(name))
-            else:
-                return
-    elif testnet:
+            return Testnet(None, None, None, name)
+
+        if name == "JUNGLE":
+            return JUNGLE
+        if name == "KYLIN":
+            return KYLIN
+
+        if raise_exception:
+            raise errors.Error("""
+            Testnet ``{}`` is not defined in the testnet mapping.
+            """.format(name))
+
+    if testnet:
         return Testnet(testnet[0], testnet[1], testnet[2], testnet[3])
 
     if raise_exception:
@@ -109,12 +111,13 @@ def get_testnet(name=None, testnet=None, raise_exception=True):
             Cannot determine testnet.
             """)
 
+    return None
+
 
 TESTNET_FILE = "testnet.json"
 
 
-def LOCAL():
-    return Testnet(
+LOCAL = Testnet(
     "eosio",
     config.eosio_key_private(),
     config.eosio_key_private(),

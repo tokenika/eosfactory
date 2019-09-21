@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 """Test example."""
 
-import argparse, sys, time
+import sys
+import time
 import importlib
+import argparse
 
 import eosfactory.core.setup as setup
 # Set the interface configuration (CLEOS or EOSJS):
-setup.set_is_eosjs(False)
-# setup.set_is_eosjs()
+# setup.set_is_eosjs(False)
+setup.set_is_eosjs()
 
 from eosfactory.eosf import *
 
@@ -15,7 +17,7 @@ verbosity([Verbosity.INFO, Verbosity.OUT, Verbosity.TRACE])
 
 CONTRACT_WORKSPACE = sys.path[0] + "/../contracts/tic_tac_toe"
 
-INITIAL_RAM_KBYTES = 8
+INITIAL_RAM_KBYTES = 3
 INITIAL_STAKE_NET = 3
 INITIAL_STAKE_CPU = 3
 
@@ -47,48 +49,51 @@ def stats():
     )
 
 
-def test(testnet, reset):
+def test(testnet, reset_testnet):
     SCENARIO("""
     There is the ``MASTER`` account that sponsors the ``HOST``
     account equipped with an instance of the ``tic_tac_toe`` smart contract. There
     are two players ``ALICE`` and ``CAROL``. We are testing that the moves of
     the game are correctly stored in the blockchain database.
     """)
-    import pdb; pdb.set_trace()
-    if reset:
-        manager.reset(testnet)
+    if reset_testnet:
+        reset(testnet)
     else:
-        manager.resume(testnet)
+        resume(testnet)
 
     create_master_account("MASTER", testnet)
+
     MASTER.info()
-    
+
     create_account(
         "HOST", MASTER,
-        buy_ram_kbytes=INITIAL_RAM_KBYTES, stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
+        ram_kbytes=INITIAL_RAM_KBYTES, 
+        stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
     create_account(
         "ALICE", MASTER,
-        buy_ram_kbytes=INITIAL_RAM_KBYTES, stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
+        ram_kbytes=INITIAL_RAM_KBYTES, 
+        stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
     create_account(
         "CAROL", MASTER,
-        buy_ram_kbytes=INITIAL_RAM_KBYTES, stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
+        ram_kbytes=INITIAL_RAM_KBYTES, 
+        stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
     CAROL.info()
 
     stats()
 
     smart = Contract(HOST, CONTRACT_WORKSPACE)
     smart.build(force=False)
-
-    try:
+    import pdb; pdb.set_trace()
+    if not HOST.is_code():
         smart.deploy(payer=MASTER)
-    except errors.ContractRunningError:
-        pass
+        MASTER.info()
 
     COMMENT("""
     Attempting to create a new game.
     This might fail if the previous game has not been closes properly:
     """)
     try:
+        setup.IS_PRINT_COMMAND_LINES = True
         HOST.push_action(
             "create",
             {
@@ -96,8 +101,8 @@ def test(testnet, reset):
                 "host": CAROL
             },
             permission=(CAROL, Permission.ACTIVE))
-    except Error as e:
-        if "game already exists" in e.message:
+    except Error as ex:
+        if "game already exists" in ex.message:
             COMMENT("""
             We need to close the previous game before creating a new one:
             """)
@@ -125,7 +130,7 @@ def test(testnet, reset):
             COMMENT("""
             The error is different than expected.
             """)
-            raise Error(str(e))
+            raise Error(str(ex))
 
     table = HOST.table("games", CAROL)
     assert table.json["rows"][0]["board"][0] == 0
@@ -216,17 +221,14 @@ def test(testnet, reset):
     Demonstrate varies properties of the ``Account`` object.
     """)
 
-    COMMENT("""
-    Show all actions with ALICE referenced in authorization or receiver:
-    """)
-    ALICE.actions()
+    # COMMENT("""
+    # Show all actions with ALICE referenced in authorization or receiver:
+    # """)
+    # ALICE.actions()
 
     COMMENT("""
     Retrieve the code and ABI for the account HOST:
     """)
-    # setup.IS_PRINT_COMMAND_LINES = True
-    # setup.IS_PRINT_RESPONSE = True
-    # setup.IS_PRINT_REQUEST = True
     HOST.code() # abi="xxx.abi", code="xxx.wasm")
 
     COMMENT("""
@@ -240,22 +242,22 @@ def test(testnet, reset):
 
     importlib.import_module(".get", setup.interface_package()).\
                                         GetAccounts(ALICE.active_key.key_public)
-
     COMMENT("""
     Buy RAM for ALICE:
     """)
-    import pdb; pdb.set_trace()
     stats()
-    setup.IS_PRINT_COMMAND_LINES = True
-    MASTER.buy_ram(1, ALICE, buy_ram_kbytes=True)
+    MASTER.buy_ram(ALICE, ram_kbytes=1)
     stats()
+
+    COMMENT("""
+    Delegate bandwidth to MASTER from himself:
+    """)
+    MASTER.delegate_bw(stake_net_quantity=1, stake_cpu_quantity=1)
 
     stop()
 
 
-
-if __name__ == '__main__':
-
+def main():
     parser = argparse.ArgumentParser(description="""
     This is a unit test for the ``tic-tac-toe`` smart contract.
     It works both on a local testnet and remote testnet.
@@ -264,7 +266,7 @@ if __name__ == '__main__':
 
     parser.add_argument(
         "alias", nargs="?",
-        help="Testnet alias")
+        help="Testnet name or its url.")
 
     parser.add_argument(
         "-t", "--testnet", nargs=4,
@@ -272,7 +274,15 @@ if __name__ == '__main__':
 
     parser.add_argument(
         "-r", "--reset", action="store_true",
-        help="Reset testnet cache")
+        help="Reset testnet cache.")
 
     args = parser.parse_args()
-    test(get_testnet(args.alias, args.testnet), reset=args.reset)
+    test(get_testnet(args.alias, args.testnet), reset_testnet=args.reset)
+
+
+if __name__ == '__main__':
+    main()
+
+# python3 ./tests/tic_tac_toe.py http://145.239.133.201:8888
+# python3 ./tests/tic_tac_toe.py JUNGLE
+# python3 ./tests/tic_tac_toe.py -t 5jejduh2w2cb 5KGVA3efMr4rZEWUxWQzD4k11sApFrjYwVYfsVqvBYge1AppHdh 5KAkkZLZVQbhJL6JnxodcBScgLi1LNv8yEX5LRXaWvXyoH87DK8 http://145.239.133.201:8888

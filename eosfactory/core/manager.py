@@ -20,62 +20,6 @@ BASE_COMMANDS = importlib.import_module(".base", setup.interface_package())
 GET_COMMANDS = importlib.import_module(".get", setup.interface_package())
 
 
-def reboot():
-    """Reset EOSFactory to its startup conditions."""
-
-    logger.INFO("""
-    ######### Reboot EOSFactory session.
-    """)
-    stop()
-    import eosfactory.shell.account as account
-    account.reboot()
-
-
-def clear_testnet_cache():
-    """ Remove persistence files (wallet, account-mapping, passwords) 
-    associated with the current testnet.
-    """
-    import pdb; pdb.set_trace()
-    if not is_local_testnet():
-        user_response = input(
-            logger.WARNING("""
-WARNING: The ``reset`` function will remove all persistance files associated 
-with the current testnet, namely: the default wallet, object name map, password 
-map. Moreover, the testnet will be lost if it does not include private keys. 
-(Testnet includes private keys if it is created with the command 
-``python3 -m eosfactory.register_testnet`` with `-p` switch.
-
-Do you want to continue? Enter Y or anything else to stop <<<"""
-            ) + " "
-        )
-
-        if not user_response == "Y":
-            exit(0)
-    if not setup.file_prefix():
-        return
-
-    logger.TRACE("""
-    Removing testnet cache for prefix `{}`
-    """.format(setup.file_prefix()))
-
-    teos.keosd_kill() # otherwise the manager may protects the wallet files
-    wallet_dir = config.keosd_wallet_dir()
-    files = os.listdir(wallet_dir)
-    try:
-        for file in files:
-            if file.startswith(setup.file_prefix()):
-                os.remove(os.path.join(wallet_dir, file))
-    except Exception as e:
-        raise errors.Error("""
-        Cannot remove testnet cache. The error message is:
-        {}
-        """.format(str(e)))
-    
-    logger.TRACE("""
-    Testnet cache successfully removed.
-    """)
-
-
 def accout_names_2_object_names(sentence, keys=False):
     """Translate blockchain account names to names of corresponding objects.
 
@@ -85,9 +29,8 @@ def accout_names_2_object_names(sentence, keys=False):
     """
     if not setup.IS_TRANSLATING:
         return sentence
-        
     exceptions = ["eosio"]
-    map_ = account_map()
+    map_ = account_map(do_not_fail=True)
     for name in map_:
         account_object_name = map_[name]
         if name in exceptions:
@@ -96,13 +39,13 @@ def accout_names_2_object_names(sentence, keys=False):
         
         if keys:
             account = BASE_COMMANDS.GetAccount(
-                        name, json=True, is_verbose=False)
-            owner_key = account.owner_public()
+                                            name, json=True, is_verbose=False)
+            owner_key = account.owner_key_public
             if owner_key:
                 sentence = sentence.replace(
                     owner_key, account_object_name + "@owner")
 
-            active_key = account.active_public()
+            active_key = account.active_key_public
             if active_key:
                 sentence = sentence.replace(
                     active_key, account_object_name + "@active")        
@@ -117,7 +60,7 @@ def object_names_2_accout_names(sentence):
     Args:
         sentence (str): The message to be translated.
     """
-    map_ = account_map()
+    map_ = account_map(do_not_fail=True)
     for name in map_:
         account_object_name = map_[name]
         sentence = sentence.replace(account_object_name, name)
@@ -173,12 +116,11 @@ def reset(
     prefix=None):
     """ Start clean an EOSIO node.
 
+    With the local testnet, the procedure addresses problems with
+    instabilities of the EOSIO ``nodeos`` executable: it happens that it is
+    stuck on clean restart (perhaps with the WSL system only).
 
-    With the local testnet, the procedure addresses problems with 
-    instabilities of the EOSIO ``nodeos`` executable: it happens that it stucks 
-    on clean restart (perhaps with the WSL system only). 
-
-    The issue is patched with one subsequent restart if the first attempt 
+    The issue is patched with one subsequent restart if the first attempt
     fails. However, it happens that both launches fail, rarely due to 
     instability of ``nodeos``, sometimes because of misconfiguration.
 
@@ -221,31 +163,70 @@ def reset(
             If the file is set with the configuration, and in the same time 
             it is set with this argument, the argument setting prevails. 
     """
-
     import eosfactory.shell.account as account
     account.reboot()
 
-    def verified_testnet(url):
-        setup.set_nodeos_address(url, prefix)
-        is_testnet_active()
-        clear_testnet_cache()
-        keosd_start()
-
-    if testnet and isinstance(testnet, str):
-        testnet = testnet_module.get_testnet(testnet, raise_exception=False)
-
+    if testnet:
+        if isinstance(testnet, str):
+            testnet = testnet_module.get_testnet(testnet)
+        url = testnet.url
     if url:
-        verified_testnet(url)
-    elif testnet and testnet.url:
-        return verified_testnet(testnet.url)
-    else:
-        if not setup.set_local_nodeos_address_if_none():
-            logger.INFO("""
-            No local nodeos is set: {}
-            """.format(setup.nodeos_address()))
-            keosd_start()    
+        setup.set_nodeos_address(url, prefix)
+    
+    setup.set_local_nodeos_address_if_none()
 
-    node_start(clear=True, nodeos_stdout=nodeos_stdout)
+    def remove_all_persistance_files():
+        if setup.file_prefix():
+            logger.TRACE("""
+            Removing testnet cache for prefix `{}`
+            """.format(setup.file_prefix()))
+
+            teos.keosd_kill() # otherwise the manager may protects the wallet files
+            wallet_dir = config.keosd_wallet_dir()
+            files = os.listdir(wallet_dir)
+            try:
+                for file in files:
+                    if file.startswith(setup.file_prefix()):
+                        os.remove(os.path.join(wallet_dir, file))
+            except Exception as e:
+                raise errors.Error("""
+                Cannot remove testnet cache. The error message is:
+                {}
+                """.format(str(e)))
+            
+            logger.TRACE("""
+            Testnet cache successfully removed.
+            """)
+
+    if is_local_testnet():
+        remove_all_persistance_files()
+        node_start(clear=True, nodeos_stdout=nodeos_stdout)
+    else:
+        user_response = input(
+            logger.WARNING("""
+WARNING: The ``reset`` function will remove all persistance files associated 
+with the current testnet {}, namely: 
+the default wallet, object name map, password map.
+Moreover, the testnet will be lost if it does not include private keys. 
+
+A testnet object includes private keys if it is created with the command 
+``python3 -m eosfactory.register_testnet`` with `-p` switch.
+
+Do you want to continue? Enter Y to continue or anything else to stop <<<"""\
+    .format(setup.nodeos_address())
+            ) + " "
+        )
+
+        if not user_response == "Y":
+            raise errors.Error("User's stop.")
+
+        is_testnet_active() # Throws an error if not.
+        logger.INFO("""
+            Non-local nodeos is set: {}
+            """.format(setup.nodeos_address()))
+        remove_all_persistance_files()
+
+    keosd_start()
 
 
 def resume(testnet=None, url=None, nodeos_stdout=None, prefix=None):
@@ -260,25 +241,27 @@ def resume(testnet=None, url=None, nodeos_stdout=None, prefix=None):
             If the file is set with the configuration, and in the same time 
             it is set with this argument, the argument setting prevails. 
     """
-    def verified_testnet(url):
-        setup.set_nodeos_address(url, prefix)
-        is_testnet_active()
-        keosd_start()
-
-    if testnet and isinstance(testnet, str):
-        testnet = testnet_module.get_testnet(testnet, raise_exception=False)
-
+    import eosfactory.shell.account as account
+    account.reboot()
+    
+    if testnet:
+        if isinstance(testnet, str):
+            testnet = testnet_module.get_testnet(testnet)
+        url = testnet.url
     if url:
-        verified_testnet(url)
-    elif testnet and testnet.url:
-        verified_testnet(testnet.url)
-    else:
-        if not setup.set_local_nodeos_address_if_none():   
-            logger.INFO("""
-                Not local nodeos is set: {}
-            """.format(setup.nodeos_address()))
+        setup.set_nodeos_address(url, prefix)
+    
+    setup.set_local_nodeos_address_if_none()
+
+    if is_local_testnet():
         node_start(nodeos_stdout=nodeos_stdout)
-        keosd_start()
+    else:
+        is_testnet_active() # Throws an error if not.
+        logger.INFO("""
+            Non-local nodeos is set: {}
+            """.format(setup.nodeos_address()))
+
+    keosd_start()
     
 
 def stop():
@@ -295,12 +278,11 @@ def is_testnet_active(throw_error=True):
     head_block = 0
     try:
         head_block = GET_COMMANDS.GetInfo(is_verbose=False).head_block
-    except:
-        if not throw_error:
-            return ""
-        raise errors.Error("""
-        The {} testnet @ {} does not respond.
-        """.format(domain, setup.nodeos_address()))
+    except Exception as ex:
+        if throw_error:
+            raise errors.Error(str(ex))
+        else:
+             return ""
     
     logger.INFO("""
     {} testnet is active @ {}.
@@ -328,68 +310,49 @@ Bash command {} does not result in a process.
     """.format(cl))
 
 
-def account_map():
-    """Return json account map.
+def account_map(do_not_fail=False): # pylint: disable=missing-docstring
+    # """Return json account map.
 
-    Attempt to open the account map file named ``setup.ACCOUNT_MAP``, located 
-    in the wallet directory ``config.keosd_wallet_dir()``, to return its json 
-    contents. If the file does not exist, return the empty json.
+    # Attempt to open the account map file named ``setup.ACCOUNT_MAP``, located 
+    # in the wallet directory ``config.keosd_wallet_dir()``, to return its json 
+    # contents. If the file does not exist, return the empty json.
+    # """
 
-    If the file is corrupted, offer editing the file with the ``nano`` linux 
-    editor. Return ``None`` if the the offer is rejected.
-    """
-    wallet_dir_ = config.keosd_wallet_dir(raise_error=False)
-    if not wallet_dir_:
-        return {}
-    
-    path = os.path.join(wallet_dir_, setup.ACCOUNT_MAP)
-    while True:
-        try: # whether the setup map file exists:
-            with open(path, "r") as input_file:
-                return json.load(input_file)
+    exception = None
+    try:
+        with open(os.path.join(
+                                config.keosd_wallet_dir(),
+                                setup.ACCOUNT_MAP), "r") as _:
+                map_ = json.load(_)
+    except Exception as ex: # pylint: disable=broad-except
+        exception = ex
 
-        except Exception as ex: # pylint: disable=broad-except
-            if isinstance(ex, FileNotFoundError):
-                return {}
+    if exception:
+        if do_not_fail:
+            return {}
+        if isinstance(exception, FileNotFoundError):
+            return {}
 
-            logger.OUT("""
-            The account mapping file is misformed. The error message is:
-            {}
-            
-            Do you want to edit the file?
-            """.format(str(ex)))
-                    
-            answer = input("y/n <<< ")
-            if answer == "y":
-                setup.edit_account_map()
-                continue
-            else:
-                raise errors.Error("""
-Use the function 'manager.edit_account_map()'
-or the corresponding method of any object of the 'eosfactory.wallet.Wallet` 
-class to edit the file.
-                """)                              
+    return map_
 
 
 def data_json(data): # pylint: disable=missing-docstring
-    class Encoder(json.JSONEncoder):
-        """Redefine the method 'default'.
-        """
+    class Encoder(json.JSONEncoder): # pylint: disable=missing-docstring
+        # """Redefine the method 'default'.
+        # """
         def default(self, o): # pylint: disable=method-hidden
             if isinstance(o, interface.Account):
                 return repr(o)
-            else:
-                return json.JSONEncoder.default(self, o)
+            return json.JSONEncoder.default(self, o)
 
     if not data:
         return "{}"
 
     data_json_ = data
-    if isinstance(data, dict) or isinstance(data, list):
+    if isinstance(data, (dict, list)):
         data_json_ = json.dumps(data, cls=Encoder)
     else:
         if isinstance(data, str):
             data_json_ = re.sub(r"\s+|\n+|\t+", " ", data)
             data_json_ = object_names_2_accout_names(data_json_)
     return data_json_
-

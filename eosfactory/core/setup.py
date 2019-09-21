@@ -22,6 +22,8 @@ import eosfactory.core.errors as errors
 
 
 WALLET_DEFAULT_NAME = "default"
+WALLET_PSWD_FILE_EXT = ".psw"
+WALLET_SAVE_PASSWORD = True
 IS_PRINT_COMMAND_LINES = False
 IS_SAVE_COMMAND_LINES = False
 COMMAND_LINE_FILE = "command_lines.txt"
@@ -32,20 +34,23 @@ IS_TRANSLATING = True
 IS_LOCAL_ADDRESS = False
 
 ACCOUNT_MAP = None
-PASSWORD_MAP = None
 
 __NODEOS_ADDRESS = None
 __FILE_PREFIX = None
 __INTERFACE_PACKAGE = None
+__LOCAL_ADDRESS = "http://" + config.http_server_address()
 
 
 def set_local_nodeos_address_if_none():
     """Set address of the local testnet.
 
     It is called just before a request is to be send to a testnet. The address of the testnet can be then set or not; if not, the locall testnet address is assumed.
+
+    Returns:
+        (bool): ``True`` if the address is local
     """
     if not nodeos_address():
-        set_nodeos_address("http://" + config.http_server_address())
+        set_nodeos_address(__LOCAL_ADDRESS)
         global IS_LOCAL_ADDRESS
         IS_LOCAL_ADDRESS = True
 
@@ -56,10 +61,13 @@ def set_is_eosjs(is_lt=True):
     """Determine whether to use ``eosjs`` interface rathert than ``cleos`` one."""
 
     global __INTERFACE_PACKAGE
+    global WALLET_PSWD_FILE_EXT
     if is_lt:
         __INTERFACE_PACKAGE = config.EOSJS_PACKAGE
+        WALLET_PSWD_FILE_EXT = ".eosfpsw"
     else:
         __INTERFACE_PACKAGE = config.CLEOS_PACKAGE
+        WALLET_PSWD_FILE_EXT = ".psw"
 
 
 def interface_package():
@@ -114,18 +122,9 @@ def set_nodeos_address(address, prefix=None):
     """
 
     global __NODEOS_ADDRESS
-    if address:
-        __NODEOS_ADDRESS = address
-
-    if not __NODEOS_ADDRESS:
-        print("""
-ERROR in setup.set_nodeos_address(...)!
-nodeos address is not set.
-        """)
-        return
-
-    address = __NODEOS_ADDRESS
-    p = url_prefix(address)
+    __NODEOS_ADDRESS = address if address else __LOCAL_ADDRESS
+        
+    p = url_prefix(__NODEOS_ADDRESS)
 
     if prefix:
         p = prefix + "_" + p
@@ -133,12 +132,10 @@ nodeos address is not set.
     global __FILE_PREFIX
     __FILE_PREFIX = p
 
-    global ACCOUNT_MAP
-    ACCOUNT_MAP = __FILE_PREFIX + "accounts.json"
-    global PASSWORD_MAP
-    PASSWORD_MAP = __FILE_PREFIX + "passwords.json"
     global WALLET_DEFAULT_NAME
     WALLET_DEFAULT_NAME = __FILE_PREFIX + "default"
+    global ACCOUNT_MAP
+    ACCOUNT_MAP = __FILE_PREFIX + "accounts.json"
 
 
 def file_prefix():
@@ -200,34 +197,29 @@ def read_map(file_name, text_editor="nano"):
                     """, translate=False)                    
 
 def save_account_map(map_):
-    """Save a file with the mapping between native account names and account object names.
-    
-    This function is used internally.
-    """
-
+    # """Save the account mapping file.
+    # """
     save_map(map_, ACCOUNT_MAP)
 
 
-def edit_account_map():
+def edit_account_map(nodeos_address=None, prefix=None, text_editor="nano"):
     """Edit the mapping between native account names and account object names.
-    
-    This function is used internally.
     """
-
-    edit_map(ACCOUNT_MAP)
+    if not nodeos_address:
+        edit_map(ACCOUNT_MAP)
+    else:
+        p = url_prefix(nodeos_address)
+        if prefix: p = prefix + "_" + p
+        edit_map(p + "accounts.json", text_editor)
 
 
 def save_map(map_, file_name):
-    """This function is used internally."""
-    
     map_ = json.dumps(map_, indent=3, sort_keys=True)
     with open(os.path.join(config.keosd_wallet_dir(), file_name), "w") as out:
         out.write(map_)
 
 
 def edit_map(file_name, text_editor="nano"):
-    """This function is used internally."""
-
-    utils.spawn([text_editor, os.path.join(
+    import subprocess
+    subprocess.run([text_editor, os.path.join(
                                     config.keosd_wallet_dir(), file_name)])
-    read_map(file_name, text_editor)

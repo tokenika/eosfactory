@@ -153,11 +153,12 @@ class Contract(ContractBuilder):
             permission = self.permission
         if dont_broadcast is None:
             dont_broadcast = self.dont_broadcast
+        result = None
         try:
             result = SET_COMMANDS.SetContract(
                 self.account, self.contract_dir, 
                 self.wasm_file, self.abi_file,
-                False, 
+                False,
                 permission, self.expiration_sec, 
                 self.skip_sign, dont_broadcast, self.force_unique,
                 self.max_cpu_usage, self.max_net_usage,
@@ -166,31 +167,39 @@ class Contract(ContractBuilder):
                 is_verbose=False,
                 json=True)
 
-        except errors.LowRamError as e:
+        except errors.ContractRunningError as ex:
+            logger.INFO("""
+            Contract is already running this version of code.
+            """)
+
+        except errors.LowRamError as ex:
             logger.TRACE("""
             * RAM needed is {}.kByte, buying RAM {}.kByte.
             """.format(
-                e.needs_kbyte,
-                e.deficiency_kbyte))
+                ex.needs_kbyte,
+                ex.deficiency_kbyte))
 
-            buy_ram_kbytes = str(
-                e.deficiency_kbyte + 1)
+            ram_kbytes = str(
+                ex.deficiency_kbyte + 1)
             if not payer:
                 payer = self.account
 
-            payer.buy_ram(buy_ram_kbytes, self.account, buy_ram_bytes=True)
-        
-            result = SET_COMMANDS.SetContract(
-                self.account, self.contract_dir, 
-                self.wasm_file, self.abi_file,
-                False, 
-                permission, self.expiration_sec, 
-                self.skip_sign, dont_broadcast, self.force_unique,
-                self.max_cpu_usage, self.max_net_usage,
-                self.ref_block,
-                self.delay_sec,
-                is_verbose=False,
-                json=True)
+            try:
+                payer.buy_ram(self.account, ram_kbytes=ram_kbytes)
+            
+                result = SET_COMMANDS.SetContract(
+                    self.account, self.contract_dir, 
+                    self.wasm_file, self.abi_file,
+                    False,
+                    permission, self.expiration_sec, 
+                    self.skip_sign, dont_broadcast, self.force_unique,
+                    self.max_cpu_usage, self.max_net_usage,
+                    self.ref_block,
+                    self.delay_sec,
+                    is_verbose=False,
+                    json=True)
+            except errors.LowRamError as ex:
+                raise errors.Error(str(ex))
 
         logger.INFO("""
         * Contract {} 

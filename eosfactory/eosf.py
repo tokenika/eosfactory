@@ -48,11 +48,11 @@ Contract = contract.Contract
 ContractBuilder = contract.ContractBuilder
 project_from_template = teos.project_from_template
 
-reboot = manager.reboot
 reset = manager.reset
 resume = manager.resume
 stop = manager.stop
 info = manager.is_testnet_active
+is_local_testnet = manager.is_local_testnet
 
 Testnet =  testnet_module.Testnet
 get_testnet =  testnet_module.get_testnet

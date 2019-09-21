@@ -134,7 +134,7 @@ def public_key(private_key):
     
     ((private_key) => {
         public_key = {key_public: ecc.privateToPublic(private_key)}
-        console.log(JSON.stringify(public_key))   
+        console.log(JSON.stringify(public_key))
     })('%s')
         """ % (private_key)).json["key_public"]
 
@@ -181,7 +181,7 @@ def open_wallet(wallet, is_verbose=True):
 
 def lock(wallet, is_verbose=True):
     name = interface.wallet_arg(wallet)
-    if _OPEN_WALLETS[name]:
+    if name in _OPEN_WALLETS:
         _OPEN_WALLETS[name].cipher_suite = None
     else:
         raise errors.Error("""
@@ -277,7 +277,7 @@ def import_key(wallet, key, is_verbose=True):
 
     ((private_key) => {
         public_key = {key_public: ecc.privateToPublic(private_key)}
-        console.log(JSON.stringify(public_key))   
+        console.log(JSON.stringify(public_key))
     })('%s')
         """ % (key_private)).json["key_public"]
 
@@ -315,7 +315,7 @@ def remove_key(key, is_verbose=True):
                 public_keys[i] = pair
             }
 
-            console.log(JSON.stringify(public_keys))   
+            console.log(JSON.stringify(public_keys))
         })(%s)
         """ % private_keys_).json
 
@@ -348,7 +348,7 @@ def keys(wallet=None, is_verbose=True):
             public_keys[i] = ecc.privateToPublic(keys[i])
         }
 
-        console.log(JSON.stringify(public_keys))   
+        console.log(JSON.stringify(public_keys))
     })(%s)
     """ % (private_keys_)).json
 

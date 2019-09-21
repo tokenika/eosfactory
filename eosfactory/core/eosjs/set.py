@@ -39,6 +39,9 @@ class SetContract(base_commands.Command):
             is_verbose=True,
             json=True):
 
+        account = interface.account_arg(account)
+        expiration_sec = expiration_sec if expiration_sec else 30
+        permission = base_commands.permission_str(permission, account)
         files = common.contract_is_built(contract_dir, wasm_file, abi_file)
         if not files:
             raise errors.Error("""
@@ -49,13 +52,7 @@ class SetContract(base_commands.Command):
         self.contract_path_absolute = files[0]
         wasm_file = files[1]
         abi_file = files[2]
-
-        self.account_name = interface.account_arg(account)
-        if not permission is None:
-            permission = interface.permission_arg(permission)
-        if not expiration_sec:
-            expiration_sec = 30
-
+        
         # if clear:
         #     args.append("--clear")
         # you should first empty any tables out before setting the wasm code to an empty array.
@@ -136,8 +133,8 @@ class SetContract(base_commands.Command):
             """ % {
                 "wasm_file": wasm_file,
                 "abi_file": abi_file,
-                "account_name": self.account_name,
-                "permissions": base_commands.permission_str(permission, self.account_name),
+                "account_name": account,
+                "permissions": permission,
                 "expiration_sec": expiration_sec,
                 "broadcast": "false" if dont_broadcast else "true",
                 "sign": "false" if skip_sign else "true",
@@ -147,7 +144,7 @@ class SetContract(base_commands.Command):
         self.printself()
 
 
-
+# https://github.com/jcalfee/eosjs-ecc-compression-tweak/blob/master/index.html#L162-L167
 class SetAccountPermission(base_commands.Command):
     """Set parameters dealing with account permissions.
 
@@ -280,7 +277,7 @@ class SetAccountPermission(base_commands.Command):
             self.console = self.json["processed"]["action_traces"][0]["console"]
             self.data = self.json["processed"]["action_traces"][0]["act"]["data"]
 
-        self.printself()    
+        self.printself()
 
 
 class SetActionPermission(base_commands.Command):

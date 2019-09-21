@@ -1,3 +1,4 @@
+import eosfactory.core.errors as errors
 import eosfactory.core.cleos.base as base_commands
 import eosfactory.core.interface as interface
 
@@ -6,7 +7,7 @@ class SystemNewaccount(interface.Account, base_commands.Command):
     """ Create an account, buy ram, stake for bandwidth for the account.
 
     Args:
-        creator (str or .interface.Account): The account creating 
+        creator (str or .interface.Account): The account creating
             the new account.
         name: The name of the new account.
         owner_key (str): If set, the owner public key for the new account, 
@@ -15,12 +16,12 @@ class SystemNewaccount(interface.Account, base_commands.Command):
             otherwise random.
         stake_net (int): The amount of EOS delegated for net bandwidth.
         stake_cpu (int): The amount of EOS delegated for CPU bandwidth.
-        buy_ram (str): The amount of RAM bytes to purchase for the new 
+        buy_ram (str): The amount of RAM bytes to purchase for the new
             account in tokens.
-        buy_ram_bytes (int): The amount of RAM bytes to purchase for the new
-            account in bytes.            
-        buy_ram_kbytes (int): The amount of RAM bytes to purchase for the new 
-            account in kibibytes (KiB)
+        ram_bytes (int): The amount of RAM bytes to purchase for the new
+            account in bytes.
+        ram_kbytes (int): The amount of RAM bytes to purchase for the new
+            account in kbytes (KiB)
         transfer (bool): Transfer voting power and right to unstake EOS to receiver.
 
     See definitions of the remaining parameters: \
@@ -28,38 +29,39 @@ class SystemNewaccount(interface.Account, base_commands.Command):
     """
     def __init__(
             self, creator, name, owner_key, active_key,
-            stake_net=0, stake_cpu=0,
+            stake_net=None, stake_cpu=None,
             permission=None,
-            buy_ram_bytes=0, buy_ram_kbytes=0, buy_ram=None,
+            ram_bytes=0, ram_kbytes=0, buy_ram=None,
             transfer=False,
-            expiration_sec=None, 
+            expiration_sec=None,
             skip_sign=0, dont_broadcast=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
             delay_sec=0,
             is_verbose = 1
             ):
-        
-        if name is None: 
+
+        if name is None:
             name = base_commands.account_name()
         interface.Account.__init__(self, name, owner_key, active_key)
 
         args = [
-            interface.account_arg(creator), self.name, 
+            interface.account_arg(creator), self.name,
                 interface.key_arg(
-                            owner_key, is_owner_key=True, is_private_key=False), 
-                interface.key_arg(active_key, is_owner_key=False, is_private_key=False)
-            ]
+                            owner_key, is_owner_key=True, is_private_key=False),
+                interface.key_arg(
+                        active_key, is_owner_key=False, is_private_key=False)
+        ]
 
         args.append("--json")
-        if stake_net:
+        if not stake_net is None:
             args.extend(["--stake-net", "{} EOS".format(stake_net)])
-        if stake_cpu:
+        if not stake_cpu is None:
             args.extend(["--stake-cpu", "{} EOS".format(stake_cpu)])
-        if buy_ram_bytes:
-            args.extend(["--buy-ram-bytes", str(buy_ram_bytes)])
-        if buy_ram_kbytes:
-            args.extend(["--buy-ram-kbytes", str(buy_ram_kbytes)])
+        if ram_bytes:
+            args.extend(["--buy-ram-bytes", str(ram_bytes)])
+        if ram_kbytes:
+            args.extend(["--buy-ram-kbytes", str(ram_kbytes)])
         if buy_ram:
             args.extend(["--buy-ram", str(buy_ram)])
         if transfer:
@@ -98,11 +100,8 @@ class SystemNewaccount(interface.Account, base_commands.Command):
         return self.name
             
     def __str__(self):
-        if self.json:
-            import eosfactory.core.str.actions
-            return str(eosfactory.core.str.actions.Actions(self.json))
-
-        return self.out_msg
+        import eosfactory.core.str.actions
+        return str(eosfactory.core.str.actions.Actions(self.json))
 
 
 class BuyRam(base_commands.Command):
@@ -111,36 +110,41 @@ class BuyRam(base_commands.Command):
     Args:
         payer (str or .interface.Account): The account paying for RAM.
         receiver (str or .interface.Account): The account receiving bought RAM.
-        amount (int): The amount of EOS to pay for RAM, or number of kbytes 
-            of RAM if ``buy_ram_kbytes`` is set.
-        buy_ram_bytes (bool): If set, buy ram in number of bytes,
-        buy_ram_kbytes (bool): If set, buy ram in number of kbytes.
+        amount (str): The amount of tokens to pay for RAM.
+        ram_bytes (int): If set, buy ram in number of bytes.
+        ram_kbytes (int): If set, buy ram in number of kbytes.
 
     See definitions of the remaining parameters: \
     :func:`.cleos.base.common_parameters`.
     """
     def __init__(
-            self, payer, receiver, amount,
-            buy_ram_bytes=False, buy_ram_kbytes=False,
-            expiration_sec=None, 
-            skip_sign=0, dont_broadcast=0, force_unique=0,
-            max_cpu_usage=0, max_net_usage=0,
-            ref_block=None,
-            delay_sec=0,
-            is_verbose=1
-            ):
+                self, payer, receiver,
+                amount=None, ram_bytes=0, ram_kbytes=0,
+                expiration_sec=None, 
+                skip_sign=0, dont_broadcast=0, force_unique=0,
+                max_cpu_usage=0, max_net_usage=0,
+                ref_block=None,
+                delay_sec=0,
+                is_verbose=1
+        ):
 
+        if amount and (ram_bytes or ram_kbytes) or (ram_bytes and ram_kbytes):
+            errors.Error("""
+            Only one of arguments [``amount``, ``ram_bytes``, ``ram_kbytes``] 
+            can be set.
+            """)
 
-        payer = interface.account_arg(payer)
-        receiver = interface.account_arg(receiver)
-        amount = str(amount)
-
-        args = [payer, receiver, amount]
-
-        if buy_ram_bytes:
+        args = [interface.account_arg(payer), interface.account_arg(receiver)]
+        args.append("--json")
+        if amount:
+            args.append(str(amount))
+        elif ram_bytes:
+            args.append(str(ram_bytes))
             args.extend(["--bytes"])
-        if buy_ram_kbytes:
+        else:
+            args.append( str(ram_kbytes))
             args.extend(["--kbytes"])
+        
         if expiration_sec:
             args.extend(["--expiration", str(expiration_sec)])
         if skip_sign:
@@ -159,9 +163,14 @@ class BuyRam(base_commands.Command):
             args.extend(["--delay-sec", delay_sec])
 
         base_commands.Command.__init__(
-            self, args, "system", "buyram", is_verbose)
+                                    self, args, "system", "buyram", is_verbose)
+        self.printself(is_verbose)
 
-    
+    def __str__(self):
+        import eosfactory.core.str.actions
+        return str(eosfactory.core.str.actions.Actions(self.json))
+
+
 class DelegateBw(base_commands.Command):
     """Delegate bandwidth.
 
@@ -196,8 +205,8 @@ class DelegateBw(base_commands.Command):
             payer, receiver,
             "{} EOS".format(stake_net_quantity),
             "{} EOS".format(stake_cpu_quantity),
-            "--expiration", str(expiration_sec),
-            "--json"]
+            "--expiration", str(expiration_sec)]#,
+            #"--json"]
 
         if not permission is None:
             p = interface.permission_arg(permission)

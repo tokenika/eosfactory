@@ -12,6 +12,14 @@ Note that the declarations
 are abundant: they are in place to satisfy the linter, whu complains about 
 dynamically created objects.
 """
+
+import importlib
+
+import eosfactory.core.setup as setup
+# Set the interface configuration (CLEOS or EOSJS):
+# setup.set_is_eosjs(False)
+setup.set_is_eosjs()
+
 import unittest
 from eosfactory.eosf import *
 
@@ -33,7 +41,7 @@ class Test(unittest.TestCase):
         SCENARIO("""
         Create a contract from template, then build and deploy it.
         """)
-        reset()
+        resume()
         create_master_account("MASTER")
 
         COMMENT("""

@@ -32,7 +32,6 @@ const rpc = new JsonRpc("%(endpoint)s", { fetch });
 SIG_PROVIDER = \
     "const signatureProvider = new JsSignatureProvider([/*private keys*/]);"
 
-
 def config_api():
     code = utils.heredoc("""
 const { Api, JsonRpc, RpcError } = require("eosjs");
@@ -42,10 +41,10 @@ const rpc = new JsonRpc("%(endpoint)s", { fetch });
 const { TextEncoder, TextDecoder } = require("util");
 %(signatureProvider)s
 const api = new Api({ 
-    rpc, 
-    signatureProvider, 
-    textDecoder: new TextDecoder, 
-    textEncoder: new TextEncoder 
+    rpc,
+    signatureProvider,
+    textDecoder: new TextDecoder,
+    textEncoder: new TextEncoder
 });
     """)
 
@@ -59,7 +58,7 @@ def permission_str(permission, account, default=None):
     permission_json = []
     if not permission and not default:
         permission_json.append(
-                            {"actor": account, 
+                            {"actor": account,
                             "permission": interface.Permission.ACTIVE.value})
     else:
         if not isinstance(permission, list):
@@ -108,7 +107,7 @@ class Command():
         js = js.replace(
             SIG_PROVIDER, 
             "const signatureProvider = new JsSignatureProvider(\n{}\n);".format(
-                json_module.dumps(wm.private_keys(is_verbose=False), indent=4)))        
+                json_module.dumps(wm.private_keys(is_verbose=False), indent=4)))
 
         cl.append(js)
 
@@ -125,12 +124,11 @@ class Command():
             for word in error_key_words:
                 if word in self.out_msg_details:
                     self.err_msg = self.out_msg_details
-                    error_msg = self.err_msg.split("\n")[0]
-                    pattern = re.compile(r".+FetchError:")
-                    if re.findall(pattern, error_msg):
-                        self.err_msg = error_msg.replace(
-                                        re.findall(pattern, error_msg)[0], "")
-                    
+                    pattern = re.compile(r".*Error:\s(.*)")
+                    if re.findall(pattern, self.err_msg):
+                        self.err_msg = re.findall(pattern, self.err_msg)[0]
+                    else:
+                        self.err_msg = self.err_msg.split("\n")[0]
                     self.out_msg_details = None
                     break
 
@@ -233,8 +231,8 @@ class GetAccount(interface.Account, Command):
         json: The json representation of the object.
     """
     def __init__(self, account, json=False, is_verbose=True):
-        interface.Account.__init__(self, interface.account_arg(account))
-        self.as_json = json
+
+        interface.Account.__init__(self, account)
         
         Command.__init__(self, config_rpc(),
             """
@@ -249,15 +247,15 @@ class GetAccount(interface.Account, Command):
             if permission["required_auth"]["keys"]:
                 key = permission["required_auth"]["keys"][0]["key"]
                 if permission["perm_name"] == "owner":
-                    self.owner_key = interface.Key(key, None)
+                    self.owner_key_public = key
                 if permission["perm_name"] == "active":
-                    self.active_key = interface.Key(key, None)
+                    self.active_key_public = key
 
         self.printself()
 
     def __str__(self):
         import eosfactory.core.str.get_account as get_account_str
-        return str(get_account_str.GetAccount(self.json, self.as_json))
+        return str(get_account_str.GetAccount(self.json))
 
 
 class GetTransaction(Command):
@@ -276,12 +274,12 @@ class GetTransaction(Command):
         json: The json representation of the object.
     """
     def __init__(self, transaction_id, block_num_hint=0, is_verbose=True):
-        Command.__init__(self, 
+
+        Command.__init__(self,
             """
         (async (is, block_num_hint) => {
             result = await rpc.history_get_transaction(is, block_num_hint)
             console.log(JSON.stringify(result))
-
         })("%s", %d)
             """.format(transaction_id, block_num_hint), is_verbose)
 
@@ -303,6 +301,11 @@ class WalletCreate(wm.Wallet):
             EOSIO cleos command.
         is_created (bool): True, if the wallet created.
     """
+    @staticmethod
+    def exists(name):
+        """Does the wallet file exist?"""
+        return os.path.exists(wm.wallet_file(name))
+
     def __init__(self, name=None, password="", is_verbose=True):
         wm.Wallet.__init__(self, name, password, is_verbose)
 
@@ -357,18 +360,8 @@ class WalletRemove_key:
 class WalletKeys:
     """List of public keys from all unlocked wallets.
 
-    - **parameters**::
-
-        is_verbose: If ``False`` do not print. Default is ``True``.
-
-    - **parameters**::
-
-        json: The json representation of the object.
-        is_verbose: If set, print output.
-
-    - **attributes**::
-
-        json: The json representation of the object.
+    Args:
+        is_verbose (bool): If ``False`` do not print. Default is ``True``.
     """
     def __init__(self, is_verbose=True):
         self.json = wm.keys(None, is_verbose)
@@ -395,7 +388,7 @@ class WalletPrivateKeys:
 
         json: The json representation of the object.
     """
-    def __init__(self, is_verbose=True):
+    def __init__(self, wallet, password, is_verbose=True):
         self.json = wm.private_keys(None, is_verbose)
 
     def __str__(self):
@@ -503,7 +496,7 @@ class GetTable(Command):
         binary: Return the value as BINARY rather than using abi to 
             interpret as JSON
         limit: The maximum number of rows to return.
-        key: The name of the key to index by as defined by the abi, 
+        key: The name of the key to index by as defined by the abi,
             defaults to primary key.
         lower: JSON representation of lower bound value of key, 
             defaults to first.
@@ -520,14 +513,8 @@ class GetTable(Command):
             limit=10, key="", lower="", upper="",
             is_verbose=True
             ):
-        self.name = interface.account_arg(account)
-
-        if not scope:
-            scope=self.name
-        try:
-            scope_name = scope.name
-        except:
-            scope_name = scope
+        account = interface.account_arg(account)
+        scope = interface.account_arg(scope) if scope else account
 
         Command.__init__(self, config_rpc(), 
         """
@@ -553,12 +540,12 @@ class GetTable(Command):
             %(limit)d, "%(key)s", "%(lower)s", "%(upper)s"
 
         """ % {
-                "code": self.name,
-                "scope": scope_name,
+                "code": account,
+                "scope": scope,
                 "table": "table",
                 "json": "false" if binary else "true",
                 "limit": limit,
-                "key": interface.key_arg(key, is_owner_key=False, is_private_key=False),
+                "key": key,
                 "lower": lower,
                 "upper": upper
             }, is_verbose)
@@ -581,6 +568,7 @@ class CreateKey(interface.Key, Command):
     def __init__(
                     self, key_public=None, key_private=None, r1=False, 
                     is_verbose=True):
+
         interface.Key.__init__(self, key_public, key_private)
 
         if self.key_public or self.key_private:
@@ -634,8 +622,8 @@ class CreateAccount(interface.Account, Command):
             self, creator, name, owner_key, 
             active_key=None,
             permission=None,
-            expiration_sec=None, 
-            skip_sign=0, 
+            expiration_sec=None,
+            skip_sign=0,
             dont_broadcast=0,
             force_unique=0,
             max_cpu_usage=0,
@@ -648,6 +636,9 @@ class CreateAccount(interface.Account, Command):
         if not name: 
             name = account_name()
         interface.Account.__init__(self, name, owner_key, active_key)
+
+        name = interface.account_arg(name)
+        creator = interface.account_arg(creator)
 
         if not expiration_sec:
             expiration_sec = 30
@@ -713,14 +704,14 @@ class CreateAccount(interface.Account, Command):
                     blocksBehind: %(blocksBehind)d,
                     expireSeconds: %(expiration_sec)d,
                     broadcast: %(broadcast)s,
-                    sign: %(sign)s, 
+                    sign: %(sign)s,
                 }
             );
             console.log(JSON.stringify(result))
         })();
             """ % {
-                "creator": creator, 
-                "name": name, 
+                "creator": creator,
+                "name": name,
                 "owner_key_public": interface.key_arg(
                             owner_key, is_owner_key=True, is_private_key=False),
                 "active_key_public": interface.key_arg(
@@ -780,11 +771,9 @@ class PushAction(Command):
             is_verbose=True,
             json=True
         ):
-        self.account_name = interface.account_arg(account)
-        if not permission is None:
-            permission = interface.permission_arg(permission)
-        if not expiration_sec:
-            expiration_sec = 30
+        account = interface.account_arg(account)
+        expiration_sec = expiration_sec if expiration_sec else 30
+        permission = permission_str(permission, account)
 
         common_parameters(
             force_unique=force_unique,
@@ -822,10 +811,10 @@ class PushAction(Command):
         console.log(JSON.stringify(result))
     })()
             """ % {
-                "account_name": self.account_name,
+                "account_name": account,
                 "action": action,
                 "data": data,
-                "permissions": permission_str(permission, self.account_name),
+                "permissions": permission,
                 "expiration_sec": expiration_sec,
                 "broadcast": "false" if dont_broadcast else "true",
                 "sign": "false" if skip_sign else "true",

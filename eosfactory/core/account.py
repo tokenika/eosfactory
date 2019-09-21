@@ -68,7 +68,9 @@ class GetAccount(BASE_COMMANDS.GetAccount):
             raise errors.Error(str(ex))
 
         self.exists = True
-        if owner_key_private: 
+        self.owner_key = interface.Key(self.owner_key_public, None)
+        self.active_key = interface.Key(self.active_key_public, None)
+        if owner_key_private:
             self.owner_key.key_private = owner_key_private
             self.active_key.key_private = active_key_private
 
@@ -76,14 +78,14 @@ class GetAccount(BASE_COMMANDS.GetAccount):
             * Account *{}* exists in the blockchain.
             """.format(self.name))
 
-    def __str__(self):
+    def __repr__(self):
         return self.name
 
 
 class CreateAccount(BASE_COMMANDS.CreateAccount):
     def __init__(
             self, creator, name, owner_key, 
-            active_key="",
+            active_key=None,
             permission=None,
             expiration_sec=None, 
             skip_sign=0, 
@@ -93,6 +95,7 @@ class CreateAccount(BASE_COMMANDS.CreateAccount):
             max_net_usage=0,
             ref_block=None,
             delay_sec=0):
+        
         BASE_COMMANDS.CreateAccount.__init__(
             self, creator, name, owner_key, active_key, permission,
             expiration_sec, skip_sign, dont_broadcast, force_unique,
@@ -103,21 +106,23 @@ class CreateAccount(BASE_COMMANDS.CreateAccount):
 
 class SystemNewaccount(SYS_COMMANDS.SystemNewaccount):
     def __init__(
-            self, creator, name, owner_key, active_key,
+            self, creator, name, owner_key, 
+            active_key=None,
             stake_net=0, stake_cpu=0,
             permission=None,
-            buy_ram_bytes=0, buy_ram_kbytes=0, buy_ram="",
+            ram_bytes=0, ram_kbytes=0, buy_ram="",
             transfer=False,
             expiration_sec=None, 
             skip_sign=0, dont_broadcast=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
             delay_sec=0):
-            
+
         SYS_COMMANDS.SystemNewaccount.__init__(
             self, creator, name, owner_key, active_key,
-            stake_net, stake_cpu, permission, buy_ram_bytes, buy_ram_kbytes, buy_ram,
+            stake_net, stake_cpu, permission, 
+            ram_bytes, ram_kbytes, buy_ram,
             transfer, expiration_sec, skip_sign, dont_broadcast, force_unique,
-            max_cpu_usage, max_net_usage, ref_block, delay_sec, 
+            max_cpu_usage, max_net_usage, ref_block, delay_sec,
             is_verbose=False)
         

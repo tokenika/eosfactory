@@ -164,7 +164,6 @@ def common_parameters(
     """
 
 
-
 class GetAccount(interface.Account, Command):
     """Retrieve an account from the blockchain.
 
@@ -175,8 +174,8 @@ class GetAccount(interface.Account, Command):
 
     Attributes:
         name (str): The EOSIO name of the account.
-        owner_key (str) The ``owner`` public key.
-        active_key (str) The ``active`` public key.
+        owner_key_public (str) The ``owner`` public key.
+        active_key_public (str) The ``active`` public key.
         json: The json representation of the object.
     """
     def __init__(self, account, json=False, is_verbose=True):
@@ -188,28 +187,22 @@ class GetAccount(interface.Account, Command):
             [self.name, "--json"], 
             "get", "account", is_verbose)
 
-        self.owner_key = None
-        self.active_key = None
+        self.owner_key_public = None
+        self.active_key_public = None
         permissions = self.json["permissions"]
         for permission in permissions:
             if permission["required_auth"]["keys"]:
                 key = permission["required_auth"]["keys"][0]["key"]
                 if permission["perm_name"] == "owner":
-                    self.owner_key = interface.Key(key, None)
+                    self.owner_key_public = key
                 if permission["perm_name"] == "active":
-                    self.active_key = interface.Key(key, None)
-        # else: # if not json
-        #     owner = re.search(r'owner\s+1\:\s+1\s(.*)\n', self.out_msg)
-        #     active = re.search(r'active\s+1\:\s+1\s(.*)\n', self.out_msg)
-        #     if owner and active:
-        #         self.owner_key = interface.Key(owner.group(1), None)
-        #         self.active_key = interface.Key(active.group(1), None)
+                    self.active_key_public = key
 
         self.printself()
 
     def __str__(self):
         import eosfactory.core.str.get_account as get_account_str
-        return str(get_account_str.GetAccount(self.json, self.as_json))
+        return str(get_account_str.GetAccount(self.json))
 
 
 class GetTransaction(Command):
@@ -253,15 +246,27 @@ class WalletCreate(interface.Wallet, Command):
             EOSIO cleos command.
         is_created (bool): True, if the wallet created.
     """
+    @staticmethod
+    def exists(name):
+        """Does the wallet file exist?"""
+        return os.path.exists(os.path.join(
+                                config.keosd_wallet_dir(), name + ".wallet"))
+
     def __init__(self, name="default", password="", is_verbose=True):
         interface.Wallet.__init__(self, name)
         self.password = None
-        
         if not password: # try to create a wallet
-            Command.__init__(
-                self, ["--name", self.name, "--to-console"], 
-                "wallet", "create", is_verbose)
-            self.json["name"] = name
+            try:
+                Command.__init__(
+                    self, ["--name", self.name, "--to-console"], 
+                    "wallet", "create", is_verbose)
+            except errors.WalletAlreadyExistsError as ex:
+                raise errors.Error("""
+            The wallet ``{}`` exists but the password is not set. Possibly, it is
+            not found in a default password file.
+            """.format(self.name))
+
+            self.json["name"] = self.name
             msg = self.out_msg
 
             self.password = msg[msg.find("\"")+1:msg.rfind("\"")]
@@ -269,13 +274,18 @@ class WalletCreate(interface.Wallet, Command):
             self.is_created = True
 
         else: # try to open an existing wallet
-            WalletOpen(name, is_verbose=False)
-            wallet_unlock = WalletUnlock(name, password, is_verbose=False)
+            try:
+                WalletOpen(self.name, is_verbose=False)
+            except Exception as ex:
+                raise errors.Error("""
+            Wallet ``{}`` does not exist.
+            """.format(self.name))
+
+            wallet_unlock = WalletUnlock(self.name, password, is_verbose=False)
             self.json = {} 
-            self.name = name
             self.password = password
             self.is_created = False
-            self.json["name"] = name
+            self.json["name"] = self.name
             self.json["password"] = password
             self.out_msg = "Restored wallet: {}".format(self.name)
 
@@ -386,6 +396,29 @@ class WalletKeys(Command):
 
     def __str__(self):
         out = "Keys in all opened wallets:\n"
+        out = out + str(Command.__str__(self))
+        return out
+
+
+class WalletPrivateKeys(Command):
+    """List of private keys from all unlocked wallets.
+
+    Args:
+        wallet (str or .interface.Wallet): The wallet to remove key from.
+        password (str): The password returned by wallet create.
+        is_verbose (bool): If ``False`` do not print. Default is ``True``.
+    """
+    def __init__(self, wallet, password, is_verbose=True):
+        self.name = interface.wallet_arg(wallet)
+        Command.__init__(
+            self,
+            ["--name", self.name, "--password", password],
+            "wallet", "private_keys", is_verbose)
+
+        self.printself() 
+
+    def __str__(self):
+        out = "Keys in the wallet {}:\n".format(self.name)
         out = out + str(Command.__str__(self))
         return out
 
@@ -503,8 +536,8 @@ class CreateAccount(interface.Account, Command):
     """Create an account, buy ram, stake for bandwidth for the account.
 
     Args:
-        creator (str or .interface.Account): The account creating 
-            the new account.
+        creator (str or .interface.Account): The account creating the new
+            account.
         name: (str) The name of the new account.
         owner_key (str): If set, the owner public key for the new account, 
             otherwise random.
@@ -533,11 +566,11 @@ class CreateAccount(interface.Account, Command):
             name = account_name()
         interface.Account.__init__(self, name)
 
-        self.owner_key = None # private keys
+        self.owner_key = None
         self.active_key = None
         
         if active_key is None:
-            active_key = owner_key        
+            active_key = owner_key
 
         owner_key_public = interface.key_arg(
             owner_key, is_owner_key=True, is_private_key=False)

@@ -37,14 +37,14 @@ def spawn(command_line, error_message='', shell=False, raise_exception=True):
     stdout = None
     stderr = None
     try:
-        p = subprocess.run(
+        proc = subprocess.run(
             command_line,
             shell=shell,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE)
 
-        stdout = p.stdout.decode("ISO-8859-1").strip()
-        stderr = p.stderr.decode("ISO-8859-1").strip()          
+        stdout = proc.stdout.decode("ISO-8859-1").strip()
+        stderr = proc.stderr.decode("ISO-8859-1").strip()
     except Exception as e:
         stderr = str(e)
 
@@ -67,9 +67,11 @@ def spawn(command_line, error_message='', shell=False, raise_exception=True):
     else:
         return (stdout, stderr)
 
+
 UBUNTU = "Ubuntu"
 DARWIN = "Darwin"
 OTHER_OS = None
+
 
 def os_version():
     version = spawn(["uname", "-v"])
@@ -119,7 +121,7 @@ error message:
 
     threading.Thread(target=thread_function).start()
     try:
-        p = subprocess.run(
+        proc = subprocess.run(
             command_line,
             cwd=cwd,
             shell=shell,
@@ -134,9 +136,9 @@ error message:
     stop = True
     time.sleep(PERIOD)
     print()
-    stdout = p.stdout.decode("ISO-8859-1")
-    stderr = p.stderr.decode("ISO-8859-1")
-    returncode = p.returncode
+    stdout = proc.stdout.decode("ISO-8859-1")
+    stderr = proc.stderr.decode("ISO-8859-1")
+    returncode = proc.returncode
 
     if cwd:
         shutil.rmtree(cwd)
@@ -156,14 +158,14 @@ error message:
         print(stdout)
         print(stderr)
 
-    return p
+    return proc
 
 
 def locate(start_dir, partial_path):
     cl = ["find", start_dir, "-wholename", '"*{}"'.format(partial_path)]
-    p = long_process(" ".join(cl), None, False, 
+    proc = long_process(" ".join(cl), None, False, 
                     "locating '{}'".format(partial_path), True)
-    stdout = p.stdout.decode("ISO-8859-1")
+    stdout = proc.stdout.decode("ISO-8859-1")
     if stdout:
         return stdout.strip()
     

@@ -1,3 +1,4 @@
+import eosfactory.core.errors as errors
 import eosfactory.core.eosjs.base as base_commands
 import eosfactory.core.interface as interface
 
@@ -17,9 +18,9 @@ class SystemNewaccount(interface.Account, base_commands.Command):
         stake_cpu (int): The amount of EOS delegated for CPU bandwidth.
         buy_ram (str): The amount of RAM bytes to purchase for the new
             account in tokens.
-        buy_ram_bytes (int): The amount of RAM bytes to purchase for the new
+        ram_bytes (int): The amount of RAM bytes to purchase for the new
             account in bytes.
-        buy_ram_kbytes (int): The amount of RAM bytes to purchase for the new
+        ram_kbytes (int): The amount of RAM bytes to purchase for the new
             account in kibibytes (KiB)
         transfer (bool): Transfer voting power and right to unstake EOS to receiver.
 
@@ -30,7 +31,7 @@ class SystemNewaccount(interface.Account, base_commands.Command):
             self, creator, name, owner_key, active_key,
             stake_net=0, stake_cpu=0,
             permission=None,
-            buy_ram_bytes=0, buy_ram_kbytes=0, buy_ram=None,
+            ram_bytes=0, ram_kbytes=0, buy_ram=None,
             transfer=False,
             expiration_sec=None, 
             skip_sign=0, dont_broadcast=0, force_unique=0,
@@ -40,20 +41,22 @@ class SystemNewaccount(interface.Account, base_commands.Command):
             is_verbose = 1
             ):
         
-        if name is None: 
-            name = base_commands.account_name()
+        name = interface.account_arg(
+                                name if name else base_commands.account_name())
+        creator = interface.account_arg(creator)
+        expiration_sec = expiration_sec if expiration_sec else 30
+        quantity = 0
+        if ram_bytes:
+            quantity = int(ram_bytes)
+        if ram_kbytes:
+            quantity += int(ram_kbytes) * 1024
+
         interface.Account.__init__(self, name, owner_key, active_key)
-
-        if not expiration_sec:
-            expiration_sec = 30
-
-        if buy_ram_kbytes:
-            buy_ram_bytes = buy_ram_kbytes * 1024
 
         # if not permission is None:
         #     p = interface.permission_arg(permission)
         #     for perm in p:
-        #         args.extend(["--permission", perm])            
+        #         args.extend(["--permission", perm])
 
         base_commands.common_parameters(
             force_unique=force_unique,
@@ -164,8 +167,8 @@ class SystemNewaccount(interface.Account, base_commands.Command):
                     },""" % {
                         "creator": creator,
                         "name": name,
-                        "bytes": buy_ram_bytes,
-                    } if buy_ram_bytes else "",
+                        "bytes": quantity,
+                    } if quantity else "",
                 "buyram" : """
                     {
                         account: 'eosio',
@@ -204,17 +207,16 @@ class BuyRam(base_commands.Command):
     Args:
         payer (str or .interface.Account): The account paying for RAM.
         receiver (str or .interface.Account): The account receiving bought RAM.
-        amount (int): The amount of EOS to pay for RAM, or number of kbytes 
-            of RAM if ``buy_ram_kbytes`` is set.
-        buy_ram_bytes (bool): If set, buy ram in number of bytes,
-        buy_ram_kbytes (bool): If set, buy ram in number of kbytes.
+        buy_ram (str): The amount of tokens to pay for RAM
+        ram_bytes (int): If set, buy ram in number of bytes.
+        ram_kbytes (int): If set, buy ram in number of kbytes.
 
     See definitions of the remaining parameters: \
     :func:`.cleos.base.common_parameters`.
     """
     def __init__(
-            self, payer, receiver, amount,
-            buy_ram_bytes=False, buy_ram_kbytes=False,
+            self, payer, receiver,
+            buy_ram=None, ram_bytes=0, ram_kbytes=0,
             expiration_sec=None, 
             skip_sign=0, dont_broadcast=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
@@ -223,12 +225,14 @@ class BuyRam(base_commands.Command):
             is_verbose=1
             ):
 
-        self.payer = interface.account_arg(payer)
-        self.receiver = interface.account_arg(receiver)
-        self.amount = str(amount)
-
-        if buy_ram_kbytes:
-            amount = amount * 1024
+        payer = interface.account_arg(payer)
+        receiver = interface.account_arg(receiver)
+        expiration_sec = expiration_sec if expiration_sec else 30
+        quantity = 0
+        if ram_bytes:
+            quantity = int(ram_bytes)
+        if ram_kbytes:
+            quantity += int(ram_kbytes) * 1024
 
         base_commands.common_parameters(
             force_unique=force_unique,
@@ -278,8 +282,8 @@ class BuyRam(base_commands.Command):
                     },""" % {
                         "payer": payer,
                         "receiver": receiver,
-                        "bytes": amount,
-                    } if buy_ram_bytes or buy_ram_kbytes else "",
+                        "bytes": quantity,
+                    } if quantity else "",
                 "buyram" : """
                     {
                         account: 'eosio',
@@ -298,12 +302,15 @@ class BuyRam(base_commands.Command):
                     },""" % {
                         "payer": payer,
                         "receiver": receiver,
-                        "quant": amount,
-                    } if not (buy_ram_bytes or buy_ram_kbytes) else "",
+                        "quant": buy_ram,
+                    } if buy_ram else "",
             }, is_verbose)
 
-
         self.printself(is_verbose)
+
+    def __str__(self):
+        import eosfactory.core.str.actions
+        return str(eosfactory.core.str.actions.Actions(self.json))        
 
     
 class DelegateBw(base_commands.Command):
@@ -335,6 +342,7 @@ class DelegateBw(base_commands.Command):
 
         payer = interface.account_arg(payer)
         receiver = interface.account_arg(receiver)
+        expiration_sec = expiration_sec if expiration_sec else 30
 
         # if not permission is None:
         #     p = interface.permission_arg(permission)

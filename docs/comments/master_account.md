@@ -99,11 +99,11 @@ MASTER.info()
 And finally, we show how the `MASTER` variable can be used to create other accounts:
 
 ```python
-create_account("CAROL", MASTER, buy_ram_kbytes=8, stake_net=3, stake_cpu=3)
+create_account("CAROL", MASTER, ram_kbytes=8, stake_net=3, stake_cpu=3)
 CAROL.info()
 ```
 
-**NOTE:** You might want to tweak with the extra parameters, i.e. `buy_ram_kbytes`, `stake_net` and `stake_cpu`.
+**NOTE:** You might want to tweak with the extra parameters, i.e. `ram_kbytes`, `stake_net` and `stake_cpu`.
 
 Here is the expected outcome:
 

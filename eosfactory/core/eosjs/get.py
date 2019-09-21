@@ -2,7 +2,6 @@
 import os
 import json
 
-import eosfactory.core.logger as logger
 import eosfactory.core.errors as errors
 import eosfactory.core.interface as interface
 import eosfactory.core.eosjs.base as base_commands
@@ -27,7 +26,7 @@ class GetInfo(base_commands.Command):
             """
     ;(async () => {
         result = await rpc.get_info()
-        console.log(JSON.stringify(result))    
+        console.log(JSON.stringify(result))
     })()
             """, is_verbose)
 
@@ -62,10 +61,11 @@ class GetActions(base_commands.Command):
         is_verbose (bool): If *False* do not print. Default is ``True``.
     """
     def __init__(
-        self, account, pos=None, offset=None, 
+        self, account, pos=None, offset=None,
         json=False, full=False, pretty=False, console=False, is_verbose=True):
 
         account = interface.account_arg(account)
+
         self.as_json = json
         self.full = full
         self.pretty = pretty
@@ -93,7 +93,7 @@ class GetActions(base_commands.Command):
     def __str__(self):
         import eosfactory.core.str.get_actions
         return str(eosfactory.core.str.get_actions.GetActions(
-            self.json, self.as_json, self.full, self.pretty, self.console))
+                                                    self.json, self.console))
 
 
 class GetBlock(base_commands.Command):
@@ -118,7 +118,6 @@ class GetBlock(base_commands.Command):
         (async (block_num_or_id) => {
             result = await rpc.get_block(block_num_or_id)
             console.log(JSON.stringify(result))
-
         })("%s")
                 """ % (block_id), is_verbose)
         else:
@@ -128,7 +127,6 @@ class GetBlock(base_commands.Command):
         (async (block_num_or_id) => {
             result = await rpc.get_block(block_num_or_id)
             console.log(JSON.stringify(result))
-
         })(%d)
                 """ % (block_number), is_verbose)
 
@@ -151,14 +149,15 @@ class GetAccounts(base_commands.Command):
         is_verbose: If set, print output.
     """
     def __init__(self, key, is_verbose=True):
-        
+
+        key = interface.key_arg(key)
+
         try:
             base_commands.Command.__init__(self, base_commands.config_rpc(),
                 """
             (async (public_key) => {
                 result = await rpc.history_get_key_accounts(public_key)
                 console.log(JSON.stringify(result))
-
             })("%s")
                 """ % (interface.key_arg(key, is_owner_key=True, is_private_key=False)),
                 is_verbose=is_verbose)
@@ -194,7 +193,7 @@ class GetCode(base_commands.Command):
             self, account, code="", abi="", 
             wasm=True, is_verbose=True):
 
-        account_name = interface.account_arg(account)
+        account = interface.account_arg(account)
 
         if not wasm:
             raise errors.Error("""
@@ -215,7 +214,7 @@ class GetCode(base_commands.Command):
 
                 console.log(JSON.stringify(retval))
             })()
-            """ % {"accountName": account_name},
+            """ % {"accountName": account},
             is_verbose)
 
         self.json["code_hash"] = "0" * 64
@@ -283,13 +282,8 @@ class GetTable(base_commands.Command):
             is_verbose=True,
             ):
         account = interface.account_arg(account)
-
-        if scope:
-            scope = interface.account_arg(scope)
-        else:
-            scope = account
-        if not index:
-            index = "1"
+        scope = interface.account_arg(scope if scope else account)
+        index = index if index else "1"
 
         if encode_type:
             raise errors.Error(

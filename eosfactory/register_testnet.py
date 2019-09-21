@@ -86,12 +86,12 @@ added to the testnet cache, for example:
 
     parser.add_argument(
                 "url",
-                help="An URL of a public node offering access to the testnet")
+                help="An URL of a public node offering access to the testnet.")
     parser.add_argument(
-                "alias", nargs="?", default=None, help="Testnet object name")
+                "alias", nargs="?", default=None, help="Testnet object name.")
     parser.add_argument(
                         "name", default=None, 
-                        help="Account name. It is random, if not set")
+                        help="Account name. It is random, if not set.")
     parser.add_argument(
         "-a", "--account", nargs=3, help="<name> <owner key> <active key>")
     parser.add_argument(
@@ -113,7 +113,7 @@ added to the testnet cache, for example:
 
     setup.set_nodeos_address(args.url)
     manager.is_testnet_active()
-    import pdb; pdb.set_trace()
+
     master_account = create_master_account(
         None,
         account_name=account_name,
@@ -138,17 +138,14 @@ added to the testnet cache, for example:
 
         testnet_module.testnets()
 
-    # python3 -m eosfactory.register_testnet http://88.99.97.30:38888 jungle -a dgxo1uyhoytn 5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY 5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA
-
 
 if __name__ == '__main__':
     main()
 
 
-# JUNGLE1
+# python3 -m eosfactory.register_testnet http://145.239.133.201:8888 JUNGLE1
 # Account Name: 5jejduh2w2cb
 # Owner Public Key: EOS6LkJUSLgfvzxzbY25L82dSBWobormyqnn1HLrZkGNZ2pWKysM7
 # Active Public Key: EOS5NXvFfWqKyerzGUCjpQ7dmMDhKPsYQrGmSmihFebvXi8uAmVdv
 
-# Owner Private Key: 5KGVA3efMr4rZEWUxWQzD4k11sApFrjYwVYfsVqvBYge1AppHdh
-# Active Private Key: 5KAkkZLZVQbhJL6JnxodcBScgLi1LNv8yEX5LRXaWvXyoH87DK8
+# python3 -m eosfactory.register_testnet http://145.239.133.201:8888 JUNGLE1 -a 5jejduh2w2cb 5KGVA3efMr4rZEWUxWQzD4k11sApFrjYwVYfsVqvBYge1AppHdh 5KAkkZLZVQbhJL6JnxodcBScgLi1LNv8yEX5LRXaWvXyoH87DK8

@@ -801,7 +801,7 @@ class Actions():
                 self.info = self.info + "\n"
             first = False
             self.info = self.info \
-                + "# >>>>>>>>>> %20s <= %-25s\n# %s" % (act["account"], "%s::%s" % (
+                + ">>>>>>>>>> %20s <= %-25s\n    %s" % (act["account"], "%s::%s" % (
                     act["account"], act["name"] + ":"), limit_data(act["data"]))
 
     def __str__(self):
