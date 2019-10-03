@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Pretty output for GetAccount object."""
 
-import json
 import re
+import eosfactory.core.manager as manager
 
 example =\
 {
@@ -209,6 +209,7 @@ class GetAccount():
 
 
     def __init__(self, received_json):
+
         class Asset():
             def __init__(self, value, symbol=None):
                 if not symbol:
@@ -360,6 +361,9 @@ class GetAccount():
                                         format_bytes(received_json["ram_quota"]), 
                                         format_bytes(received_json["ram_usage"])))
 
+        if manager.is_local_testnet():
+            return
+        
         ##########################################################################
         addln("### net bandwidth:")
 

@@ -83,7 +83,7 @@ def test(testnet, reset_testnet):
 
     smart = Contract(HOST, CONTRACT_WORKSPACE)
     smart.build(force=False)
-    import pdb; pdb.set_trace()
+
     if not HOST.is_code():
         smart.deploy(payer=MASTER)
         MASTER.info()

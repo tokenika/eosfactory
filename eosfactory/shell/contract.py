@@ -135,8 +135,7 @@ class Contract(ContractBuilder):
         result = SET_COMMANDS.SetContract(
             self.account, self.contract_dir, 
             self.wasm_file, self.abi_file,
-            True,
-            json=True)
+            True)
             
         self.contract = result
 
@@ -164,8 +163,7 @@ class Contract(ContractBuilder):
                 self.max_cpu_usage, self.max_net_usage,
                 self.ref_block,
                 self.delay_sec,
-                is_verbose=False,
-                json=True)
+                is_verbose=False)
 
         except errors.ContractRunningError as ex:
             logger.INFO("""
@@ -196,8 +194,8 @@ class Contract(ContractBuilder):
                     self.max_cpu_usage, self.max_net_usage,
                     self.ref_block,
                     self.delay_sec,
-                    is_verbose=False,
-                    json=True)
+                    is_verbose=False)
+
             except errors.LowRamError as ex:
                 raise errors.Error(str(ex))
 
@@ -213,7 +211,7 @@ class Contract(ContractBuilder):
             permission=None, expiration_sec=None, 
             skip_sign=0, dont_broadcast=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
-            ref_block=None, json=True):
+            ref_block=None):
         """Push a transaction with a single action.
 
         Call ``EOSIO cleos`` with the ``push action`` command. Store the result,
@@ -232,7 +230,7 @@ class Contract(ContractBuilder):
             permission, expiration_sec,
             skip_sign, dont_broadcast, force_unique,
             max_cpu_usage, max_net_usage,
-            ref_block, json)
+            ref_block)
 
     def show_action(self, action, data, permission=None):
         """ Implements the `push action` command without broadcasting. 

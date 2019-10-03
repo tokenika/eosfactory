@@ -5,7 +5,7 @@ import eosfactory.core.logger as logger
 import eosfactory.core.interface as interface
 
 
-def validate(omittable):
+def validate_command_result(omittable):
     """Throw exception if validation fails.
     """
     err_msg = omittable.err_msg
@@ -55,11 +55,39 @@ class Error(Exception):
     """Base class for exceptions in EOSFactory.
     """
     def __init__(
-            self, message, translate=True, print_stack=False, stack_frame=1):
+            self, message, translate=True):
         if not message:
             message = "no message"
         self.message = logger.error(message, translate)
         Exception.__init__(self, self.message)
+
+
+class UserError(Error):
+    """User error as a missing argument, for example.
+    """
+    def __init__(self, message):
+        Error.__init__(self, message)
+
+
+class InterfaceError(UserError):
+    def __init__(self, message):
+        UserError.__init__(self, message)
+
+
+class ArgumentNotSet(UserError):
+    """Missing argument error.
+    """
+    def __init__(
+            self, argument_name=None, argument_definition=None, message=None):
+
+        message = message if message else """
+The argument ``{}``,
+which is {}, has to be set.
+        """.format(argument_name, argument_definition)
+        UserError.__init__(self, message) if argument_definition else """
+The argument ``{}`` has to be set.
+        """.format(argument_name)
+        UserError.__init__(self, message)
 
 
 class IsNodeRunning(Error):
@@ -83,7 +111,6 @@ class AccountDoesNotExistError(Error):
 
 class WalletDoesNotExistError(Error):
     def __init__(self, wallet):
-        self.wallet = wallet
         Error.__init__(
             self, 
             "Wallet ``{}`` does not exist."
@@ -93,7 +120,6 @@ class WalletDoesNotExistError(Error):
 
 class WalletAlreadyExistsError(Error):
     def __init__(self, wallet):
-        self.wallet = wallet
         Error.__init__(
             self, 
             "Wallet ``{}`` already exists."
@@ -103,11 +129,10 @@ class WalletAlreadyExistsError(Error):
 
 class InvalidPasswordError(Error):
     def __init__(self, wallet):
-        self.wallet = wallet
         Error.__init__(
             self, 
             "Invalid password for wallet {}"
-            .format(interface.wallet_arg(wallet)), 
+            .format(interface.wallet_arg(wallet)),
             True)
 
 

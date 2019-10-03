@@ -1,5 +1,6 @@
 """
 """
+import re
 import enum
 
 class Omittable:
@@ -8,11 +9,18 @@ class Omittable:
     def __init__(self):
         self.err_msg = None
 
+
 class Permission(enum.Enum):
     """Enumeration {OWNER, ACTIVE}
     """
     OWNER = 'owner'
     ACTIVE = 'active'
+
+    @staticmethod
+    def name(permission):
+        if isinstance(permission, Permission):
+            return permission.value
+        return permission
 
 
 class Key(Omittable):
@@ -39,20 +47,27 @@ class Key(Omittable):
 
 
 class Account(Omittable):
-    """Having the *name* and *key_public* and *key_private* attributes.
+    """Having the ``name`` and ``owner_key`` and ``active_key`` attributes.
 
     Args:
-        name (str): EOSIO contract name
+        name (str or Account): EOSIO contract name or Account object, then
+            copies this object.
         owner_key (str or .Key): The owner key of the account.
         active_key (str or .Key): The account key of the account.
     
     Attributes:
         name (str): EOSIO contract name
     """
-    def __init__(self, name=None, owner_key=None, active_key=None):
-        self.name = name
-        self.owner_key = owner_key
-        self.active_key = active_key if active_key else owner_key
+    def __init__(self, name, owner_key=None, active_key=None):
+        self.name = account_arg(name)
+
+        if isinstance(name, Account):
+            self.owner_key = name.owner_key
+            self.active_key = name.active_key
+        else:
+            active_key = active_key if active_key else owner_key
+            self.owner_key = owner_key
+            self.active_key = active_key
         Omittable.__init__(self)
     
     def owner_public(self):
@@ -71,11 +86,11 @@ class Account(Omittable):
 
         Returns:
             str: public active key
-        """        
+        """
         if isinstance(self.active_key, Key):
             return self.active_key.key_public
         else:
-            return self.active_key    
+            return self.active_key
 
 
 class Wallet(Omittable):
@@ -110,6 +125,18 @@ def wallet_arg(wallet):
         return wallet
 
 
+def is_key(key):
+    return isinstance(key, Key) or isinstance(key, str) \
+        and (re.match(r"^[A-Za-z0-9]*$", key) \
+            and ("EOS" == key[0:3] and len(key) == 53) \
+                                    or key[0] == "5" and len(key) == 51)
+
+
+def is_account(account):
+    return isinstance(account, Account) or isinstance(account, str) \
+        and(re.match(r"^[A-Za-z0-9]*$", account) and len(account) <= 12)
+
+
 def key_arg(key, is_owner_key=True, is_private_key=True):
     """Accepts any key argument.
 
@@ -123,18 +150,23 @@ def key_arg(key, is_owner_key=True, is_private_key=True):
     Returns:
         str: The value of the *key* argument.
     """
+    if not key:
+        import eosfactory.core.errors as errors
+        raise errors.ArgumentNotSet(
+                    "key",
+                    "key string or Key object or Account object")
+
     if isinstance(key, Account):
         if is_owner_key:
             key = key.owner_key
         else:
             key = key.active_key
+
         if is_private_key:
             key = key.key_private
         else:
             key = key.key_public
 
-        if not key:
-            return None
         return key
 
     if isinstance(key, Key):
@@ -142,10 +174,15 @@ def key_arg(key, is_owner_key=True, is_private_key=True):
             key = key.key_private
         else:
             key = key.key_public
-        if not key:
-            return None
+
         return key
+    
     if isinstance(key, str):
+        if not is_key(key):
+            import eosfactory.core.errors as errors
+            raise errors.InterfaceError("""
+        ``{}`` is not a valid eosio public key.
+        """.format(key))
         return key
 
 
@@ -159,6 +196,11 @@ def account_arg(account):
         str: The EOSIO name of the *account* argument.
     """
     if isinstance(account, str):
+        if not is_account(account):
+            import eosfactory.core.errors as errors
+            raise errors.InterfaceError("""
+        ``{}`` is not a valid eosio account name.
+        """.format(account))
         return account
     if isinstance(account, Account):
         return account.name
@@ -188,35 +230,45 @@ def permission_arg(permission):
     """
     if isinstance(permission, str):
         return [permission]
-    if isinstance(permission, Account):
+    elif isinstance(permission, Account):
         return [permission.name]
-    if isinstance(permission, tuple):
-        retval = None
+    elif isinstance(permission, tuple):
         if isinstance(permission[0], str):
             retval = permission[0]
-        if isinstance(permission[0], Account):
+        elif isinstance(permission[0], Account):
             retval = permission[0].name
-        if retval is None:
-            return None
-        permission_name = None
+        else:
+            import eosfactory.core.errors as errors
+            raise errors.InterfaceError("""
+                ``{}`` is not a valid permission object.
+                """.format(permission))
+                
         if isinstance(permission[1], Permission):
             permission_name = permission[1].value
-        if isinstance(permission[1], str):
+        elif isinstance(permission[1], str):
             permission_name = permission[1]
-
-        if not permission_name is None:
-            if permission_name[0] == "@":
-                retval = retval + permission_name
-            else:
-                retval = retval + "@" + permission_name
-            return [retval]
         else:
-            return None
+            import eosfactory.core.errors as errors
+            raise errors.InterfaceError("""
+                ``{}`` is not a valid permission object.
+                """.format(permission))
 
-    if isinstance(permission, list):
+        if permission_name[0] == "@":
+            retval = retval + permission_name
+        else:
+            retval = retval + "@" + permission_name
+        return [retval]
+
+    elif isinstance(permission, list):
         retval = []
         while len(permission) > 0:
             p = permission_arg(permission.pop())
             retval.append(p[0])
         return retval
+
+    else:
+        import eosfactory.core.errors as errors
+        raise errors.InterfaceError("""
+            ``{}`` is not a valid permission object.
+            """.format(permission))
 

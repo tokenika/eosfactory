@@ -16,7 +16,6 @@
 #  yvngxrjzbf3w <= eosio.token::transfer        {"from":"yvngxrjzbf3w","to":"eosio.stake","quantity":"6.0000 EOS","memo":"stake bandwidth"}
 #   eosio.stake <= eosio.token::transfer        {"from":"yvngxrjzbf3w","to":"eosio.stake","quantity":"6.0000 EOS","memo":"stake bandwidth"}
 
-
 example =\
 {
   "transaction_id": "4e6e12e84991582eaea834e174a1ee86046e8a0ce027129b50b6f8d5ed7a4b34",
@@ -767,7 +766,7 @@ example =\
 }
 
 class Actions():
-    DATA_LIMIT = 90
+    DATA_LIMIT = 100
 
     def __init__(self, received_json):
 

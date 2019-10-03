@@ -84,7 +84,7 @@ class Command():
             if self.err_msg and not "Transaction took too long" in self.err_msg:
                 break
 
-        errors.validate(self)
+        errors.validate_command_result(self)
 
         try:
             self.json = json_module.loads(self.out_msg)
@@ -169,34 +169,32 @@ class GetAccount(interface.Account, Command):
 
     Args:
         account (str or .interface.Account): The account to retrieve.
-        json: If set, prints the json representation of the object.
         is_verbose (bool): If ``False`` do not print. Default is ``True``.
 
     Attributes:
         name (str): The EOSIO name of the account.
-        owner_key_public (str) The ``owner`` public key.
-        active_key_public (str) The ``active`` public key.
+        owner_key (str) The ``owner`` public key.
+        active_key (str) The ``active`` public key.
         json: The json representation of the object.
     """
-    def __init__(self, account, json=False, is_verbose=True):
+    def __init__(self, account, is_verbose=True):
         interface.Account.__init__(self, interface.account_arg(account))
-        self.as_json = json
 
         Command.__init__(
             self, 
             [self.name, "--json"], 
             "get", "account", is_verbose)
 
-        self.owner_key_public = None
-        self.active_key_public = None
+        self.owner_key = None
+        self.active_key = None
         permissions = self.json["permissions"]
         for permission in permissions:
             if permission["required_auth"]["keys"]:
                 key = permission["required_auth"]["keys"][0]["key"]
                 if permission["perm_name"] == "owner":
-                    self.owner_key_public = key
+                    self.owner_key = key
                 if permission["perm_name"] == "active":
-                    self.active_key_public = key
+                    self.active_key = key
 
         self.printself()
 
@@ -264,7 +262,7 @@ class WalletCreate(interface.Wallet, Command):
                 raise errors.Error("""
             The wallet ``{}`` exists but the password is not set. Possibly, it is
             not found in a default password file.
-            """.format(self.name))
+            """.format(self.name)) from ex
 
             self.json["name"] = self.name
             msg = self.out_msg
@@ -279,7 +277,7 @@ class WalletCreate(interface.Wallet, Command):
             except Exception as ex:
                 raise errors.Error("""
             Wallet ``{}`` does not exist.
-            """.format(self.name))
+            """.format(self.name)) from ex
 
             wallet_unlock = WalletUnlock(self.name, password, is_verbose=False)
             self.json = {} 
@@ -562,24 +560,13 @@ class CreateAccount(interface.Account, Command):
             is_verbose=True
             ):
 
-        if name is None: 
-            name = account_name()
-        interface.Account.__init__(self, name)
-
-        self.owner_key = None
-        self.active_key = None
-        
-        if active_key is None:
-            active_key = owner_key
-
-        owner_key_public = interface.key_arg(
-            owner_key, is_owner_key=True, is_private_key=False)
-        active_key_public = interface.key_arg(
-            active_key, is_owner_key=False, is_private_key=False)
+        interface.Account.__init__(
+            self, name if name else account_name(), owner_key, active_key)
 
         args = [
-                interface.account_arg(creator), self.name, 
-                owner_key_public, active_key_public
+                interface.account_arg(creator), self.name,
+                self.owner_public(),
+                self.active_public()
             ]
 
         args.append("--json")
@@ -659,14 +646,12 @@ class PushAction(Command):
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
             delay_sec=0,
-            is_verbose=True,
-            json=False
+            is_verbose=True
         ):
         self.account_name = interface.account_arg(account)
 
         args = [self.account_name, action, data]
-        if json:
-            args.append("--json")
+        args.append("--json")
         if not permission is None:
             p = interface.permission_arg(permission)
             for perm in p:

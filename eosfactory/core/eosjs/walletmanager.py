@@ -69,7 +69,7 @@ class Wallet(interface.Wallet):
                 with open(wallet_file(name), "r")  as input:
                     _KEYS_CIPHERED = [key.rstrip('\n') for key in input]
             except Exception as e:
-                raise errors.Error(str(e))
+                raise errors.Error(str(e)) from e
             
             if _KEYS_CIPHERED:
                 try:
@@ -97,7 +97,7 @@ class Wallet(interface.Wallet):
                 with open(_file, "w+")  as out:
                     out.write("")
             except Exception as e:
-                raise errors.Error(str(e))
+                raise errors.Error(str(e)) from e
             
             self.is_created = True
 
@@ -150,7 +150,7 @@ def delete(wallet, is_verbose=True):
         try:
             os.remove(_file)
         except Exception as e:
-            raise errors.Error(str(e))
+            raise errors.Error(str(e)) from e
 
         if is_verbose:
             logger.OUT("Deleted wallet: '{}'".format(name))
@@ -225,7 +225,7 @@ def unlock(wallet, password=None, is_verbose=True):
         except Exception as e:
             raise errors.Error("""
                 Wrong password.n
-                """)
+                """) from e
         
     if is_verbose:
         logger.OUT("Unlocked: {}".format(name))    

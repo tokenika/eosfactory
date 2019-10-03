@@ -309,8 +309,8 @@ Retry.
             for name, object_name in account_map.items():
                 account_object = ca.GetAccount(object_name, name)
                 if account_object.exists:
-                    if account_object.owner_key_public in wallet_keys.json and \
-                        account_object.active_key_public in wallet_keys.json:
+                    if account_object.owner_public() in wallet_keys.json and \
+                        account_object.active_public() in wallet_keys.json:
 
                         new_map[name] = object_name
                         account_object.__class__ = GetAccountAccount

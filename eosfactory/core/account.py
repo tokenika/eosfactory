@@ -61,15 +61,15 @@ class GetAccount(BASE_COMMANDS.GetAccount):
         
         try:
             BASE_COMMANDS.GetAccount.__init__(
-                                self, self.name, json=True, is_verbose=False)
+                                self, self.name, is_verbose=False)
         except errors.AccountDoesNotExistError:
             return
         except Exception as ex:
-            raise errors.Error(str(ex))
+            raise errors.Error(str(ex)) from ex
 
         self.exists = True
-        self.owner_key = interface.Key(self.owner_key_public, None)
-        self.active_key = interface.Key(self.active_key_public, None)
+        self.owner_key = interface.Key(self.owner_public(), None)
+        self.active_key = interface.Key(self.active_public(), None)
         if owner_key_private:
             self.owner_key.key_private = owner_key_private
             self.active_key.key_private = active_key_private

@@ -1,0 +1,23 @@
+{
+    "threshold" : 100, 
+    "keys" : [], 
+    "accounts" : 
+        [
+            {
+                "permission":
+                    {
+                        "actor": BOB,
+                        "permission":"active"
+                    },
+                "weight":15
+            }, 
+            {	
+                "permission":
+                    {
+                        "actor": CAROL,
+                        "permission":"active"
+                    },
+                "weight":85
+            }
+        ]
+}

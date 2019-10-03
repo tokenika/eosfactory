@@ -678,8 +678,8 @@ def keosd_wallet_dir(raise_error=True):
 Cannot find any path for '{}'.
 Tried:
 {}
-                """.format(keosd_wallet_dir_[0], keosd_wallet_dir_[1]), 
-                                                            translate=False)
+        """.format(keosd_wallet_dir_[0], keosd_wallet_dir_[1]),
+                                                translate=False)
 
     return path
 
@@ -694,7 +694,7 @@ def config_file():
             with open(file, "w+") as f:
                 f.write("{}")
         except Exception as e:
-            raise errors.Error(str(e), translate=False)
+            raise errors.Error(str(e), translate=False) from e
     return file
 
 
@@ -714,7 +714,7 @@ def config_map():
                 else:
                     return json.loads(text)
         except Exception as e:
-            raise errors.Error(str(e), translate=False)
+            raise errors.Error(str(e), translate=False) from e
 
     raise errors.Error("""
 Cannot find the config file.       

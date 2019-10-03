@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Pretty print json received from a PushAction object."""
+
 import eosfactory.core.str.actions as actions
 
 #  HOST <= HOST::create         {"challenger":"ALICE","host":"CAROL"}
@@ -85,7 +86,7 @@ example =\
 class Push():
 
     def __init__(self, received_json):
-
+          
         self.info = ""
         def addln(msg=""):
             self.info = self.info + msg + "\n"

@@ -116,7 +116,7 @@ Cannot remove the directory {}.
 error message:
 ==============
 {}
-                """.format(cwd, str(e)))
+                """.format(cwd, str(e))) from e
         os.mkdir(cwd)
 
     threading.Thread(target=thread_function).start()
@@ -249,7 +249,7 @@ def relay(command_url, node_url, print_request, print_response):
             if not "Address already in use" in str(e):
                 raise errors.Error(str(e))
         except Exception as e:
-            raise errors.Error(str(e))
+            raise errors.Error(str(e)) from e
 
     if print_request or print_response: 
         thread = threading.Thread(target=run_in_thread)

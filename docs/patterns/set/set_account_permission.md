@@ -5,75 +5,130 @@ The `set_account_permission` command creates or updates an account's permission.
 **NOTE**: The Python code listed below is executable, as explained [here](../README.html).
 
 ```python
-from eosfactory.eosf import *
+import os
 import eosfactory.core.setup as setup
+# Set the interface configuration (CLEOS or EOSJS):
+# setup.set_is_eosjs()
+
+from eosfactory.eosf import *
 ```
 
 ```python
 reset()
-create_master_account("master")
-create_account("alice", master)
-alice.info()
+create_master_account("MASTER")
+create_account("ALICE", MASTER)
+ALICE.info()
 ```
 
-The permissions section of `alice.info()`:
+The permissions section of ALICE.info():
 
-```md
-permissions:
-     owner     1:    1 alice@owner
-        active     1:    1 alice@active
+```
+### permissions:
+    owner thrd=1
+                  wght=1 key=ALICE@owner
+    |--> active thrd=1
+                       wght=1 key=ALICE@active
+```
+
+## Let ALICE set `eosio.code` permission to herself
+
+```python
+COMMENT("""
+ALICE sets `eosio.code` permission to herself:
+""")
+
+ALICE.set_account_permission(
+    Permission.ACTIVE, ALICE, add_code=True)
+ALICE.info()
+```
+The permissions section of ALICE.info():
+```
+### permissions:
+    owner thrd=1
+                  wght=1 key=ALICE@owner
+    |--> active thrd=1
+                       wght=1 key=ALICE@active
+                       wght=1 perm=ALICE@eosio.code
+```
+
+## Let ALICE remove her `eosio.code` permission
+
+```python
+COMMENT("""
+ALICE removes her `eosio.code` permission:
+""")
+
+ALICE.set_account_permission(
+    Permission.ACTIVE, ALICE, remove_code=True)
+ALICE.info()
+```
+The permissions section of ALICE.info():
+```
+### permissions:
+    owner thrd=1
+                  wght=1 key=ALICE@owner
+    |--> active thrd=1
+                       wght=1 key=ALICE@active
+### memory:
+                   quota: unlimited, used: 2.7 KiB
 ```
 
 ## Set new key to a permission
 ```python
-COMMENT("Set new key to a permission:")
+COMMENT("""
+Create a key and save it to the wallet, then set it to the ALICE's ``active1`` permissions.
+""")
+
 key = CreateKey(is_verbose=False)
-setup.IS_PRINT_COMMAND_LINES = True
-alice.set_account_permission(
-    Permission.ACTIVE, key.key_public, Permission.OWNER, 
-    (alice, Permission.OWNER))
-setup.IS_PRINT_COMMAND_LINES = False
-alice.info()
+get_wallet().import_key(key)
+
+ALICE.set_account_permission(
+    "active1", key.key_public, Permission.OWNER,
+    permission=(ALICE, Permission.OWNER))
+ALICE.info()
 ```
 
-The `permissions` section of `alice.info()`:
-
-```md
-permissions:
-     owner     1:    1 alice@owner
-        active     1:    1 alice@active
+The `permissions` section of `ALICE.info()`:
+```
+### permissions:
+    owner thrd=1
+                  wght=1 key=ALICE@owner
+    |--> active thrd=1
+                       wght=1 key=ALICE@active
+    |--> active1 thrd=1
+                       wght=1 key=EOS7NPEUv5jodCsDDFmeRiWVjL4v1jfddHsM1xsz3EVB4wLbupqwE
 ```
 
-## Set an account (instead of a key) as authority for a permission
+## Remove a permission.
 ```python
-COMMENT("Set an account (instead of a key) as authority for a permission:")
-create_account("bob", master)
-setup.IS_PRINT_COMMAND_LINES = True
-alice.set_account_permission(
-    Permission.ACTIVE, bob, Permission.OWNER, 
-    (alice, Permission.OWNER))
-setup.IS_PRINT_COMMAND_LINES = False
-alice.info()
+COMMENT("""
+Remove the previously set permission ``active1``:
+""")
+
+ALICE.set_account_permission(
+    "active1", "remove", Permission.OWNER,
+    permission=(ALICE, Permission.OWNER))
+ALICE.info()
 ```
-
-The permissions section of `alice.info()`:
-
-```md
-permissions:
-     owner     1:    1 alice@owner
-        active     1:    1 bob@active
+The `permissions` section of `ALICE.info()`:
+```
+### permissions:
+    owner thrd=1
+                  wght=1 key=ALICE@owner
+    |--> active thrd=1
+                       wght=1 key=ALICE@active
 ```
 
 ## Weights and Threshold
 
-Note that actors have to be sorted in the ``authority`` JSON.
-
 ```python
-COMMENT("Weights and Threshold:")
-create_account("carol", master)
-actors = [repr(bob), repr(carol)]
-actors.sort()
-alice.set_account_permission(Permission.ACTIVE,
+COMMENT("""
+Create two new accounts and use them as weighted permissions for ALICE:
+""")
+
+create_account("BOB", MASTER)
+create_account("CAROL", MASTER)
+ALICE.set_account_permission(Permission.ACTIVE,
     {
         "threshold" : 100, 
         "keys" : [], 
@@ -82,7 +137,7 @@ alice.set_account_permission(Permission.ACTIVE,
                 {
                     "permission":
                         {
-                            "actor": actors[0],
+                            "actor": BOB,
                             "permission":"active"
                         },
                     "weight":25
@@ -90,7 +145,7 @@ alice.set_account_permission(Permission.ACTIVE,
                 {	
                     "permission":
                         {
-                            "actor":actors[1],
+                            "actor": CAROL,
                             "permission":"active"
                         },
                     "weight":75
@@ -98,49 +153,115 @@ alice.set_account_permission(Permission.ACTIVE,
             ]
     },
     Permission.OWNER,
-    (alice, Permission.OWNER))
-alice.info()
-```
-The permissions section of `alice.info()`:
-```md
-permissions:
-     owner     1:    1 alice@owner
-        active   100:    25 carol@active, 75 bob@active
+    (ALICE, Permission.OWNER))
+ALICE.info()
 ```
 
-## Set two-weighted keys
+> **NOTE**: `cleos` eosio CLI demands that the lists in the `authority` JSON are specifically sorted. EOSFactory sorts them itself.
 
-Note that keys have to be sorted in the ``authority`` JSON.
+The permissions section of `ALICE.info()`:
+```
+### permissions:
+    owner thrd=1
+                  wght=1 key=ALICE@owner
+    |--> active thrd=100
+                       wght=75 perm=CAROL@active
+                       wght=25 perm=BOB@active
+    |--> active1 thrd=1
+                       wght=1 key=EOS6GeD7tNy8iqa7DdncAz7qGi4PG3agDE37jmdzUKLdLYaTUogzm
+```
+
+## Set permission from a file
+
+The argument ``authority`` can be set from a file, for example, the file `set_account_permission.json`:
+```
+{
+    "threshold" : 100, 
+    "keys" : [], 
+    "accounts" : 
+        [
+            {
+                "permission":
+                    {
+                        "actor": BOB,
+                        "permission":"active"
+                    },
+                "weight":15
+            }, 
+            {	
+                "permission":
+                    {
+                        "actor": CAROL,
+                        "permission":"active"
+                    },
+                "weight":85
+            }
+        ]
+}
+```
+Note, that the account names can be symbolic (without quatation marks).
+
 ```python
-COMMENT("Set two weighted keys:")
-keys = [bob.owner_public(), carol.owner_public()]
-keys.sort()
-alice.set_account_permission(Permission.ACTIVE,
+COMMENT("""
+Set permission from the file ``set_account_permission.json``:
+""")
+
+ALICE.set_account_permission(
+    Permission.ACTIVE,
+    os.path.join(os.path.dirname(__file__), "set_account_permission.json"),
+    Permission.OWNER,
+    permission=(ALICE, Permission.OWNER))
+ALICE.info()
+```
+
+The permissions section of `ALICE.info()`:
+```
+### permissions:
+    owner thrd=1
+                  wght=1 key=ALICE@owner
+    |--> active thrd=100
+                       wght=15 perm=BOB@active
+                       wght=85 perm=CAROL@active
+```
+
+## Set two weighted keys
+
+```python
+COMMENT("""
+Set two weighted keys:
+""")
+
+ALICE.set_account_permission(Permission.ACTIVE,
     {
         "threshold" : 100, 
         "keys" : 
             [
                 {
-                    "key": keys[0],
+                    "key": BOB.owner_public(),
                     "weight": 50
                 },
                 {
-                    "key": keys[1],
+                    "key": CAROL.owner_public(),
                     "weight": 50
                 }                    
             ]
     },
     Permission.OWNER,
-    (alice, Permission.OWNER)
+    (ALICE, Permission.OWNER)
 )
-alice.info()
+ALICE.info()
 ```
-The permissions section of `alice.info()`:
+The permissions section of `ALICE.info()`:
 
-```md
-permissions:
-     owner     1:    1 alice@owner
-        active   100:    50 alice@active, 50 bob@owner
+```
+### permissions:
+    owner thrd=1
+                  wght=1 key=ALICE@owner
+    |--> active thrd=100
+                       wght=50 key=ALICE@active
+                       wght=50 key=CAROL@owner
+    |--> active1 thrd=1
+                       wght=1 key=EOS6GeD7tNy8iqa7DdncAz7qGi4PG3agDE37jmdzUKLdLYaTUogzm
 ```
 
 ```python

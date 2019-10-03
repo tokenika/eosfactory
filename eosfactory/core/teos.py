@@ -44,7 +44,7 @@ def get_target_dir(contract_dir):
     try:
         os.mkdir(path)
     except Exception as e:
-        raise errors.Error(str(e))
+        raise errors.Error(str(e)) from e
 
     return path
 
@@ -60,7 +60,7 @@ def get_include_dir(source_dir):
         try:
             os.mkdir(path)
         except Exception as e:
-            raise errors.Error(str(e))
+            raise errors.Error(str(e)) from e
 
     return path
 
@@ -76,7 +76,7 @@ def get_recardian_dir(source_dir):
         try:
             os.mkdir(path)
         except Exception as e:
-            raise errors.Error(str(e))
+            raise errors.Error(str(e)) from e
 
     return path
 
@@ -175,7 +175,7 @@ The option '-o' does not has its value set:
                         raise errors.Error("""
 Cannot make directory set with the option '-o'.
 {}
-                        """.format(str(e)))
+                        """.format(str(e))) from e
         
         elif "-abigen_output" in entry:
             abigen_path = utils.wslMapWindowsLinux(
@@ -191,7 +191,7 @@ Cannot make directory set with the option '-o'.
                         raise errors.Error("""
 Cannot make directory set with the option '-abigen_output'.
 {}
-                        """.format(str(e)))
+                        """.format(str(e))) from e
 
             compile_options.append("-abigen_output={}".format(abigen_path))
         elif "--src" in entry:
@@ -368,7 +368,7 @@ def get_c_cpp_properties(contract_dir=None, c_cpp_properties_path=None):
             with open(c_cpp_properties_path, "r") as f:
                 return json.loads(f.read())
         except Exception as e:
-            raise errors.Error(str(e))
+            raise errors.Error(str(e)) from e
     else:
         return json.loads(resolve_home(vscode.c_cpp_properties()))
 
@@ -503,7 +503,7 @@ Cannot remove the directory {}.
 error message:
 ==============
 {}
-                    """.format(project_dir, str(e)))
+                    """.format(project_dir, str(e))) from e
             else:
                 msg = """
 NOTE:
@@ -521,7 +521,7 @@ already exists. Cannot overwrite it.
         os.makedirs(os.path.join(project_dir, "tests"))
         os.makedirs(os.path.join(project_dir, "include"))
     except Exception as e:
-        raise errors.Error(str(e))
+        raise errors.Error(str(e)) from e
             
     def copy_dir_contents(
             project_dir, template_dir, directory, project_name):
@@ -731,7 +731,7 @@ opening the given stdout log file that is
 {}
 Error message is
 {}
-            """.format(nodeos_stdout, str(e)))
+            """.format(nodeos_stdout, str(e))) from e
 
     def onExit():
         global std_out_handle
@@ -816,7 +816,7 @@ Local node has stopped.
         except errors.IsNodeRunning:
             head_block_num = 0
         except Exception as e:
-            raise errors.Error(str(e))
+            raise errors.Error(str(e)) from e
 
         if block_num:
             print("{:.0f}* ".format(cpu_percent), end="", flush=True)

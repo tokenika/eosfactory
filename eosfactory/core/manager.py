@@ -3,8 +3,11 @@
 """
 
 import os
+import sys
 import json
 import re
+import inspect
+import traceback
 import time
 import importlib
 import subprocess
@@ -20,6 +23,13 @@ BASE_COMMANDS = importlib.import_module(".base", setup.interface_package())
 GET_COMMANDS = importlib.import_module(".get", setup.interface_package())
 
 
+def user_error(error):
+    print(str(error))
+    stack = inspect.stack()
+    traceback.print_stack(stack[2][0])
+    sys.exit(1)
+
+
 def accout_names_2_object_names(sentence, keys=False):
     """Translate blockchain account names to names of corresponding objects.
 
@@ -29,23 +39,28 @@ def accout_names_2_object_names(sentence, keys=False):
     """
     if not setup.IS_TRANSLATING:
         return sentence
-    exceptions = ["eosio"]
+    exceptions = []
     map_ = account_map(do_not_fail=True)
     for name in map_:
         account_object_name = map_[name]
         if name in exceptions:
             continue
+        sentence = sentence.replace("'" + name + "'", account_object_name)
+        sentence = sentence.replace('"' + name + "'", account_object_name)
         sentence = sentence.replace(name, account_object_name)
         
         if keys:
-            account = BASE_COMMANDS.GetAccount(
-                                            name, json=True, is_verbose=False)
-            owner_key = account.owner_key_public
+            account = BASE_COMMANDS.GetAccount(name, is_verbose=False)
+            owner_key = account.owner_public()
             if owner_key:
+                sentence = sentence.replace(
+                    "'" + owner_key + "'", account_object_name + "@owner")
+                sentence = sentence.replace(
+                    '"' + owner_key + '"', account_object_name + "@owner")
                 sentence = sentence.replace(
                     owner_key, account_object_name + "@owner")
 
-            active_key = account.active_key_public
+            active_key = account.active_public()
             if active_key:
                 sentence = sentence.replace(
                     active_key, account_object_name + "@active")        
@@ -53,7 +68,7 @@ def accout_names_2_object_names(sentence, keys=False):
     return sentence
 
 
-def object_names_2_accout_names(sentence):
+def object_names_2_accout_names(sentence, quatation_marks=False):
     """Translate account object names to corresponding blockchain account 
     names.
 
@@ -63,7 +78,11 @@ def object_names_2_accout_names(sentence):
     map_ = account_map(do_not_fail=True)
     for name in map_:
         account_object_name = map_[name]
-        sentence = sentence.replace(account_object_name, name)
+        if quatation_marks:
+            sentence = sentence.replace(
+                account_object_name, '"' + name + '"')
+        else:
+            sentence = sentence.replace(account_object_name, name)
 
     return sentence
 
@@ -192,7 +211,7 @@ def reset(
                 raise errors.Error("""
                 Cannot remove testnet cache. The error message is:
                 {}
-                """.format(str(e)))
+                """.format(str(e))) from e
             
             logger.TRACE("""
             Testnet cache successfully removed.
@@ -280,7 +299,7 @@ def is_testnet_active(throw_error=True):
         head_block = GET_COMMANDS.GetInfo(is_verbose=False).head_block
     except Exception as ex:
         if throw_error:
-            raise errors.Error(str(ex))
+            raise errors.Error(str(ex)) from ex
         else:
              return ""
     
@@ -294,13 +313,13 @@ def is_testnet_active(throw_error=True):
 def keosd_start():
     """Start eos wallet manager ``keosd``."""
     count = 5
-    cl = config.keosd_exe()
+    cl = [config.keosd_exe(), "--wallet-dir", config.keosd_wallet_dir()]
     while count > 0:
         if teos.get_pid(config.keosd_exe()):
             return
         count = count -1
         subprocess.Popen(
-            [cl], stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, 
+            cl, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, 
             stderr=subprocess.DEVNULL)
 
     if not count:
@@ -344,7 +363,7 @@ def data_json(data): # pylint: disable=missing-docstring
             if isinstance(o, interface.Account):
                 return repr(o)
             return json.JSONEncoder.default(self, o)
-
+            
     if not data:
         return "{}"
 

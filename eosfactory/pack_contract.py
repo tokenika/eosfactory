@@ -152,7 +152,7 @@ def unpack(contract_dir=None, zip_file=None):
         """.format(
             os.path.realpath(zip_file), os.path.realpath(contract_dir),
             str(e)
-            ))
+            )) from e
 
     create_ignore_list_file(contract_dir)
     create_utils(contract_dir)
@@ -216,7 +216,7 @@ def pack(contract_dir=None, zip_file=None):
                     {}
                 The error message is
                     {}
-            """.format(zip_file, str(e)))
+            """.format(zip_file, str(e))) from e
 
     ignore_file = create_ignore_list_file(contract_dir, True)
 

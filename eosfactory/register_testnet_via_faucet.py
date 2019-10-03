@@ -56,7 +56,7 @@ def register_testnet_via_faucet_(faucet, url, alias):
                     Request failed: {}
                     Error message is
                     {}
-                    """.format(path, str(e)))
+                    """.format(path, str(e))) from e
             else:
                 account_name = BASE_COMMANDS.account_name()
                 path = faucet + "/" + CREATE_ACCOUNT_URL + "?" + account_name
@@ -99,7 +99,7 @@ def register_testnet_via_faucet_(faucet, url, alias):
                         Request failed: {}
                         Error message is
                         {}
-                        """.format(path, str(e)))
+                        """.format(path, str(e))) from e
                 break
             time.sleep(DELAY_IN_SECONDDS)
 

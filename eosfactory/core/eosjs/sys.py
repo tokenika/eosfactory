@@ -310,7 +310,7 @@ class BuyRam(base_commands.Command):
 
     def __str__(self):
         import eosfactory.core.str.actions
-        return str(eosfactory.core.str.actions.Actions(self.json))        
+        return str(eosfactory.core.str.actions.Actions(self.json))
 
     
 class DelegateBw(base_commands.Command):
