@@ -633,7 +633,7 @@ def args(clear=False):
     return args_
 
 
-def on_nodeos_error(clear=False):
+def on_nodeos_error(error_msg, clear=False):
     ERROR_WAIT_TIME = 5
     NOT_ERROR = [
         "exit shutdown",
@@ -646,10 +646,13 @@ def on_nodeos_error(clear=False):
     command_line = " ".join(args_)
 
     logger.ERROR("""
-    The local ``nodeos`` failed to start few times in sequence. Perhaps, something is
-    wrong with configuration of the system. See the command line issued:
+    The local ``nodeos`` failed to start few times in sequence. 
+    The error message is 
+    ``{}``
 
-    """)
+    Perhaps, something is wrong with configuration of the system. See the 
+    command line issued:
+    """.format(error_msg))
     print("\n{}\n".format(command_line))
     print("""
 Now, see the result of execution of the command line:
@@ -793,7 +796,7 @@ Local node has failed to start.
     cpu_percent_start = proc.cpu_percent(interval=WAIT_TIME)
 
     # Give nodeos a time to restart:
-    print("Starting nodeos, cpu percent: ", end="", flush=True)
+    print("\nStarting nodeos, cpu percent: ", end="", flush=True)
     for _ in range(0, int(DELAY_TIME / WAIT_TIME)):
         cpu_percent = proc.cpu_percent(interval=WAIT_TIME)
         print("{:.0f}, ".format(cpu_percent), end="", flush=True)
@@ -816,7 +819,7 @@ Local node has stopped.
         except errors.IsNodeRunning:
             head_block_num = 0
         except Exception as e:
-            raise errors.Error(str(e)) from e
+            raise
 
         if block_num:
             print("{:.0f}* ".format(cpu_percent), end="", flush=True)
@@ -826,7 +829,7 @@ Local node has stopped.
         if count == CHECK_COUNT and not block_num and \
                             cpu_percent_start / cpu_percent < RATIO_THRESHOLD:
             print(" stuck.")
-            raise errors.Error(ERR_MSG_IS_STUCK)        
+            raise errors.Error(ERR_MSG_IS_STUCK)
 
         if block_num and head_block_num - block_num >= NUMBER_BLOCKS_ADDED:
             print()

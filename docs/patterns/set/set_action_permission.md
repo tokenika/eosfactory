@@ -7,14 +7,13 @@ The `set_action_permission` command sets authorization for a contract's specific
 ```python
 import eosfactory.core.setup as setup
 # Set the interface configuration (CLEOS or EOSJS):
-setup.set_is_eosjs()
+# setup.set_is_eosjs()
 from eosfactory.eosf import *
 ```
 
 ```python
 COMMENT("""
-Reset the local testnet, create a master account -- having the authority to create
-accounts -- and let it create a test account object named ``PRODUCER``:
+Reset the local testnet, create a master account -- having the authority to create accounts -- and let it create a test account object named ``PRODUCER``:
 """)
 reset()
 create_master_account("MASTER")
@@ -40,7 +39,7 @@ Set an account permission named ``claimer`` to the account PRODUCER:
 
 PRODUCER.set_account_permission("claimer",
     {
-        "threshold" : 1, 
+        "threshold" : 1,
         "keys" : 
             [
                 {
@@ -73,7 +72,7 @@ Now, set permission to the account PRODUCER to execute an action named
 """)
 PRODUCER.set_action_permission(MASTER, "claimrewards", "claimer")
 
-OUT(str(PRODUCER.set_action_permission_result))
+OUT(str(PRODUCER.action_permission_result))
 ```
 See the following confirmation of the action permission setting:
 ```

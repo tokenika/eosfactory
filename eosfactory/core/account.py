@@ -45,34 +45,28 @@ class GetAccount(BASE_COMMANDS.GetAccount):
     """
     def __init__(
             self,
-            account_object_name, name=None, 
+            account_object_name, name, 
             owner_key_private=None, active_key_private=None):
 
         self.account_object_name = account_object_name
-        if name is None: 
-            self.name = BASE_COMMANDS.account_name()
-        else:
-            self.name = name
-
-        if active_key_private is None:
+        self.name = name
+        if not active_key_private:
             active_key_private = owner_key_private
 
         self.exists = False
         
         try:
-            BASE_COMMANDS.GetAccount.__init__(
-                                self, self.name, is_verbose=False)
+            BASE_COMMANDS.GetAccount.__init__(self, self.name, is_verbose=False)
         except errors.AccountDoesNotExistError:
             return
         except Exception as ex:
             raise errors.Error(str(ex)) from ex
 
         self.exists = True
-        self.owner_key = interface.Key(self.owner_public(), None)
-        self.active_key = interface.Key(self.active_public(), None)
-        if owner_key_private:
-            self.owner_key.key_private = owner_key_private
-            self.active_key.key_private = active_key_private
+        self.owner_key.key_private = interface.Key.get_key_private(
+                                                            owner_key_private)
+        self.active_key.key_private = interface.Key.get_key_private(
+                                                            active_key_private)
 
         logger.TRACE("""
             * Account *{}* exists in the blockchain.

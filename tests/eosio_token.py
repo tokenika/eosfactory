@@ -68,20 +68,21 @@ class Test(unittest.TestCase):
                 "can_recall": "0",
                 "can_whitelist": "0"
             },
-            force_unique=True,
             permission=[(MASTER, Permission.ACTIVE), (HOST, Permission.ACTIVE)])
-        print("'trace[\"console\"]' sum is '{}'".format(HOST.action.console))
-        logger.DEBUG(HOST.action.act)
+        print("'trace[\"console\"]' sum is '{}'".format(
+                HOST.action_result.console))
+        logger.DEBUG(HOST.action_result.act)
 
         HOST.push_action(
             "issue",
             {
                 "to": ALICE, "quantity": "100.0000 EOS", "memo": ""
             },
-            force_unique=True,
-            permission=[(MASTER, Permission.ACTIVE), (HOST, Permission.ACTIVE), (ALICE, Permission.ACTIVE)])
-        print("'trace[\"console\"]' sum is '{}'".format(HOST.action.console))
-        logger.DEBUG(HOST.action.act)
+            permission=[(MASTER, Permission.ACTIVE), 
+                        (HOST, Permission.ACTIVE), (ALICE, Permission.ACTIVE)])
+        print("'trace[\"console\"]' sum is '{}'".format(
+                                                    HOST.action_result.console))
+        logger.DEBUG(HOST.action_result.act)
 
         COMMENT("""
         Execute a series of transfers between the accounts:
@@ -93,9 +94,8 @@ class Test(unittest.TestCase):
                 "from": ALICE, "to": CAROL,
                 "quantity": "25.0000 EOS", "memo":""
             },
-            force_unique=True,
             permission=(ALICE, Permission.ACTIVE))
-        logger.DEBUG(HOST.action.act)
+        logger.DEBUG(HOST.action_result.act)
 
         HOST.push_action(
             "transfer",
@@ -104,7 +104,7 @@ class Test(unittest.TestCase):
                 "quantity": "11.0000 EOS", "memo": ""
             },
             permission=(CAROL, Permission.ACTIVE))
-        logger.DEBUG(HOST.action.act)
+        logger.DEBUG(HOST.action_result.act)
 
         HOST.push_action(
             "transfer",
@@ -112,9 +112,8 @@ class Test(unittest.TestCase):
                 "from": CAROL, "to": BOB, 
                 "quantity": "2.0000 EOS", "memo": ""
             },
-            force_unique=True,
             permission=(CAROL, Permission.ACTIVE))
-        logger.DEBUG(HOST.action.act)
+        logger.DEBUG(HOST.action_result.act)
 
         HOST.push_action(
             "transfer",
@@ -122,14 +121,12 @@ class Test(unittest.TestCase):
                 "from": BOB, "to": ALICE, \
                 "quantity": "2.0000 EOS", "memo":""
             },
-            force_unique=True,
             permission=(BOB, Permission.ACTIVE))
-        logger.DEBUG(HOST.action.act)
+        logger.DEBUG(HOST.action_result.act)
 
         COMMENT("""
         Verify the outcome:
         """)
-
         table_ALICE = HOST.table("accounts", ALICE)
         table_BOB = HOST.table("accounts", BOB)
         table_CAROL = HOST.table("accounts", CAROL)

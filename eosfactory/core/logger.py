@@ -164,7 +164,7 @@ def DEBUG(msg=None, verbosity=None, translate=True):
     if msg and Verbosity.DEBUG in \
                         (verbosity if not verbosity is None else __verbosity):
         msg = condition(msg, translate)
-        __debug_buffer = msg        
+        __debug_buffer = msg
         color = Verbosity.DEBUG.value
         cprint(msg, color[0], color[1], attrs=color[2])
 

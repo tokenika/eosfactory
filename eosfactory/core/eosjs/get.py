@@ -22,7 +22,7 @@ class GetInfo(base_commands.Command):
         is_verbose: If set, print output.
     """
     def __init__(self, is_verbose=1):
-        base_commands.Command.__init__(self, base_commands.config_rpc(), 
+        base_commands.Command.__init__(self, base_commands.config_rpc(),
             """
     ;(async () => {
         result = await rpc.get_info()

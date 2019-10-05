@@ -9,7 +9,7 @@ import argparse
 import eosfactory.core.setup as setup
 # Set the interface configuration (CLEOS or EOSJS):
 # setup.set_is_eosjs(False)
-setup.set_is_eosjs()
+# setup.set_is_eosjs()
 
 from eosfactory.eosf import *
 

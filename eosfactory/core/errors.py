@@ -29,7 +29,8 @@ def validate_command_result(omittable):
         raise InvalidPasswordError(omittable)
     elif "ontract is already running this version of code" in err_msg:
         raise ContractRunningError()
-    elif "Missing required authority" in err_msg:
+    elif "Missing required authority" in err_msg \
+                                        or "missing authority of" in err_msg:
         raise MissingRequiredAuthorityError(err_msg)
     elif "Duplicate transaction" in err_msg:
         raise DuplicateTransactionError(err_msg)
@@ -88,6 +89,16 @@ which is {}, has to be set.
 The argument ``{}`` has to be set.
         """.format(argument_name)
         UserError.__init__(self, message)
+
+
+class TypeError(UserError):
+    """Wrong type error.
+    """
+    def __init__(self, argument_name, argument_type, expected_type):
+         UserError.__init__(self, """
+The type of argument ``{}`` is ``{}`` 
+while it is expected to be ``{}``.
+         """.format(argument_name, argument_type, expected_type))
 
 
 class IsNodeRunning(Error):

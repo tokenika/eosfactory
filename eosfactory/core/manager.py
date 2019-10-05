@@ -26,8 +26,9 @@ GET_COMMANDS = importlib.import_module(".get", setup.interface_package())
 def user_error(error):
     print(str(error))
     stack = inspect.stack()
-    traceback.print_stack(stack[2][0])
-    sys.exit(1)
+    level = min(2, len(stack) - 1)
+    traceback.print_stack(stack[level][0], limit=2)
+    os._exit(1)
 
 
 def accout_names_2_object_names(sentence, keys=False):
@@ -109,13 +110,15 @@ def node_start(clear=False, nodeos_stdout=None):
     """
     wait_time = 0.6
     try_count = 3
+    error_msg = None
 
     while True:
         try:
             teos.node_start(clear, nodeos_stdout)
             teos.node_probe()
-        except Exception as e: # pylint: disable=broad-except
-            if not (clear and teos.ERR_MSG_IS_STUCK in str(e)):
+        except Exception as ex: # pylint: disable=broad-except
+            error_msg = str(ex)            
+            if not (clear and teos.ERR_MSG_IS_STUCK in str(ex)):
                 try_count = try_count - 1
                 if try_count <= 0:
                     break
@@ -125,7 +128,7 @@ def node_start(clear=False, nodeos_stdout=None):
         else:
             return
 
-    teos.on_nodeos_error(clear)
+    teos.on_nodeos_error(error_msg, clear)
 
 
 def reset(    
@@ -286,6 +289,8 @@ def resume(testnet=None, url=None, nodeos_stdout=None, prefix=None):
 def stop():
     """ Stops keosd and all running EOSIO nodes."""
     teos.node_stop()
+    import eosfactory.shell.wallet as wallet
+    wallet.get_wallet().stop()
     teos.keosd_kill()
 
 
@@ -319,8 +324,9 @@ def keosd_start():
             return
         count = count -1
         subprocess.Popen(
-            cl, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, 
+            cl, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL)
+        time.sleep(1)
 
     if not count:
         raise errors.Error("""

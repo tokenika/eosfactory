@@ -251,7 +251,9 @@ def list(is_verbose=True):
         Open wallets. Starlet, if any, means 'unlocked':\n""" 
             + "\n".join(wallets))
         else:
-            logger.OUT("There is not any wallet open.")            
+            logger.OUT("There is not any wallet open.")
+    
+    return wallets
 
 
 def import_key(wallet, key, is_verbose=True):
@@ -288,7 +290,7 @@ def import_key(wallet, key, is_verbose=True):
     return key_public
     
 
-def remove_key(key, is_verbose=True):
+def remove_key(key, wallet, password, is_verbose=True):
     trash = []
 
     for name, _open_wallet in _OPEN_WALLETS.items():
@@ -398,7 +400,7 @@ def stop(is_verbose=True):
 
     if is_verbose:
         logger.OUT("""
-    All the wallet objects locked and removed from the list of open wallets.""")
+    All wallets closed.""")
 
 
 class Node():

@@ -102,7 +102,7 @@ Retry.
         Returns `BASE_COMMANDS.WalletList` object
         """ 
         result = BASE_COMMANDS.WalletList(is_verbose=0)
-        logger.OUT(result.out_msg)
+        logger.OUT(json.dumps(result.json, indent=4))
     
     def open(self):
         """ Opens the wallet.
@@ -327,7 +327,8 @@ Retry.
         """
         account_map = manager.account_map()
         for _, object_name in account_map.items():
-            del Wallet.wallet_globals[object_name]
+            if object_name in Wallet.wallet_globals:
+                del Wallet.wallet_globals[object_name]
 
     def stop(self):
         """Stop keosd, the EOSIO wallet manager.
@@ -342,7 +343,7 @@ Retry.
         logger.TRACE("""
             Keys in the open walet '{}':
             {}
-            """.format(self.name, wallet_keys.out_msg))
+            """.format(self.name, json.dumps(wallet_keys.json, indent=4)))
         return wallet_keys.json
 
     def private_keys(self):

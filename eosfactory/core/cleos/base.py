@@ -56,7 +56,7 @@ class Command():
         cl.extend(args)
 
         if setup.IS_SAVE_COMMAND_LINES:
-            setup.add_to__COMMAND_LINE_FILE(" ".join(cl))        
+            setup.add_to__COMMAND_LINE_FILE(" ".join(cl))
         if setup.IS_PRINT_COMMAND_LINES:
             print("######## command line sent to cleos:")
             print(" ".join(cl))
@@ -173,15 +173,15 @@ class GetAccount(interface.Account, Command):
 
     Attributes:
         name (str): The EOSIO name of the account.
-        owner_key (str) The ``owner`` public key.
-        active_key (str) The ``active`` public key.
+        owner_key (.interface.Key) The ``owner`` key.
+        active_key (.interface.Key) The ``active`` key.
         json: The json representation of the object.
     """
     def __init__(self, account, is_verbose=True):
         interface.Account.__init__(self, interface.account_arg(account))
 
         Command.__init__(
-            self, 
+            self,
             [self.name, "--json"], 
             "get", "account", is_verbose)
 
@@ -192,9 +192,9 @@ class GetAccount(interface.Account, Command):
             if permission["required_auth"]["keys"]:
                 key = permission["required_auth"]["keys"][0]["key"]
                 if permission["perm_name"] == "owner":
-                    self.owner_key = key
+                    self.owner_key = interface.Key.create_key(key)
                 if permission["perm_name"] == "active":
-                    self.active_key = key
+                    self.active_key = interface.Key.create_key(key)
 
         self.printself()
 
@@ -279,7 +279,7 @@ class WalletCreate(interface.Wallet, Command):
             Wallet ``{}`` does not exist.
             """.format(self.name)) from ex
 
-            wallet_unlock = WalletUnlock(self.name, password, is_verbose=False)
+            WalletUnlock(self.name, password, is_verbose=False)
             self.json = {} 
             self.password = password
             self.is_created = False
@@ -691,6 +691,7 @@ class PushAction(Command):
                         trace["act"]["account"],
                         trace["act"]["name"],
                         trace["act"]["data"])
+
         self.printself()
 
     def __str__(self):

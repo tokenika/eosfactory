@@ -17,8 +17,7 @@ import importlib
 
 import eosfactory.core.setup as setup
 # Set the interface configuration (CLEOS or EOSJS):
-# setup.set_is_eosjs(False)
-setup.set_is_eosjs()
+# setup.set_is_eosjs()
 
 import unittest
 from eosfactory.eosf import *
@@ -41,7 +40,8 @@ class Test(unittest.TestCase):
         SCENARIO("""
         Create a contract from template, then build and deploy it.
         """)
-        resume()
+        # resume()
+        reset()
         create_master_account("MASTER")
 
         COMMENT("""
@@ -55,6 +55,7 @@ class Test(unittest.TestCase):
         COMMENT("""
         Create, build and deploy the contract:
         """)
+
         create_account("HOST", MASTER)
         smart = Contract(HOST, project_from_template(
             CONTRACT_WORKSPACE, template="hello_world", 
@@ -66,9 +67,9 @@ class Test(unittest.TestCase):
         Test an action for ALICE, including the debug buffer:
         """)
         HOST.push_action(
-            "hi", {"user":ALICE}, 
-            permission=(ALICE, Permission.ACTIVE),
-            force_unique=True)
+            "hi", {"user":ALICE},
+            permission=(ALICE, Permission.ACTIVE))
+        
         self.assertTrue("ALICE" in DEBUG())
 
         COMMENT("""

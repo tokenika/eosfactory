@@ -33,15 +33,85 @@ class Key(Omittable):
     Attributes:
         key_public (str): The public key of a key pair.
         key_private (str): The private key of a key pair.
-    """    
-    def __init__(self, key_public, key_private):
+    """
+    @staticmethod
+    def create_key(key):
+        if not key:
+            return Key()
+        
+        if isinstance(key, str):
+            if not is_public_key(key):
+                import eosfactory.core.errors as errors
+                raise errors.InterfaceError("""
+        The argument ``key`` is not a valid public key.
+        """)
+            return Key(key, None)
+        elif isinstance(key, Key):
+            return key
+        else:
+            import eosfactory.core.errors as errors
+            raise errors.InterfaceError("""
+        The argument ``key`` which is 
+        ``{}`` 
+        have to be either ``str`` or ``interface.Key``.
+        """.format(key))
+
+    @staticmethod
+    def get_key_private(key):
+        if isinstance(key, str):
+            if not is_private_key(key):
+                import eosfactory.core.errors as errors
+                raise errors.InterfaceError("""
+        The argument ``key`` is not a valid private key.
+        """)
+            return key
+        elif isinstance(key, Key):
+            return key.key_private
+        else:
+            import eosfactory.core.errors as errors
+            raise errors.InterfaceError("""
+        The argument ``key`` have to be either ``str`` or ``interface.Key``.
+        """)
+            
+    @staticmethod
+    def get_key_public(key):
+        if isinstance(key, str):
+            if not is_public_key(key):
+                import eosfactory.core.errors as errors
+                raise errors.InterfaceError("""
+        The argument ``key`` is not a valid public key.
+        """)
+            return key
+        elif isinstance(key, Key):
+            return key.key_public
+        else:
+            import eosfactory.core.errors as errors
+            raise errors.InterfaceError("""
+        The argument ``key`` have to be either ``str`` or ``interface.Key``.
+        """)
+
+    def __init__(self, key_public=None, key_private=None):
+
+        if key_public and not is_public_key(key_public):
+            import eosfactory.core.errors as errors
+            raise errors.InterfaceError("""
+        The argument ``key_public`` is not a valid public key.
+        """)
         self.key_public = key_public
+
+        if key_private and not is_private_key(key_private):
+            import eosfactory.core.errors as errors
+            raise errors.InterfaceError("""
+        The argument ``key_private`` is not a valid private key.
+        """)        
         self.key_private = key_private
+
         Omittable.__init__(self)
 
+    def is_complete(self):
+        return self.key_public and self.key_private
+
     def __str__(self):
-        if not self.key_private:
-            return "public:  {}".format(self.key_public)
         return "public: {}\nprivate: {}".format(
                                             self.key_public, self.key_private)
 
@@ -59,15 +129,17 @@ class Account(Omittable):
         name (str): EOSIO contract name
     """
     def __init__(self, name, owner_key=None, active_key=None):
-        self.name = account_arg(name)
+        self.name = account_arg(name) # Verifies name.
 
         if isinstance(name, Account):
             self.owner_key = name.owner_key
             self.active_key = name.active_key
-        else:
-            active_key = active_key if active_key else owner_key
-            self.owner_key = owner_key
-            self.active_key = active_key
+        elif isinstance(name, str):
+            if not active_key:
+                active_key = owner_key
+            self.owner_key = Key.create_key(owner_key)
+            self.active_key = Key.create_key(owner_key)
+
         Omittable.__init__(self)
     
     def owner_public(self):
@@ -125,11 +197,22 @@ def wallet_arg(wallet):
         return wallet
 
 
+def is_public_key(key):
+    return isinstance(key, str) and re.match(r"^[A-Za-z0-9]*$", key) \
+                                    and "EOS" == key[0:3] and len(key) == 53
+
+
+def is_private_key(key):
+    return isinstance(key, str) and re.match(r"^[A-Za-z0-9]*$", key) \
+                                    and key[0] == "5" and len(key) == 51
+
+
 def is_key(key):
-    return isinstance(key, Key) or isinstance(key, str) \
-        and (re.match(r"^[A-Za-z0-9]*$", key) \
-            and ("EOS" == key[0:3] and len(key) == 53) \
-                                    or key[0] == "5" and len(key) == 51)
+    return isinstance(key, Key) \
+        or isinstance(key, str) \
+                    and (re.match(r"^[A-Za-z0-9]*$", key) \
+                        and ("EOS" == key[0:3] and len(key) == 53) \
+                                            or key[0] == "5" and len(key) == 51)
 
 
 def is_account(account):

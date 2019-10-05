@@ -62,8 +62,7 @@ def permission_str(permission, account, default=None):
                             {"actor": account,
                             "permission": interface.Permission.ACTIVE.value})
     else:
-        if not isinstance(permission, list):
-            permission = interface.permission_arg(permission)
+        permission = interface.permission_arg(permission)
 
         for perm in permission:
             perm = perm.split("@")
@@ -88,27 +87,29 @@ class Command():
 
         setup.set_local_nodeos_address_if_none()
         header = header % {"endpoint": utils.relay(
-                            "http://" + config.RELY_URL, setup.nodeos_address(), 
+                            "http://" + config.RELY_URL, setup.nodeos_address(),
                             setup.IS_PRINT_REQUEST, setup.IS_PRINT_RESPONSE)
         }
         cl = ["node", "-e"]
         js = header + "\n" + utils.heredoc(js)
 
         if setup.IS_SHOW_PRIVATE_KEYS:
-            js = js.replace(
-                SIG_PROVIDER, 
-                "const signatureProvider = new JsSignatureProvider(\n{}\n);".format(
-                    json_module.dumps(wm.private_keys(is_verbose=False), indent=4))) 
+            if SIG_PROVIDER in js:
+                js = js.replace(
+                    SIG_PROVIDER,
+                    "const signatureProvider = new JsSignatureProvider(\n{}\n);".format(
+                            json_module.dumps(wm.private_keys(
+                                                is_verbose=False), indent=4)))
 
         if setup.IS_SAVE_COMMAND_LINES:
-            setup.add_to__COMMAND_LINE_FILE("\n" + js + "\n") 
+            setup.add_to__COMMAND_LINE_FILE("\n" + js + "\n")
         if setup.IS_PRINT_COMMAND_LINES:
             print("\n" + js + "\n")
-
-        js = js.replace(
-            SIG_PROVIDER, 
-            "const signatureProvider = new JsSignatureProvider(\n{}\n);".format(
-                json_module.dumps(wm.private_keys(is_verbose=False), indent=4)))
+        if SIG_PROVIDER in js:
+            js = js.replace(
+                SIG_PROVIDER,
+                "const signatureProvider = new JsSignatureProvider(\n{}\n);".format(
+                    json_module.dumps(wm.private_keys(is_verbose=False), indent=4)))
 
         cl.append(js)
 
@@ -116,7 +117,7 @@ class Command():
             process = subprocess.run(
                                         cl,
                                         stdout=subprocess.PIPE,
-                                        stderr=subprocess.PIPE) 
+                                        stderr=subprocess.PIPE)
             self.out_msg = process.stdout.decode("ISO-8859-1")
             self.out_msg_details = process.stderr.decode("ISO-8859-1")
             self.err_msg = None
@@ -211,7 +212,7 @@ def common_parameters(
     """
 
     if force_unique or max_cpu_usage or max_net_usage or ref_block:
-        raise errors.Error("""
+        raise errors.UserError("""
         Currently, parameters 
         ``force_unique``, ``max_cpu_usage``,``max_net_usage`` and ``ref_block`` are not supported with EOSJS interface.
         """)
@@ -325,7 +326,7 @@ class WalletList:
         is_verbose: If ``False`` do not print. Default is ``True``.
     """
     def __init__(self, is_verbose=True):
-        wm.list()
+        self.json = wm.list()
 
 
 class WalletImport:
@@ -353,8 +354,8 @@ class WalletRemove_key:
         key: A key object or a public key in WIF format to remove.
         is_verbose: If ``False`` do not print. Default is ``True``.
     """
-    def __init__(self, key, password, is_verbose=True):
-        wm.remove_key(wallet, key, is_verbose)
+    def __init__(self, key, wallet, password, is_verbose=True):
+        wm.remove_key(key, wallet, password, is_verbose)
 
 
 class WalletKeys:
@@ -715,7 +716,7 @@ class CreateAccount(interface.Account, Command):
                 "expiration_sec": expiration_sec,
                 "broadcast": "false" if dont_broadcast else "true",
                 "sign": "false" if skip_sign else "true",
-                "blocksBehind": delay_sec * 2,
+                "blocksBehind": delay_sec * 2 if delay_sec else 3,
             }, is_verbose)
 
         self.printself(is_verbose)
@@ -814,13 +815,12 @@ class PushAction(Command):
                 "expiration_sec": expiration_sec,
                 "broadcast": "false" if dont_broadcast else "true",
                 "sign": "false" if skip_sign else "true",
-                "blocksBehind": delay_sec * 2,
+                "blocksBehind": delay_sec * 2 if delay_sec else 3,
             }, is_verbose)
 
         self.console = ""
         self.act = ""
         if not dont_broadcast:
-            
             for act in self.json["processed"]["action_traces"]:
                 self.console += common.gather_console_output(act)
 
@@ -835,9 +835,6 @@ class PushAction(Command):
                         trace["act"]["data"])
 
         self.printself()
-
-    def get_transaction(self):
-        return GetTransaction(self.transaction)
 
     def __str__(self):
         import eosfactory.core.str.push

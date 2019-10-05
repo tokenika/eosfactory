@@ -145,7 +145,7 @@ class SystemNewaccount(interface.Account, base_commands.Command):
                 "expiration_sec": expiration_sec,
                 "broadcast": "false" if dont_broadcast else "true",
                 "sign": "false" if skip_sign else "true",
-                "blocksBehind": delay_sec * 2,
+                "blocksBehind": delay_sec * 2 if delay_sec else 3,
                 "transfer": "true" if transfer else "false",
                 "stake_net_quantity": "%0.4f EOS" % (stake_net),
                 "stake_cpu_quantity": "%0.4f EOS" % (stake_cpu),
@@ -263,7 +263,7 @@ class BuyRam(base_commands.Command):
                 "expiration_sec": expiration_sec,
                 "broadcast": "false" if dont_broadcast else "true",
                 "sign": "false" if skip_sign else "true",
-                "blocksBehind": delay_sec * 2,
+                "blocksBehind": delay_sec * 2 if delay_sec else 3,
                 "buyrambytes": """
                     {
                         account: 'eosio',
@@ -396,7 +396,7 @@ class DelegateBw(base_commands.Command):
                 "expiration_sec": expiration_sec,
                 "broadcast": "false" if dont_broadcast else "true",
                 "sign": "false" if skip_sign else "true",
-                "blocksBehind": delay_sec * 2,
+                "blocksBehind": delay_sec * 2 if delay_sec else 3,
                 "transfer": "true" if transfer else "false",
                 "stake_net_quantity": "%0.4f EOS" % (stake_net_quantity),
                 "stake_cpu_quantity": "%0.4f EOS" % (stake_cpu_quantity),

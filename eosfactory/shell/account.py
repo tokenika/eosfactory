@@ -23,8 +23,6 @@ import eosfactory.core.account as account_module
 import eosfactory.shell.wallet as wallet
 
 
-wallet_globals = None
-wallet_singleton = None
 IS_MASTER_ACCOUNT = "is_master_account"
 IS_ACCOUNT = "is_account"
 
@@ -49,10 +47,10 @@ def add_methods_and_put_on_stack(account_object_name, account_object, stack=None
     account_object.__class__ = GetAccountAccount
     set_is_account(account_object)
 
-    wallet_singleton.map_account(account_object)
+    wallet.Wallet.wallet_singleton.map_account(account_object)
     # export the account object to the globals in the wallet module:
     if not stack:
-        stack = wallet_globals
+        stack = wallet.Wallet.wallet_globals
     stack[account_object_name] = account_object
 
     logger.TRACE("""
@@ -92,6 +90,7 @@ class Account():
                 is ``False``.
         """
         self.stop_if_account_is_not_created()
+
         try:
             self.actions_result = GET_COMMANDS.GetActions(
                                 self, pos, offset, console, is_verbose=False)
@@ -113,6 +112,7 @@ class Account():
             wasm (bool): Save contract as wasm.
         """
         self.stop_if_account_is_not_created()
+
         try:
             self.code_result = GET_COMMANDS.GetCode(
                                     self, code, abi, wasm, is_verbose=False)
@@ -164,8 +164,9 @@ class Account():
         :func:`.cleos.base.common_parameters`.
         """
         self.stop_if_account_is_not_created()
+
         try:
-            self.set_contract_result = SET_COMMANDS.SetContract(
+            self.contract_result = SET_COMMANDS.SetContract(
                         self, contract_dir, 
                         wasm_file, abi_file,
                         clear, 
@@ -179,7 +180,7 @@ class Account():
         except errors.UserError as ex:
             manager.user_error(ex)
             
-        logger.OUT(self.set_contract_result)
+        logger.OUT(self.contract_result)
 
     def set_account_permission(
                 self, 
@@ -226,9 +227,9 @@ class Account():
         logger.TRACE("""
             * Set account permission.
             """)
-        
+
         try:
-            self.set_account_permission_result \
+            self.account_permission_result \
                 = SET_COMMANDS.SetAccountPermission(
                     self, permission_name, authority, parent,
                     permission,
@@ -278,8 +279,9 @@ class Account():
         logger.TRACE("""
         * Set action permission.
         """)
+
         try:
-            self.set_action_permission_result \
+            self.action_permission_result \
                 = SET_COMMANDS.SetActionPermission(
                     self, code, type, requirement,
                     permission,
@@ -334,9 +336,9 @@ class Account():
         permission = permission if permission else self
 
         try:
-            self.push_action_result = BASE_COMMANDS.PushAction(
+            self.action_result = BASE_COMMANDS.PushAction(
                 self, action, data,
-                permission, expiration_sec, 
+                permission, expiration_sec,
                 skip_sign, dont_broadcast, force_unique,
                 max_cpu_usage, max_net_usage,
                 ref_block,
@@ -351,12 +353,8 @@ class Account():
         logger.INFO("""
             {}
         """.format(re.sub(' +',' ', data)))
-
-        try:
-            self._console = set_action_permission.console
-            logger.DEBUG(self._console)
-        except:
-            pass
+        if self.action_result.console:
+            logger.DEBUG(self.action_result.console)
 
     def show_action(
             self, action, data, permission=None,
@@ -368,6 +366,7 @@ class Account():
         """ Implement the `push action` command without broadcasting. 
         """
         self.stop_if_account_is_not_created()
+
         try:
             self.push_action(
                 action, data,
@@ -419,6 +418,7 @@ class Account():
         logger.INFO("""
         * Table ``{}`` for ``{}``
         """.format(table_name, scope))
+
         try:
             self.table_result = GET_COMMANDS.GetTable(
                         self, table_name, scope,
@@ -430,6 +430,7 @@ class Account():
             manager.user_error(ex)
 
         logger.OUT(str(self.table_result))
+        return self.table_result
 
     def buy_ram(
             self, receiver=None,
@@ -922,7 +923,7 @@ def create_account(
         account_object_name,
         creator, 
         account_name="",
-        owner_key="", active_key="",
+        owner_key=None, active_key=None,
         stake_net=3, stake_cpu=3,
         permission=None,
         expiration_sec=None,
@@ -957,11 +958,11 @@ def create_account(
             account
         account_name (str): The name of an valid EOSIO account. If not set, it 
             is random.
-        owner_key (.core.interface.Key): The ``owner`` key pair. If not set, it
-            is random.
-        active_key (.core.interface.Key): The ``active`` key pair. If not set, 
-            and the ``owner_key`` is set, it is substituted with the ``owner_key``.
-            Otherwise, it is random.
+        owner_key (.core.interface.Key): An owner's key. If not set, it 
+            is randomized.
+        active_key (.core.interface.Key): An active key. If not set, and the 
+            ``owner_key`` is set, it is substituted with the ``owner_key``. 
+            Otherwise, it is randomized.
         stake_net (int): The amount of EOS delegated for net bandwidth.
         stake_cpu (int): The amount of EOS delegated for CPU bandwidth.
         ram_bytes (int): The amount of RAM bytes to purchase.
@@ -974,14 +975,29 @@ def create_account(
     See definitions of the remaining parameters: \
     :func:`.cleos.base.common_parameters`.
     """
+    try:
+        if not owner_key:
+            owner_key = interface.Key()
+        else:
+            if not isinstance(owner_key, interface.Key):
+                raise errors.TypeError(
+                            "owner_key", type(owner_key), type(interface.Key))
+        if not active_key:
+            active_key = active_key = owner_key
+        else:
+            if not isinstance(active_key, interface.Key):
+                raise errors.TypeError(
+                            "active_key", type(active_key), type(interface.Key))
+    except errors.UserError as ex:
+        manager.user_error(ex)
 
     if isinstance(account_name, testnet_module.Testnet):
         testnet = account_name
 
     if testnet:
         account_name = testnet.account_name
-        owner_key_private = testnet.owner_key_private # Can be None
-        active_key_private = testnet.active_key_private # Can be None 
+        owner_key.key_private = testnet.owner_key_private # Can be None
+        active_key.key_private = testnet.active_key_private # Can be None 
 
     account_globals = create_wallet_if_none(inspect.stack()[1][0].f_globals)
 
@@ -1003,8 +1019,6 @@ def create_account(
         ######### Create an account object ``{}``.
         """.format(account_object_name))
 
-    
-
     if not creator \
         or not (hasattr(creator, IS_ACCOUNT) \
                                     or hasattr(creator, IS_MASTER_ACCOUNT)):
@@ -1014,37 +1028,27 @@ def create_account(
             """)
 
     # If ``account_name`` is set then check the account name for existence and 
-    # verify keys that possibly are set as ``owner_key_private`` and 
-    # ``active_key_private`` or exist in the wallet.
+    # verify keys, set as ``owner_key_private`` and ``active_key_private``,
+    # or existing in the wallet.
     if account_name:
         account_object = account_module.GetAccount(
                                         account_object_name, account_name, 
-                                        owner_key_private, active_key_private)
-        # Verify the keys
-        put_keys_to_wallet(
-                            account_name, 
-                            account_object.owner_key, account_object.active_key)
+                                        owner_key.key_private, 
+                                        active_key.key_private)
+        if account_object.exists:
+            # Verify the keys, raise an exception if verification fails.
+            put_keys_to_wallet(account_object)
 
-        if account_object_name:
             set_is_master_account(account_object)
-            add_methods_and_put_on_stack(
-                                    account_object_name, account_object)
-        
-        add_methods_and_put_on_stack(account_object_name, account_object)
-        return account_object
-    
-        raise errors.Error("""
-            There is no account named ``{}`` in blockchain {}.
-            """.format(account_name, setup.nodeos_address()))
+            add_methods_and_put_on_stack(account_object_name, account_object)
+            
+            return account_object
 
-    else:
+    if not account_name:
         account_name = BASE_COMMANDS.account_name()
 
     # Create a new account in the blockchain.
-    if owner_key:
-        if not active_key:
-            active_key = owner_key
-    else:
+    if not (owner_key.is_complete() and active_key.is_complete()):
         owner_key = BASE_COMMANDS.CreateKey(is_verbose=False)
         active_key = BASE_COMMANDS.CreateKey(is_verbose=False)
 
@@ -1108,26 +1112,17 @@ def create_account(
 def reboot():
     # """Reset the :mod:`.shell.account` module.
     # """
-    global wallet_singleton
-    if wallet_singleton:
-        wallet_singleton.delete_globals()
-        del wallet_singleton
-        wallet_singleton = None
+    if wallet.Wallet.wallet_singleton:
+        wallet.Wallet.wallet_singleton.delete_globals()
+        wallet.Wallet.wallet_singleton = None 
 
-    wallet.Wallet.wallet_single = None    
-
-    global wallet_globals
-    wallet_globals = None
+    wallet.Wallet.wallet_globals = None
     setup.reboot()
 
 
 def create_wallet_if_none(account_globals):
-    global wallet_globals
-    if not wallet_globals:
-        global wallet_singleton
-        wallet_singleton = wallet.create_wallet(
-            wallet_globals=account_globals, restore=True)
-        wallet_globals = wallet.Wallet.wallet_globals
+    if not wallet.Wallet.wallet_singleton:
+        wallet.create_wallet(wallet_globals=account_globals, restore=True)
     return wallet.Wallet.wallet_globals
 
 
@@ -1152,21 +1147,20 @@ def put_keys_to_wallet(account_object, owner_key=None, active_key=None):
     if not active_key:
         active_key = owner_key
 
-    global wallet_singleton
     logger.TRACE("""
         * Ensuring that the wallet has keys to the account ``{}``
         """.format(interface.Account(account_object).name))
-    if not wallet_singleton.keys_in_wallets(
+    if not wallet.Wallet.wallet_singleton.keys_in_wallets(
                             [owner_key.key_public, active_key.key_public]):
         
-        if not wallet_singleton.import_key(owner_key) \
-                                or not wallet_singleton.import_key(active_key):
+        if not wallet.Wallet.wallet_singleton.import_key(owner_key) \
+                                or not wallet.Wallet.wallet_singleton.import_key(active_key):
             raise errors.Error("""
             Wrong or missing keys for the account ``{}`` in the wallet.
             """.format(interface.Account(account_object).name))
 
         # See whether the imported private keys match their public counterparts.
-        if not wallet_singleton.keys_in_wallets(
+        if not wallet.Wallet.wallet_singleton.keys_in_wallets(
                             [owner_key.key_public, active_key.key_public]):
 
             raise errors.Error("""

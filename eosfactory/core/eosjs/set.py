@@ -138,7 +138,7 @@ class SetContract(base_commands.Command):
                 "expiration_sec": expiration_sec,
                 "broadcast": "false" if dont_broadcast else "true",
                 "sign": "false" if skip_sign else "true",
-                "blocksBehind": delay_sec * 2,
+                "blocksBehind": delay_sec * 2 if delay_sec else 3,
             }, is_verbose)
         
         self.printself()
@@ -423,7 +423,7 @@ class SetAccountPermission(base_commands.Command):
                 "expiration_sec": expiration_sec,
                 "broadcast": "false" if dont_broadcast else "true",
                 "sign": "false" if skip_sign else "true",
-                "blocksBehind": delay_sec * 2,
+                "blocksBehind": delay_sec * 2 if delay_sec else 3,
             }, is_verbose)
 
         self.console = None
@@ -544,7 +544,7 @@ class SetActionPermission(base_commands.Command):
                 "expiration_sec": expiration_sec,
                 "broadcast": "false" if dont_broadcast else "true",
                 "sign": "false" if skip_sign else "true",
-                "blocksBehind": delay_sec * 2,
+                "blocksBehind": delay_sec * 2 if delay_sec else 3,
             }, is_verbose)
 
         self.console = None
