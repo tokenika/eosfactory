@@ -66,8 +66,8 @@ class Wallet(interface.Wallet):
             global _KEYS_CIPHERED
             _KEYS_CIPHERED = []
             try:
-                with open(wallet_file(name), "r")  as input:
-                    _KEYS_CIPHERED = [key.rstrip('\n') for key in input]
+                with open(wallet_file(name), "r")  as _f:
+                    _KEYS_CIPHERED = [key.rstrip('\n') for key in _f]
             except Exception as e:
                 raise errors.Error(str(e)) from e
             
@@ -94,8 +94,8 @@ class Wallet(interface.Wallet):
             self.password = key.decode("utf-8")
 
             try:
-                with open(_file, "w+")  as out:
-                    out.write("")
+                with open(_file, "w+")  as _f:
+                    _f.write("")
             except Exception as e:
                 raise errors.Error(str(e)) from e
             
@@ -220,8 +220,8 @@ def unlock(wallet, password=None, is_verbose=True):
         try:
             _OPEN_WALLETS[name].cipher_suite = fernet.Fernet(str.encode(password))
             global _KEYS_CIPHERED
-            with open(wallet_file(name), "r")  as input:
-                _KEYS_CIPHERED = [key.rstrip('\n') for key in input]
+            with open(wallet_file(name), "r")  as _f:
+                _KEYS_CIPHERED = [key.rstrip('\n') for key in _f]
         except Exception as e:
             raise errors.Error("""
                 Wrong password.n
@@ -270,9 +270,16 @@ def import_key(wallet, key, is_verbose=True):
             raise errors.Error("""
                 Private key is not defined.
                 """)
+    try:
+        with open(wallet_file(name), "r")  as _f:
+            keys_ciphered = [key.rstrip('\n') for key in _f]
+            keys_ciphered.append(
+                            encrypt(key_private, _OPEN_WALLETS[name].cipher_suite))
 
-    with open(wallet_file(name), "a")  as out:
-        out.write(encrypt(key_private, _OPEN_WALLETS[name].cipher_suite) + "\n")
+            with utils.atomic_write(wallet_file(name))  as _ff:
+                _ff.write("\n".join(keys_ciphered))
+    except Exception as e:
+        raise errors.Error(str(e)) from e
 
     key_public = Node("""
     const ecc = require('eosjs-ecc');
@@ -330,9 +337,11 @@ def remove_key(key, wallet, password, is_verbose=True):
             for private_key in private_keys_:
                 if not private_key in trash:
                     remaining.append(private_key)
-
-            with open(wallet_file(name), "w")  as out:
-                out.write("\n".join(remaining))
+        try:
+            with utils.atomic_write(wallet_file(name))  as _f:
+                _f.write("\n".join(remaining))
+        except Exception as e:
+            raise errors.Error(str(e)) from e
     
     if is_verbose:
         if trash:
@@ -374,8 +383,11 @@ def private_keys(wallet=None, is_verbose=True):
         is_open_and_unlocked(name)
 
         global _KEYS_CIPHERED
-        with open(wallet_file(name), "r")  as f:
-            _KEYS_CIPHERED = [key.rstrip('\n') for key in f]
+        try:
+            with open(wallet_file(name), "r")  as _f:
+                _KEYS_CIPHERED = [key.rstrip('\n') for key in _f]
+        except Exception as e:
+            raise errors.Error(str(e)) from e
 
         for key in _KEYS_CIPHERED:
             _keys.append(decrypt(key, _OPEN_WALLETS[name].cipher_suite))
@@ -467,81 +479,3 @@ def unlocked():
         if is_unlocked(name):
             retval.append(name)
     return retval
-
-
-import contextlib
-import stat
-import tempfile
-
-# https://code.activestate.com/recipes/579097-safely-and-atomically-write-to-a-file/
-@contextlib.contextmanager
-def atomic_write(filename, text=True, keep=True,
-                 owner=None, group=None, perms=None,
-                 suffix='.bak', prefix='tmp'):
-    """Context manager for overwriting a file atomically.
-
-    Usage:
-
-    >>> with atomic_write("myfile.txt") as f:  # doctest: +SKIP
-    ...     f.write("data")
-
-    The context manager opens a temporary file for writing in the same
-    directory as `filename`. On cleanly exiting the with-block, the temp
-    file is renamed to the given filename. If the original file already
-    exists, it will be overwritten and any existing contents replaced.
-
-    (On POSIX systems, the rename is atomic.)
-
-    If an uncaught exception occurs inside the with-block, the original
-    file is left untouched. By default the temporary file is also
-    preserved, for diagnosis or data recovery. To delete the temp file,
-    pass `keep=False`. Any errors in deleting the temp file are ignored.
-
-    By default, the temp file is opened in text mode. To use binary mode,
-    pass `text=False` as an argument.
-
-    The temporary file is readable and writable only by the creating user.
-    By default, the original ownership and access permissions of `filename`
-    are restored after a successful rename. If `owner`, `group` or `perms`
-    are specified and are not None, the file owner, group or permissions
-    are set to the given numeric value(s). If they are not specified, or
-    are None, the appropriate value is taken from the original file (which
-    must exist).
-
-    By default, the temp file will have a name starting with "tmp" and
-    ending with ".bak". You can vary that by passing strings as the
-    `suffix` and `prefix` arguments.
-    """
-    t = (uid, gid, mod) = (owner, group, perms)
-    if any(x is None for x in t):
-        info = os.stat(filename)
-        if uid is None:
-            uid = info.st_uid
-        if gid is None:
-            gid = info.st_gid
-        if mod is None:
-            mod = stat.S_IMODE(info.st_mode)
-    path = os.path.dirname(filename)
-    fd, tmp = tempfile.mkstemp(
-                            suffix=suffix, prefix=prefix, dir=path, text=text)
-    try:
-        replace = os.replace  # Python 3.3 and better.
-    except AttributeError:
-        # Atomic on POSIX. Not sure about Cygwin, OS/2 or others.
-        replace = os.rename
-    try:
-        with os.fdopen(fd, 'w' if text else 'wb') as f:
-            yield f
-        # Perform an atomic rename (if possible). This will be atomic on 
-        # POSIX systems.
-        replace(tmp, filename)
-        tmp = None
-        os.chown(filename, uid, gid) # pylint: disable=no-member
-        os.chmod(filename, mod)
-    finally:
-        if (tmp is not None) and (not keep):
-            # Silently delete the temporary file. Ignore any errors.
-            try:
-                os.unlink(tmp)
-            except:
-                pass

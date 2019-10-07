@@ -16,12 +16,14 @@ CODE_OPTIONS = "codeOptions"
 TEST_OPTIONS = "testOptions"
 
 def get_includes():
-    includes = config.eosio_cpp_includes()
     retval = []
     root = config.wsl_root()
-    for include in includes:
-        retval.append(root + include)
 
+    includes = config.eosio_cpp_includes()
+    # for include in includes:
+    #     retval.append(root + include)
+
+    retval.append(root + includes[0] + "/**")
     retval.append("${workspaceFolder}")
     retval.append("${workspaceFolder}/include")
 

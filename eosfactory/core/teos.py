@@ -308,10 +308,11 @@ The file path is to be absolute or relative to the project directory.
             entry = entry.replace(WORKSPACE_FOLDER, contract_dir)
             command_line.append("-I=" + linuxize_path(entry))
         else:
-            path = linuxize_path(entry)
-            if not path in config.eosio_cpp_includes():
-                command_line.append(
-                    "-I=" + path)
+            if not entry.endswith("/**"):
+                path = linuxize_path(entry)
+                if not path in config.eosio_cpp_includes():
+                    command_line.append(
+                        "-I=" + path)
 
     for entry in c_cpp_properties[CONFIGURATIONS][0][vscode.LIBS]:
         command_line.append(

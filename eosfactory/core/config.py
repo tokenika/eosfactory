@@ -74,18 +74,18 @@ libs_ = ("LIBS", "libs")
 interface_package_ = ("INTERFACE_PACKAGE", [CLEOS_PACKAGE])
 
 
-cli_exe_ = ("EOSIO_CLI_EXECUTABLE", 
+cli_exe_ = ("EOSIO_CLI_EXECUTABLE",
                         ["cleos", "/usr/bin/cleos", "/usr/local/bin/cleos"])
-keosd_exe_ = ("KEOSD_EXECUTABLE", 
-                        ["keosd","/usr/bin/keosd", "/usr/local/bin/keosd"])
-node_exe_ = ("LOCAL_NODE_EXECUTABLE", 
-                        ["nodeos","/usr/bin/nodeos", "/usr/local/bin/nodeos"])
-eosio_cpp_ = ("EOSIO_CPP", 
+keosd_exe_ = ("KEOSD_EXECUTABLE",
+                        ["keosd", "/usr/bin/keosd", "/usr/local/bin/keosd"])
+node_exe_ = ("LOCAL_NODE_EXECUTABLE",
+                        ["nodeos", "/usr/bin/nodeos", "/usr/local/bin/nodeos"])
+eosio_cpp_ = ("EOSIO_CPP",
             ["eosio-cpp", "/usr/bin/eosio-cpp", "/usr/local/bin/eosio-cpp"])
-eosio_cdt_root_ = ("EOSIO_CDT_ROOT", 
+eosio_cdt_root_ = ("EOSIO_CDT_ROOT",
     ["/usr/opt/eosio.cdt/0.0.0/", "/usr/local/Cellar/eosio.cdt/0.0.0/opt/eosio.cdt/"])
 eosio_cpp_includes_ = (
-    "EOSIO_CPP_INCLUDES", 
+    "EOSIO_CPP_INCLUDES",
     [["include", "include/libcxx", "include/eosiolib/core", \
                                                 "include/eosiolib/contracts"]])
 
