@@ -11,6 +11,7 @@ Note that the declarations
 are abundant: they are in place to satisfy the linter, whu complains about 
 dynamically created objects.
 '''
+import time
 import unittest
 from eosfactory.eosf import *
 
@@ -36,6 +37,7 @@ class Test(unittest.TestCase):
         Create a contract from template, then build and deploy it.
         ''')
         reset()
+        time.sleep(3)
         create_master_account("MASTER")
 
         COMMENT('''
