@@ -771,7 +771,7 @@ def node_probe():
     NUMBER_GET_INFO_CALLS = 7
     CHECK_COUNT = 2
     RATIO_THRESHOLD = 2.5
-    NODEOS = "nodeos"
+    NODEOS = "amnod"
 
     count = NUMBER_GET_INFO_CALLS
     block_num = None

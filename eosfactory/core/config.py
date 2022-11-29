@@ -58,11 +58,11 @@ libs_ = ("LIBS", "libs")
 
 
 cli_exe_ = ("EOSIO_CLI_EXECUTABLE", 
-                        ["cleos", "/usr/bin/cleos", "/usr/local/bin/cleos"])
+                        ["amcli", "/usr/bin/amcli", "/usr/opt/amax/0.5.0/bin/amcli"])
 keosd_exe_ = ("KEOSD_EXECUTABLE", 
-                        ["keosd","/usr/bin/keosd", "/usr/local/bin/keosd"])
+                        ["amkey","/usr/bin/amkey", "/usr/opt/amax/0.5.0/bin/amkey"])
 node_exe_ = ("LOCAL_NODE_EXECUTABLE", 
-                        ["nodeos","/usr/bin/nodeos", "/usr/local/bin/nodeos"])
+                        ["amnod","/usr/bin/amnod", "/usr/opt/amax/0.5.0/bin/amnod"])
 eosio_cpp_ = ("EOSIO_CPP", 
             ["eosio-cpp", "/usr/bin/eosio-cpp", "/usr/local/bin/eosio-cpp"])
 eosio_cdt_root_ = ("EOSIO_CDT_ROOT", 
