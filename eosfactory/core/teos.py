@@ -603,7 +603,7 @@ def args(clear=False):
         "--contracts-console",
         "--verbose-http-errors",
         "--enable-stale-production",
-        "--producer-name eosio",
+        "--producer-name " + config.SYSTEM_ACCOUNT,
         "--signature-provider " + config.eosio_key_public() + "=KEY:"
             + config.eosio_key_private(),
         "--plugin eosio::producer_plugin",

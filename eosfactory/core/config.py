@@ -50,7 +50,7 @@ nodeos_config_dir_ = ("NODEOS_CONFIG_DIR", [None])
 nodeos_data_dir_ = ("NODEOS_DATA_DIR", [None])
 nodeos_options_ = ("NODEOS_OPTIONS", [])
 
-keosd_wallet_dir_ = ("KEOSD_WALLET_DIR", ["${HOME}/amax-wallet/"])
+keosd_wallet_dir_ = ("KEOSD_WALLET_DIR", ["/root/amax-wallet/"])
 chain_state_db_size_mb_ = ("EOSIO_SHARED_MEMORY_SIZE_MB", ["300"])
 
 wsl_root_ = ("WSL_ROOT", [None])
@@ -59,12 +59,12 @@ includes_ = ("INCLUDE", "includes")
 libs_ = ("LIBS", "libs")
 
 
-cli_exe_ = ("EOSIO_CLI_EXECUTABLE",
-                        ["amcli", "/usr/bin/amcli", "${HOME}/amax/0.5.0/bin/amcli"])
-keosd_exe_ = ("KEOSD_EXECUTABLE",
-                        ["amkey","/usr/bin/amkey", "${HOME}/amax/0.5.0/bin/amkey"])
-node_exe_ = ("LOCAL_NODE_EXECUTABLE",
-                        ["amnod","/usr/bin/amnod", "${HOME}/amax/0.5.0/bin/amnod"])
+cli_exe_ = ("EOSIO_CLI_EXECUTABLE", 
+                        ["amcli", "/usr/bin/amcli", "/usr/opt/amax/0.5.0/bin/amcli"])
+keosd_exe_ = ("KEOSD_EXECUTABLE", 
+                        ["amkey","/usr/bin/amkey", "/usr/opt/amax/0.5.0/bin/amkey"])
+node_exe_ = ("LOCAL_NODE_EXECUTABLE", 
+                        ["amnod","/usr/bin/amnod", "/usr/opt/amax/0.5.0/bin/amnod"])
 eosio_cpp_ = ("EOSIO_CPP",
             ["amax-cpp", "/usr/bin/amax-cpp", "/usr/local/amax.cdt/bin/amax-cpp", "${HOME}/amax.cdt/bin/amax-cpp"])
 eosio_cdt_root_ = ("EOSIO_CDT_ROOT",

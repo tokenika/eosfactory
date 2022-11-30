@@ -122,6 +122,7 @@ def node_start(clear=False, nodeos_stdout=None):
         try:
             teos.node_start(clear, nodeos_stdout)
             teos.node_probe()
+            # time.sleep(3)
             return
         except Exception as e:
             if not (clear and teos.ERR_MSG_IS_STUCK in str(e)):

@@ -65,14 +65,14 @@ class Test(unittest.TestCase):
             "hi", {"user":ALICE}, 
             permission=(ALICE, Permission.ACTIVE),
             force_unique=True)
-        self.assertTrue("ALICE" in DEBUG())
+        self.assertTrue(ALICE.__str__ in DEBUG())
 
         COMMENT('''
         Test an action for CAROL, including the debug buffer:
         ''')
         HOST.push_action(
             "hi", {"user":CAROL}, permission=(CAROL, Permission.ACTIVE))
-        self.assertTrue("CAROL" in DEBUG())
+        self.assertTrue(CAROL in DEBUG())
 
         COMMENT('''
         WARNING: This action should fail due to authority mismatch!
