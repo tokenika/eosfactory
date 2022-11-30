@@ -28,13 +28,14 @@ CONFIGURATIONS = "configurations"
 BROWSE = "browse"
 WORKSPACE_FOLDER = "${workspaceFolder}"
 # The root directory of the Windows WSL, or empty string if not Windows:
-ROOT = config.wsl_root() 
+ROOT = config.wsl_root()
 HOME = ROOT + os.environ["HOME"] # Linux ~home<user name>
 PROJECT_0_DIR = os.path.join(config.template_dir(), config.PROJECT_0)
 ERR_MSG_IS_STUCK = "The process of 'nodeos' is stuck."
+BLOCK_INTERVAL=1
 
 
-def resolve_home(string): 
+def resolve_home(string):
     return string.replace(TEMPLATE_HOME, HOME)
 
 
@@ -73,11 +74,11 @@ def get_c_cpp_properties(contract_dir=None, c_cpp_properties_path=None):
 
 def build(
         contract_dir_hint, c_cpp_properties_path=None,
-        compile_only=False, is_test_mode=False, is_execute=False, 
+        compile_only=False, is_test_mode=False, is_execute=False,
         verbosity=None):
     '''Produce ABI and WASM files.
 
-    Compiler options come with the argument 'c_cpp_properties_path', as 
+    Compiler options come with the argument 'c_cpp_properties_path', as
     components of 'compilerOptions' list. Option can be any of the 'eosio-cpp'
     options, plus the following ones:
 
@@ -87,17 +88,17 @@ def build(
     * -o - the same as the corresponding eosio-cpp option, but may be relative
         to 'build' directory
 
-    Without any option set, the only source file is determined as a result of the function :func:`.core.config.contract_source_files`, if the result is a 
+    Without any option set, the only source file is determined as a result of the function :func:`.core.config.contract_source_files`, if the result is a
     single file. If it is not, an error is thrown, stating that the source file has to be specified with the '--src' option.
 
-    The ABI and WASM targets are named after the contract source file. 
+    The ABI and WASM targets are named after the contract source file.
 
     Args:
         contract_dir_hint (str): Path, may be partial, to the project directory.
-        c_cpp_properties_path (str): If set, the path to a c_cpp_properties json 
+        c_cpp_properties_path (str): If set, the path to a c_cpp_properties json
             file in '.vscode' folder in the project directory.
         compile_only (bool): If set, do not link.
-        verbosity (([.core.logger.Verbosity])): Verbosity parameter, used in 
+        verbosity (([.core.logger.Verbosity])): Verbosity parameter, used in
             loggers.
     '''
     contract_dir = config.contract_dir(contract_dir_hint)
@@ -109,7 +110,7 @@ def build(
     target_path = None
     compile_options = []
     source_files = []
-    
+
     ############################################################################
     # begin compiler option logics
     ############################################################################
@@ -133,7 +134,7 @@ def build(
         compile_options.append("-abigen")
     if is_test_mode and not "-fnative" in compile_options_:
         compile_options.append("-fnative")
-    
+
     for i in range(0, len(compile_options_)):
         entry = compile_options_[i]
         if "-R=" in entry:
@@ -166,7 +167,7 @@ The option '-o' does not has its value set:
 Cannot make directory set with the option '-o'.
 {}
                         '''.format(str(e)))
-        
+
         elif "-abigen_output" in entry:
             abigen_path = utils.wslMapWindowsLinux(
                                     entry.replace("-abigen_output=", "").strip())
@@ -196,9 +197,9 @@ Cannot make directory set with the option '-abigen_output'.
                     next_item = compile_options_[next_index]
                     if "-" in next_item:
                         break
-                    
+
                     input_files_ = input_files_ + " " + next_item
-                    
+
             if not input_files_:
                 raise errors.Error('''
 The option '--src' does not has its value set:
@@ -218,7 +219,7 @@ The option '--src' does not has its value set:
                 if not os.path.exists(temp):
                     raise errors.Error('''
 The source file
-{} 
+{}
 cannot be found. It is neither absolute nor relative to the contract directory
 or relative to the 'src' directory.
                     '''.format(input_file))
@@ -233,15 +234,15 @@ or relative to the 'src' directory.
 
     if not source_files:
         source_files = contract_source_files[1]
-    
+
     if not source_files:
         raise errors.Error('''
 Cannot find any source file (".c", ".cpp",".cxx", ".c++") in the contract folder.
         ''')
 
-    if not is_test_mode and len(source_files) > 1: 
+    if not is_test_mode and len(source_files) > 1:
             raise errors.Error('''
-Cannot determine the source file of the contract. There is many files in 
+Cannot determine the source file of the contract. There is many files in
 the 'src' directory, namely:
 {}
 Specify the file with the compiler option '--src', for
@@ -257,7 +258,7 @@ The file path is to be absolute or relative to the project directory.
     if not contract_src_name and len(source_files) == 1:
             contract_src_name = os.path.splitext(
                                         os.path.basename(source_files[0]))[0]
-        
+
     ############################################################################
     # end compiler option logics
     ############################################################################
@@ -281,7 +282,7 @@ The file path is to be absolute or relative to the project directory.
                 ######## command line:
                 {}
                 '''.format(" ".join(command_line)), [logger.Verbosity.DEBUG])
-        utils.long_process(command_line, build_dir, is_verbose=True, 
+        utils.long_process(command_line, build_dir, is_verbose=True,
                                                             prompt=target_path)
         return
 
@@ -319,43 +320,43 @@ The file path is to be absolute or relative to the project directory.
             ######## command line:
             {}
             '''.format(" ".join(command_line)), [logger.Verbosity.DEBUG])
-        
-    utils.long_process(command_line, build_dir, is_verbose=True, 
+
+    utils.long_process(command_line, build_dir, is_verbose=True,
                                                             prompt="eosio-cpp")
     if not compile_only:
         if "wasm" in target_path:
             logger.TRACE('''
-                ABI file writen to file: 
+                ABI file writen to file:
                     {}
-                '''.format(os.path.normpath(abigen_path)), verbosity)        
+                '''.format(os.path.normpath(abigen_path)), verbosity)
             logger.TRACE('''
-                WASM file writen to file: 
+                WASM file writen to file:
                     {}
                 '''.format(os.path.normpath(target_path)), verbosity)
         else:
             logger.TRACE('''
-                terget writen to file: 
+                terget writen to file:
                     {}
                 '''.format(os.path.normpath(target_path)), verbosity)
-    print("eosio-cpp: OK")            
+    print("eosio-cpp: OK")
 
 
 def project_from_template(
         project_name, template=None, workspace_dir=None,
         c_cpp_prop_path=None,
         includes=None,
-        libs=None, 
-        remove_existing=False, 
-        open_vscode=False, throw_exists=False, 
+        libs=None,
+        remove_existing=False,
+        open_vscode=False, throw_exists=False,
         verbosity=None):
     '''Given the project name and template name, create a smart contract project.
 
     - **parameters**::
 
-        project_name: The name of the project, or an existing path to 
+        project_name: The name of the project, or an existing path to
             a directory.
         template: The name of the template used.
-        workspace_dir: If set, the folder for the work-space. Defaults to the 
+        workspace_dir: If set, the folder for the work-space. Defaults to the
             value returned by the config.contract_workspace_dir() function.
         includes: If set, comma-separated list of include folders.
         libs: If set, comma-separated list of libraries.
@@ -370,7 +371,7 @@ def project_from_template(
     if not os.path.isdir(template_dir):
         raise errors.Error('''
 The contract project template '{}' does not exist.
-        '''.format(template_dir)) 
+        '''.format(template_dir))
 
     if c_cpp_prop_path:
         c_cpp_prop_path = linuxize_path(c_cpp_prop_path)
@@ -382,7 +383,7 @@ The contract project template '{}' does not exist.
                 c_cpp_properties = vscode.c_cpp_properties()
     else:
         c_cpp_properties = vscode.c_cpp_properties()
-    
+
     c_cpp_properties_json = json.loads(c_cpp_properties)
 
     if includes:
@@ -407,7 +408,7 @@ The contract project template '{}' does not exist.
                                             [vscode.INCLUDE_PATH].append(path)
             c_cpp_properties_json[CONFIGURATIONS][0][BROWSE]["path"]\
                                                                 .append(path)
-    
+
     if libs:
         temp = libs.split(", ")
         temp_ = []
@@ -416,7 +417,7 @@ The contract project template '{}' does not exist.
             if not path in c_cpp_properties_json[CONFIGURATIONS][0]\
                                                                 [vscode.LIBS]:
                 temp_.append(path)
-            
+
         c_cpp_properties_json[CONFIGURATIONS][0][vscode.LIBS].extend(temp_)
 
     eoside_libs = config.eoside_libs_dir()
@@ -431,7 +432,7 @@ The contract project template '{}' does not exist.
 
     c_cpp_properties = json.dumps(c_cpp_properties_json, indent=4)
     c_cpp_properties = resolve_home(c_cpp_properties)
-    
+
     split = os.path.split(project_name)
     if os.path.isdir(split[0]):
         project_dir = project_name
@@ -441,7 +442,7 @@ The contract project template '{}' does not exist.
                                 or not os.path.isabs(workspace_dir) \
                                 or not os.path.exists(workspace_dir):
             workspace_dir = config.contract_workspace_dir()
-        workspace_dir = workspace_dir.strip()        
+        workspace_dir = workspace_dir.strip()
         project_dir = os.path.join(workspace_dir, project_name)
 
     if os.path.isdir(project_dir):
@@ -474,18 +475,18 @@ already exists. Cannot overwrite it.
         os.makedirs(os.path.join(project_dir, "include"))
     except Exception as e:
         raise errors.Error(str(e))
-            
+
     def copy_dir_contents(
             project_dir, template_dir, directory, project_name):
         contents = os.listdir(os.path.join(template_dir, directory))
-        
+
         for item in contents:
             path = os.path.join(directory, item)
             template_path = os.path.join(template_dir, path)
             contract_path = os.path.join(
                 project_dir, path.replace(
                                         TEMPLATE_NAME, project_name))
-                          
+
             if os.path.isdir(template_path) \
                                         and not "__pycache__" in template_path:
                 if not os.path.exists(contract_path):
@@ -510,8 +511,8 @@ already exists. Cannot overwrite it.
             output.write(template)
 
     copy_dir_contents(project_dir, PROJECT_0_DIR, "", project_name)
-    if not template_dir == PROJECT_0_DIR: 
-        copy_dir_contents(project_dir, template_dir, "", project_name)  
+    if not template_dir == PROJECT_0_DIR:
+        copy_dir_contents(project_dir, template_dir, "", project_name)
 
     if open_vscode:
         if utils.is_windows_ubuntu():
@@ -526,8 +527,8 @@ already exists. Cannot overwrite it.
         os.system(command_line)
 
     logger.INFO('''
-######## Created contract project '{}', 
-    originated from template 
+######## Created contract project '{}',
+    originated from template
     '{}'.
     '''.format(project_dir, template_dir), verbosity)
 
@@ -536,7 +537,7 @@ already exists. Cannot overwrite it.
 
 def get_pid(name=None):
     """Return process ids found by name.
-    """    
+    """
     if not name:
         name = os.path.splitext(os.path.basename(config.node_exe()))[0]
 
@@ -554,7 +555,7 @@ def get_target_dir(contract_dir):
     path = os.path.join(contract_dir, "build")
     if os.path.exists(path):
         return path
-        
+
     try:
         os.mkdir(path)
     except Exception as e:
@@ -564,7 +565,7 @@ def get_target_dir(contract_dir):
 
 
 def get_recardian_dir(source_dir):
-    
+
     path = os.path.join(source_dir, "..", "ricardian")
     if os.path.exists(path):
         return path
@@ -580,7 +581,7 @@ def get_recardian_dir(source_dir):
 
 
 def get_include_dir(source_dir):
-    
+
     path = os.path.join(source_dir, "..", "include")
     if os.path.exists(path):
         return path
@@ -603,7 +604,7 @@ def args(clear=False):
         "--verbose-http-errors",
         "--enable-stale-production",
         "--producer-name eosio",
-        "--signature-provider " + config.eosio_key_public() + "=KEY:" 
+        "--signature-provider " + config.eosio_key_public() + "=KEY:"
             + config.eosio_key_private(),
         "--plugin eosio::producer_plugin",
         "--plugin eosio::chain_api_plugin",
@@ -620,7 +621,7 @@ def args(clear=False):
         node_stop()
         args_.extend(["--delete-all-blocks"])
         if config.genesis_json():
-            args_.extend(["--genesis-json", config.genesis_json()])     
+            args_.extend(["--genesis-json", config.genesis_json()])
     return args_
 
 
@@ -658,10 +659,10 @@ Now, see the result of execution of the command line:
 
     def runInThread():
         proc = subprocess.Popen(
-            " ".join(args_), 
-            stdin=subprocess.DEVNULL, stdout=std_out_handle, 
+            " ".join(args_),
+            stdin=subprocess.DEVNULL, stdout=std_out_handle,
             stderr=subprocess.PIPE, shell=True)
-        out, err = proc.communicate()  
+        out, err = proc.communicate()
 
         err_msg = err.decode("ISO-8859-1")
         not_error = False
@@ -684,7 +685,7 @@ Rerun the script.
                 print(
                 '''
 Rerun the script with 'nodeos' restarted.
-                ''')                
+                ''')
         else:
             print(err_msg)
 
@@ -709,14 +710,14 @@ def node_start(clear=False, nodeos_stdout=None):
     Args:
         clear (bool): If set, the blockchain is deleted and then re-created.
         nodeos_stdout (str): If set, a file where *stdout* stream of
-            the local *nodeos* is send. Note that the file can be included to 
+            the local *nodeos* is send. Note that the file can be included to
             the configuration of EOSFactory, see :func:`.core.config.nodeos_stdout`.
-            If the file is set with the configuration, and in the same time 
-            it is set with this argument, the argument setting prevails. 
+            If the file is set with the configuration, and in the same time
+            it is set with this argument, the argument setting prevails.
     '''
-    
+
     args_ = args(clear)
-        
+
     if not nodeos_stdout:
         nodeos_stdout = config.nodeos_stdout()
 
@@ -727,8 +728,8 @@ def node_start(clear=False, nodeos_stdout=None):
             std_out_handle = open(nodeos_stdout, 'w')
         except Exception as e:
             raise errors.Error('''
-Error when preparing to start the local EOS node, 
-opening the given stdout log file that is 
+Error when preparing to start the local EOS node,
+opening the given stdout log file that is
 {}
 Error message is
 {}
@@ -748,17 +749,17 @@ Error message is
     if setup.is_print_command_lines:
         print("######## nodeos command line:")
         print(config.node_exe() + " " + " ".join(args_))
-         
+
     args_.insert(0, config.node_exe())
     def runInThread():
         proc = subprocess.Popen(
-            " ".join(args_), 
-            stdin=subprocess.DEVNULL, stdout=std_out_handle, 
+            " ".join(args_),
+            stdin=subprocess.DEVNULL, stdout=std_out_handle,
             stderr=subprocess.DEVNULL, shell=True)
         proc.wait()
         onExit()
         return
-    
+
     thread = threading.Thread(target=runInThread)
     thread.start()
 
@@ -783,7 +784,7 @@ def node_probe():
         if pids and pids[0]["name"] == NODEOS:
             pid = pids[0]["pid"]
             break
-        time.sleep(0.5)
+        time.sleep(BLOCK_INTERVAL)
     if not pid:
         raise errors.Error('''
 Local node has failed to start.
@@ -805,17 +806,17 @@ Local node has stopped.
         count = count - 1
 
         cpu_percent = proc.cpu_percent(interval=WAIT_TIME)
-        
+
         try:
             import eosfactory.core.cleos_get as cleos_get
             head_block_num = cleos_get.GetInfo(is_verbose=0).head_block
             if block_num is None:
                 block_num = head_block_num
-                count = int(NUMBER_BLOCKS_ADDED * 0.5/WAIT_TIME) + 1
+                count = int(NUMBER_BLOCKS_ADDED * BLOCK_INTERVAL/WAIT_TIME) + 1
         except:
             head_block_num = 0
             pass
-        
+
         if block_num:
             print("{:.0f}* ".format(cpu_percent), end="", flush=True)
         else:
@@ -824,7 +825,7 @@ Local node has stopped.
         if count == CHECK_COUNT and not block_num and \
                             cpu_percent_start / cpu_percent < RATIO_THRESHOLD:
             print(" stuck.")
-            raise errors.Error(ERR_MSG_IS_STUCK)        
+            raise errors.Error(ERR_MSG_IS_STUCK)
 
         if block_num and head_block_num - block_num >= NUMBER_BLOCKS_ADDED:
             print()
@@ -850,11 +851,11 @@ def kill(name):
     for pid in pids:
         p = psutil.Process(pid)
         p.terminate()
-    
+
         while count > 0:
             time.sleep(1)
             if not psutil.pid_exists(pid):
-                break            
+                break
             count = count -1
 
     if count <= 0:
@@ -872,19 +873,19 @@ def kill_keosd():
 
 
 def node_stop(verbose=True):
-    # You can see if the process is a zombie by using top or 
+    # You can see if the process is a zombie by using top or
     # the following command:
     # ps aux | awk '$8=="Z" {print $2}'
 
     kill_keosd()
     pids = kill(os.path.splitext(os.path.basename(config.node_exe()))[0])
-    
+
     if verbose:
         logger.INFO('''
 Local node is stopped {}.
-        '''.format(str(pids)))        
+        '''.format(str(pids)))
 
-    
+
 def node_is_running():
     return not get_pid()
 

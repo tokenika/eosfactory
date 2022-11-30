@@ -11,11 +11,11 @@ class SetContract(cleos.Cleos):
     '''Create or update the contract on an account.
 
     Args:
-        account (str or .interface.Account): The account to publish a contract 
+        account (str or .interface.Account): The account to publish a contract
             for.
         contract_dir (str): The path to a directory.
         wasm_file (str): The WASM file relative to the contract_dir.
-        abi_file (str): The ABI file for the contract relative to the 
+        abi_file (str): The ABI file for the contract relative to the
             contract-dir.
         clear (bool): Remove contract on an account. Default is False.
 
@@ -27,10 +27,10 @@ class SetContract(cleos.Cleos):
         account_name (str): The EOSIO name of the contract's account.
     '''
     def __init__(
-            self, account, contract_dir, 
-            wasm_file=None, abi_file=None, 
+            self, account, contract_dir,
+            wasm_file=None, abi_file=None,
             clear=False,
-            permission=None, expiration_sec=None, 
+            permission=None, expiration_sec=None,
             skip_sign=0, dont_broadcast=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
@@ -41,13 +41,13 @@ class SetContract(cleos.Cleos):
         files = cleos.contract_is_built(contract_dir, wasm_file, abi_file)
         if not files:
             raise errors.Error("""
-            Cannot determine the contract directory. The clue is 
+            Cannot determine the contract directory. The clue is
             {}.
             """.format(contract_dir))
 
         contract_path_absolute = files[0]
         wasm_file = files[1]
-        abi_file = files[2]            
+        abi_file = files[2]
         account_name = interface.account_arg(account)
 
         args = [account_name, contract_path_absolute]
@@ -55,7 +55,7 @@ class SetContract(cleos.Cleos):
             wasm_file = os.path.relpath(wasm_file, contract_path_absolute)
         if os.path.isabs(abi_file):
             abi_file = os.path.relpath(abi_file, contract_path_absolute)
-        
+
         if clear:
             args.append("--clear")
         if json:
@@ -78,7 +78,7 @@ class SetContract(cleos.Cleos):
         if  max_net_usage:
             args.extend(["--max-net-usage", str(max_net_usage)])
         if  not ref_block is None:
-            args.extend(["--ref-block", ref_block]) 
+            args.extend(["--ref-block", ref_block])
         if delay_sec:
             args.extend(["--delay-sec", str(delay_sec)])
         if wasm_file:
@@ -95,31 +95,31 @@ class SetAccountPermission(cleos.Cleos):
     '''Set parameters dealing with account permissions.
 
     Args:
-        account (str or .interface.Account): The account to set/delete a 
+        account (str or .interface.Account): The account to set/delete a
             permission authority for.
-        permission_name (str or .Permission): The permission to set/delete an 
+        permission_name (str or .Permission): The permission to set/delete an
             authority for (defaults to: "active").
-        parent_permission_name (str or .Permission): The permission name of 
+        parent_permission_name (str or .Permission): The permission name of
             this parents permission (defaults to: "active").
         authority (str or dict or filename):  None to delete.
-        add_code (bool): If set, add 'eosio.code' permission to specified 
+        add_code (bool): If set, add 'eosio.code' permission to specified
             permission authority. Default is false.
-        remove_code (bool): If set, remove 'eosio.code' permission from 
+        remove_code (bool): If set, remove 'eosio.code' permission from
             specified permission authority. Default is false.
-        
+
     Exemplary values of the argument *authority*::
 
-        # bob, carol are account objects created with 
+        # bob, carol are account objects created with
         # shell.account.create_account factory function
 
-        str_value = "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"
+        str_value = "AM6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"
 
         permission_value = bob.active()
 
         dict_value = {
-            "threshold" : 100, 
-            "keys" : [], 
-            "accounts" : 
+            "threshold" : 100,
+            "keys" : [],
+            "accounts" :
                 [
                     {
                         "permission":
@@ -143,13 +143,13 @@ class SetAccountPermission(cleos.Cleos):
             component of EOSIO cleos responce.
     '''
     def __init__(
-            self, account, permission_name, 
-            authority=None, 
+            self, account, permission_name,
+            authority=None,
             parent_permission_name=None,
             permission=None,
             add_code=False,
             remove_code=False,
-            expiration_sec=None, 
+            expiration_sec=None,
             skip_sign=0, dont_broadcast=0, return_packed=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
@@ -175,7 +175,7 @@ class SetAccountPermission(cleos.Cleos):
 
         if isinstance(parent_permission_name, interface.Permission):
             parent_permission_name = parent_permission_name.value
-                
+
         if parent_permission_name:
             parent_permission_name = interface.permission_arg(
                 parent_permission_name)[0]
@@ -183,12 +183,12 @@ class SetAccountPermission(cleos.Cleos):
 
         if json:
             args.append("--json")
-        
+
         if permission:
             p = interface.permission_arg(permission)
             for perm in p:
                 args.extend(["--permission", perm])
-        
+
         if add_code:
             args.append("--add-code")
         if remove_code:
@@ -211,7 +211,7 @@ class SetAccountPermission(cleos.Cleos):
             args.extend(["--ref-block", ref_block])
         if delay_sec:
             args.extend(["--delay-sec", str(delay_sec)])
-                        
+
         cleos.Cleos.__init__(
             self, args, "set", "account permission", is_verbose)
         self.account_name = account_name
@@ -222,19 +222,19 @@ class SetAccountPermission(cleos.Cleos):
             self.console = self.json["processed"]["action_traces"][0]["console"]
             self.data = self.json["processed"]["action_traces"][0]["act"]["data"]
 
-        self.printself()    
+        self.printself()
 
 
 class SetActionPermission(cleos.Cleos):
     '''Set parameters dealing with account permissions.
 
     Args:
-        account (str or .interface.Account): The account to set/delete a 
+        account (str or .interface.Account): The account to set/delete a
             permission authority for.
         code (str or .interface.Account): The account that owns the code for \
             the action.
         action_type (str): The type of the action.
-        requirement (str): The permission name require for executing the given 
+        requirement (str): The permission name require for executing the given
             action.
 
     See definitions of the remaining parameters: \
@@ -250,7 +250,7 @@ class SetActionPermission(cleos.Cleos):
     def __init__(
             self, account, code, action_type, requirement,
             permission=None,
-            expiration_sec=None, 
+            expiration_sec=None,
             skip_sign=0, dont_broadcast=0, return_packed=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
@@ -306,4 +306,3 @@ class SetActionPermission(cleos.Cleos):
             self.data = self.json["processed"]["action_traces"][0]["act"]["data"]
 
         self.printself()
-    

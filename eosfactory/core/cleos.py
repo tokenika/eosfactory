@@ -41,7 +41,7 @@ class Cleos():
 
     Raises:
         .core.errors.Error: If err_msg.
-    '''    
+    '''
     def __init__(self, args, command_group, command, is_verbose=True):
         self.out_msg = None
         self.out_msg_details = None
@@ -64,18 +64,18 @@ class Cleos():
         cl.extend(args)
 
         if setup.is_save_command_lines:
-            setup.add_to__command_line_file(" ".join(cl))        
+            setup.add_to__command_line_file(" ".join(cl))
         if setup.is_print_command_lines:
             print("######## command line sent to cleos:")
             print(" ".join(cl))
             print("")
-            
+
         while True:
             process = subprocess.run(
                 cl,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
-                cwd=str(pathlib.Path(config.cli_exe()).parent)) 
+                cwd=str(pathlib.Path(config.cli_exe()).parent))
 
             self.out_msg = process.stdout.decode("ISO-8859-1")
             self.out_msg_details = process.stderr.decode("ISO-8859-1")
@@ -92,12 +92,12 @@ class Cleos():
                 break
 
         errors.validate(self)
-        
+
         if not self.err_msg \
                     and (setup.is_print_request or setup.is_print_response):
             print("######## cleos request and response:")
             print(self.out_msg_details)
-            
+
         try:
             self.json = json.loads(self.out_msg)
         except:
@@ -106,7 +106,7 @@ class Cleos():
         try:
             self.json = json.loads(self.out_msg_details)
         except:
-            pass        
+            pass
 
     def printself(self, is_verbose=False):
         '''Print a message.
@@ -134,8 +134,8 @@ class Cleos():
 
 
 def common_parameters(
-        permission=None, 
-        expiration_sec=None, 
+        permission=None,
+        expiration_sec=None,
         skip_sign=False, dont_broadcast=False, force_unique=False,
         max_cpu_usage=0, max_net_usage=0,
         ref_block=None,
@@ -145,9 +145,9 @@ def common_parameters(
 
     Args:
         permission (.interface.Account or str or (str, str) or \
-            (.interface.Account, str) or any list of the previous items.): 
+            (.interface.Account, str) or any list of the previous items.):
             An account and permission level to authorize.
-        
+
     Exemplary values of the argument *permission*::
 
         eosio # eosio is interface.Account object
@@ -161,20 +161,20 @@ def common_parameters(
         ["eosio@owner", (eosio, .Permission.ACTIVE)]
 
     Args:
-        expiration (int): The time in seconds before a transaction expires, 
+        expiration (int): The time in seconds before a transaction expires,
             defaults to 30s
-        skip_sign (bool): Specify if unlocked wallet keys should be used to 
+        skip_sign (bool): Specify if unlocked wallet keys should be used to
             sign transaction.
-        dont_broadcast (bool): Don't broadcast transaction to the network 
+        dont_broadcast (bool): Don't broadcast transaction to the network
             (just print).
-        force_unique(bool): Force the transaction to be unique. This will 
-            consume extra bandwidth and remove any protections against 
+        force_unique(bool): Force the transaction to be unique. This will
+            consume extra bandwidth and remove any protections against
             accidentally issuing the same transaction multiple times.
-        max_cpu_usage (int): Upper limit on the milliseconds of cpu usage budget, 
+        max_cpu_usage (int): Upper limit on the milliseconds of cpu usage budget,
             for the execution of the transaction (defaults to 0 which means no limit).
-        max_net_usage (int): Upper limit on the net usage budget, in bytes, for the 
+        max_net_usage (int): Upper limit on the net usage budget, in bytes, for the
             transaction (defaults to 0 which means no limit).
-        ref_block (int): The reference block num or block id used for TAPOS 
+        ref_block (int): The reference block num or block id used for TAPOS
             (Transaction as Proof-of-Stake).
         delay_sec: The delay in seconds, defaults to 0s.
     '''
@@ -196,8 +196,8 @@ class GetAccount(interface.Account, Cleos):
     def __init__(self, account, is_info=True, is_verbose=True):
         interface.Account.__init__(self, interface.account_arg(account))
         Cleos.__init__(
-            self, 
-            [self.name] if is_info else [self.name, "--json"], 
+            self,
+            [self.name] if is_info else [self.name, "--json"],
             "get", "account", is_verbose)
 
         self.owner_key = None
@@ -211,7 +211,7 @@ class GetAccount(interface.Account, Cleos):
                         if permission["perm_name"] == "owner":
                             self.owner_key = key
                         if permission["perm_name"] == "active":
-                            self.active_key = key                   
+                            self.active_key = key
             else:
                 owner = re.search(r'owner\s+1\:\s+1\s(.*)\n', self.out_msg)
                 active = re.search(r'active\s+1\:\s+1\s(.*)\n', self.out_msg)
@@ -240,7 +240,7 @@ class GetTransaction(Cleos):
         json: The transaction retrieved.
     '''
     def __init__(self, transaction_id, block_hint=None, is_verbose=True):
-        
+
         self.transaction_id = transaction_id
         args = [transaction_id]
         if block_hint:
@@ -259,22 +259,22 @@ class WalletCreate(interface.Wallet, Cleos):
 
     Args:
         name (str): The name of the wallet, defaults to *default*.
-        password (str): The password to the wallet, if the wallet exists. 
+        password (str): The password to the wallet, if the wallet exists.
         is_verbose (bool): If *False* do not print. Default is *True*.
 
     Attributes:
         name (str): The name of the wallet.
-        password (str): The password returned by the *wallet create* 
+        password (str): The password returned by the *wallet create*
             EOSIO cleos command.
         is_created (bool): True, if the wallet created.
     '''
     def __init__(self, name="default", password="", is_verbose=True):
         interface.Wallet.__init__(self, name)
         self.password = None
-        
+
         if not password: # try to create a wallet
             Cleos.__init__(
-                self, ["--name", self.name, "--to-console"], 
+                self, ["--name", self.name, "--to-console"],
                 "wallet", "create", is_verbose)
             self.json["name"] = name
             msg = self.out_msg
@@ -286,7 +286,7 @@ class WalletCreate(interface.Wallet, Cleos):
         else: # try to open an existing wallet
             WalletOpen(name, is_verbose=False)
             wallet_unlock = WalletUnlock(name, password, is_verbose=False)
-            self.json = {} 
+            self.json = {}
             self.name = name
             self.password = password
             self.is_created = False
@@ -301,7 +301,7 @@ class WalletStop(Cleos):
     '''Stop keosd, the EOSIO wallet manager.
 
     Args:
-        is_verbose (bool): If *False* do not print. Default is *True*.    
+        is_verbose (bool): If *False* do not print. Default is *True*.
     '''
     def __init__(self, is_verbose=True):
         Cleos.__init__(self, [], "wallet", "stop", is_verbose)
@@ -313,8 +313,8 @@ class WalletList(Cleos):
     '''List opened wallets, * marks unlocked.
 
     Args:
-        is_verbose (bool): If *False* do not print. Default is *True*.    
-            
+        is_verbose (bool): If *False* do not print. Default is *True*.
+
     Attributes:
         json: The list of the open wallets.
     '''
@@ -342,8 +342,8 @@ class WalletImport(Cleos):
         key_private = interface.key_arg(
             key, is_owner_key=True, is_private_key=True)
         Cleos.__init__(
-            self, 
-            ["--private-key", key_private, "--name", 
+            self,
+            ["--private-key", key_private, "--name",
                 interface.wallet_arg(wallet)],
             "wallet", "import", is_verbose)
 
@@ -368,9 +368,9 @@ class WalletRemove_key(Cleos):
             key, is_owner_key=True, is_private_key=False)
 
         Cleos.__init__(
-            self, 
-            [key_public, "--name", interface.wallet_arg(wallet), 
-                "--password", password], 
+            self,
+            [key_public, "--name", interface.wallet_arg(wallet),
+                "--password", password],
             "wallet", "remove_key", is_verbose)
 
         self.json["key_public"] = key_public
@@ -386,8 +386,8 @@ class WalletKeys(Cleos):
     '''
     def __init__(self, is_verbose=True):
         Cleos.__init__(
-            self, [], "wallet", "keys", is_verbose)                
-        self.printself() 
+            self, [], "wallet", "keys", is_verbose)
+        self.printself()
 
     def __str__(self):
         out = "Keys in all opened wallets:\n"
@@ -404,7 +404,7 @@ class WalletOpen(Cleos):
     '''
     def __init__(self, wallet="default", is_verbose=True):
         Cleos.__init__(
-            self, ["--name", interface.wallet_arg(wallet)], 
+            self, ["--name", interface.wallet_arg(wallet)],
             "wallet", "open", is_verbose)
 
         self.printself()
@@ -414,7 +414,7 @@ class WalletLockAll(Cleos):
     '''Lock all unlocked wallets.
 
     Args:
-        is_verbose (bool): If *False* do not print. Default is *True*.    
+        is_verbose (bool): If *False* do not print. Default is *True*.
     '''
     def __init__(self, is_verbose=True):
         Cleos.__init__(
@@ -432,7 +432,7 @@ class WalletLock(Cleos):
     '''
     def __init__(self, wallet="default", is_verbose=True):
         Cleos.__init__(
-            self, ["--name", interface.wallet_arg(wallet)], 
+            self, ["--name", interface.wallet_arg(wallet)],
             "wallet", "lock", is_verbose)
 
         self.printself()
@@ -448,13 +448,13 @@ class WalletUnlock(Cleos):
     '''
     def __init__(
             self, wallet="default", password="", timeout=0, is_verbose=True):
- 
+
         if isinstance(wallet, interface.Wallet):
             password = wallet.password
 
         Cleos.__init__(
-            self, 
-            ["--name", interface.wallet_arg(wallet), "--password", password], 
+            self,
+            ["--name", interface.wallet_arg(wallet), "--password", password],
             "wallet", "unlock", is_verbose)
 
         self.printself()
@@ -466,7 +466,7 @@ class CreateKey(interface.Key, Cleos):
     Args:
         key_private (str): If set, a private key to set, otherwise random.
         key_public (str): If set, a public key to set, otherwise random.
-        r1: Generate a key using the R1 curve (iPhone), instead of the 
+        r1: Generate a key using the R1 curve (iPhone), instead of the
             K1 curve (Bitcoin)
         is_verbose (bool): If *False* do not print. Default is *True*.
 
@@ -475,13 +475,13 @@ class CreateKey(interface.Key, Cleos):
         key_public (str): The public key set.
     '''
     def __init__(
-            self, key_public=None, key_private=None, r1=False, 
+            self, key_public=None, key_private=None, r1=False,
             is_verbose=True):
         interface.Key.__init__(self, key_public, key_private)
 
         if self.key_public or self.key_private:
             self.json = {}
-            self.json["publicKey"] = self.key_public           
+            self.json["publicKey"] = self.key_public
             self.json["privateKey"] = self.key_private
             self.out_msg = "Private key: {0}\nPublic key: {1}\n" \
                 .format(self.key_private, self.key_public)
@@ -492,7 +492,7 @@ class CreateKey(interface.Key, Cleos):
 
             Cleos.__init__(
                 self, args, "create", "key", is_verbose)
-            
+
             msg = str(self.out_msg)
             first_collon = msg.find(":")
             first_end = msg.find("\n")
@@ -521,23 +521,23 @@ class CreateAccount(interface.Account, Cleos):
     '''Create an account, buy ram, stake for bandwidth for the account.
 
     Args:
-        creator (str or .interface.Account): The account creating 
+        creator (str or .interface.Account): The account creating
             the new account.
         name: (str) The name of the new account.
-        owner_key (str): If set, the owner public key for the new account, 
+        owner_key (str): If set, the owner public key for the new account,
             otherwise random.
-        active_key (str): If set, the active public key for the new account, 
+        active_key (str): If set, the active public key for the new account,
             otherwise random.
 
     See definitions of the remaining parameters: \
     :func:`.cleos.common_parameters`.
     '''
     def __init__(
-            self, creator, name, owner_key, 
+            self, creator, name, owner_key,
             active_key=None,
             permission=None,
-            expiration_sec=None, 
-            skip_sign=0, 
+            expiration_sec=None,
+            skip_sign=0,
             dont_broadcast=0,
             force_unique=0,
             max_cpu_usage=0,
@@ -547,15 +547,15 @@ class CreateAccount(interface.Account, Cleos):
             is_verbose=True
             ):
 
-        if name is None: 
+        if name is None:
             name = account_name()
         interface.Account.__init__(self, name)
 
         self.owner_key = None # private keys
         self.active_key = None
-        
+
         if active_key is None:
-            active_key = owner_key        
+            active_key = owner_key
 
         owner_key_public = interface.key_arg(
             owner_key, is_owner_key=True, is_private_key=False)
@@ -563,7 +563,7 @@ class CreateAccount(interface.Account, Cleos):
             active_key, is_owner_key=False, is_private_key=False)
 
         args = [
-                interface.account_arg(creator), self.name, 
+                interface.account_arg(creator), self.name,
                 owner_key_public, active_key_public
             ]
 
@@ -592,10 +592,10 @@ class CreateAccount(interface.Account, Cleos):
 
         Cleos.__init__(
             self, args, "create", "account", is_verbose)
-            
+
         self.json = GetAccount(self.name, is_verbose=False, is_info=False).json
         self.printself()
-            
+
     def __str__(self):
         return self.name
 
@@ -634,7 +634,7 @@ def contract_is_built(contract_dir, wasm_file=None, abi_file=None):
         if not wasm_file:
             return []
 
-    if abi_file:        
+    if abi_file:
         if not os.path.isfile(os.path.join(contract_path_absolute, abi_file)):
             return []
     else:
@@ -649,9 +649,9 @@ class PushAction(Cleos):
     '''Push a transaction with a single action.
 
     Args:
-        account (str or .interface.Account): The account to publish a contract 
+        account (str or .interface.Account): The account to publish a contract
             for.
-        action (str or json or filename): Definition of the action to execute on 
+        action (str or json or filename): Definition of the action to execute on
             the contract.
         data (str): The arguments to the contract.
 
@@ -667,7 +667,7 @@ class PushAction(Cleos):
     '''
     def __init__(
             self, account, action, data,
-            permission=None, expiration_sec=None, 
+            permission=None, expiration_sec=None,
             skip_sign=0, dont_broadcast=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
@@ -701,13 +701,13 @@ class PushAction(Cleos):
             args.extend(["--ref-block", ref_block])
         if delay_sec:
             args.extend(["--delay-sec", str(delay_sec)])
-                        
+
         Cleos.__init__(self, args, "push", "action", is_verbose)
 
         self.console = ""
         self.act = ""
         if not dont_broadcast:
-            
+
             for act in self.json["processed"]["action_traces"]:
                 self.console += gather_console_output(act)
 
@@ -715,8 +715,8 @@ class PushAction(Cleos):
                 if trace["act"]["data"]:
                     if self.act:
                         self.act += "\n"
-                    self.act += "{} <= {}::{} {}".format( 
-                                                        trace["act"]["account"], 
+                    self.act += "{} <= {}::{} {}".format(
+                                                        trace["act"]["account"],
                                                         trace["act"]["account"],
                                                         trace["act"]["name"],
                                                         trace["act"]["data"])
@@ -729,6 +729,7 @@ def gather_console_output(act, padding=""):
         console += padding + act["act"]["account"] + "@" + act["act"]["name"] + ":\n"
         console += padding + act["console"].replace("\n", "\n" + padding) + "\n"
 
-    for inline in act["inline_traces"]:
-        console += gather_console_output(inline, padding + PADDING)
+    if "inline_traces" in act:
+        for inline in act["inline_traces"]:
+            console += gather_console_output(inline, padding + PADDING)
     return (console + "\n").rstrip()

@@ -53,15 +53,15 @@ def clear_testnet_cache():
 def accout_names_2_object_names(sentence, keys=False):
     if not setup.is_translating:
         return sentence
-        
-    exceptions = ["eosio"]
+
+    exceptions = [config.SYSTEM_ACCOUNT]
     map_ = account_map()
     for name in map_:
         account_object_name = map_[name]
         if name in exceptions:
             continue
         sentence = sentence.replace(name, account_object_name)
-        
+
         if keys:
             account = cleos.GetAccount(
                         name, is_info=False, is_verbose=False)
@@ -73,7 +73,7 @@ def accout_names_2_object_names(sentence, keys=False):
             active_key = account.active()
             if active_key:
                 sentence = sentence.replace(
-                    active_key, account_object_name + "@active")        
+                    active_key, account_object_name + "@active")
 
     return sentence
 
@@ -115,7 +115,7 @@ def is_local_testnet():
 
 
 def node_start(clear=False, nodeos_stdout=None):
-    WAIT_TIME = 0.6
+    WAIT_TIME = 1.2
     try_count = 3
 
     while(True):
@@ -131,18 +131,18 @@ def node_start(clear=False, nodeos_stdout=None):
             teos.node_stop(verbose=False)
 
             time.sleep(WAIT_TIME)
-                    
+
     teos.on_nodeos_error(clear)
 
 
 def reset(nodeos_stdout=None):
     ''' Start clean the local EOSIO node.
 
-    The procedure addresses problems with instabilities of EOSIO *nodeos* 
-    executable: it happens that it blocks itself on clean restart. 
+    The procedure addresses problems with instabilities of EOSIO *nodeos*
+    executable: it happens that it blocks itself on clean restart.
 
-    The issue is patched with one subsequent restart if the first attempt 
-    fails. However, it happens that both launches fail, rarely due to 
+    The issue is patched with one subsequent restart if the first attempt
+    fails. However, it happens that both launches fail, rarely due to
     instability of *nodeos*, sometimes because of misconfiguration.
 
     When both launch attempts fail, an exception routine passes. At first,
@@ -152,16 +152,16 @@ def reset(nodeos_stdout=None):
         The local 'nodeos' failed to start twice in sequence. Perhaps, something is
         wrong with configuration of the system. See the command line issued:
 
-        /usr/bin/nodeosx 
-        --http-server-address 127.0.0.1:8888 
-        --data-dir /mnt/c/Workspaces/EOS/eosfactory/localnode/ 
-        --config-dir /mnt/c/Workspaces/EOS/eosfactory/localnode/ 
-        --chain-state-db-size-mb 200 --contracts-console --verbose-http-errors --enable-stale-production --producer-name eosio 
-        --signature-provider EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV=KEY:5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3 
-        --plugin eosio::producer_plugin 
-        --plugin eosio::chain_api_plugin 
-        --plugin eosio::http_plugin 
-        --plugin eosio::history_api_plugin 
+        /usr/bin/nodeosx
+        --http-server-address 127.0.0.1:8888
+        --data-dir /mnt/c/Workspaces/EOS/eosfactory/localnode/
+        --config-dir /mnt/c/Workspaces/EOS/eosfactory/localnode/
+        --chain-state-db-size-mb 200 --contracts-console --verbose-http-errors --enable-stale-production --producer-name eosio
+        --signature-provider AM6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV=KEY:5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3
+        --plugin eosio::producer_plugin
+        --plugin eosio::chain_api_plugin
+        --plugin eosio::http_plugin
+        --plugin eosio::history_api_plugin
         --genesis-json /mnt/c/Workspaces/EOS/eosfactory/localnode/genesis.json
         --delete-all-blocks
 
@@ -170,16 +170,16 @@ def reset(nodeos_stdout=None):
         Now, see the result of an execution of the command line.
         /bin/sh: 1: /usr/bin/nodeosx: not found
 
-    The exemplary case is easy, it explains itself. Generally, the command 
-    line given can be executed in a *bash* terminal separately, in order to 
+    The exemplary case is easy, it explains itself. Generally, the command
+    line given can be executed in a *bash* terminal separately, in order to
     understand a problem.
 
     Args:
         nodeos_stdout (str): If set, a file where *stdout* stream of
-            the local *nodeos* is send. Note that the file can be included to 
+            the local *nodeos* is send. Note that the file can be included to
             the configuration of EOSFactory, see :func:`.core.config.nodeos_stdout`.
-            If the file is set with the configuration, and in the same time 
-            it is set with this argument, the argument setting prevails. 
+            If the file is set with the configuration, and in the same time
+            it is set with this argument, the argument setting prevails.
     '''
     import eosfactory.shell.account as account
     account.reboot()
@@ -198,18 +198,18 @@ def resume(nodeos_stdout=None):
 
     Args:
         nodeos_stdout (str): If set, a file where *stdout* stream of
-            the local *nodeos* is send. Note that the file can be included to 
+            the local *nodeos* is send. Note that the file can be included to
             the configuration of EOSFactory, see :func:`.core.config.nodeos_stdout`.
-            If the file is set with the configuration, and in the same time 
-            it is set with this argument, the argument setting prevails. 
-    ''' 
-    if not cleos.set_local_nodeos_address_if_none():   
+            If the file is set with the configuration, and in the same time
+            it is set with this argument, the argument setting prevails.
+    '''
+    if not cleos.set_local_nodeos_address_if_none():
         logger.INFO('''
             Not local nodeos is set: {}
         '''.format(setup.nodeos_address()))
 
     node_start(nodeos_stdout=nodeos_stdout)
-    
+
 
 
 def stop():
@@ -219,7 +219,7 @@ def stop():
         stop_keosd()
     except:
         pass
-    
+
     teos.node_stop()
 
 
@@ -267,17 +267,17 @@ def verify_testnet_production(throw_error=True):
 def account_map():
     '''Return json account map
 
-Attempt to open the account map file named ``setup.account_map``, located 
-in the wallet directory ``config.keosd_wallet_dir()``, to return its json 
+Attempt to open the account map file named ``setup.account_map``, located
+in the wallet directory ``config.keosd_wallet_dir()``, to return its json
 contents. If the file does not exist, return an empty json.
 
-If the file is corrupted, offer editing the file with the ``nano`` linux 
+If the file is corrupted, offer editing the file with the ``nano`` linux
 editor. Return ``None`` if the the offer is rejected.
     '''
     wallet_dir_ = config.keosd_wallet_dir(raise_error=False)
     if not wallet_dir_:
         return {}
-    
+
     path = os.path.join(wallet_dir_, setup.account_map)
     while True:
         try: # whether the setup map file exists:
@@ -291,10 +291,10 @@ editor. Return ``None`` if the the offer is rejected.
                 logger.OUT('''
             The account mapping file is misformed. The error message is:
             {}
-            
+
             Do you want to edit the file?
             '''.format(str(e)))
-                    
+
                 answer = input("y/n <<< ")
                 if answer == "y":
                     edit_account_map()
@@ -302,9 +302,9 @@ editor. Return ``None`` if the the offer is rejected.
                 else:
                     raise errors.Error('''
         Use the function 'manager.edit_account_map()'
-        or the corresponding method of any object of the 'eosfactory.wallet.Wallet` 
+        or the corresponding method of any object of the 'eosfactory.wallet.Wallet`
         class to edit the file.
-                    ''')                    
+                    ''')
 
 
 def save_account_map(map_):
@@ -318,7 +318,7 @@ def edit_account_map():
 def save_map(map_, file_name):
     map_ = json.dumps(map_, indent=3, sort_keys=True)
     with open(os.path.join(config.keosd_wallet_dir(), file_name), "w") as out:
-        out.write(map_)            
+        out.write(map_)
 
 
 def edit_map(file_name, text_editor="nano"):
@@ -330,11 +330,11 @@ def edit_map(file_name, text_editor="nano"):
 def read_map(file_name, text_editor="nano"):
     '''Return json account map
 
-Attempt to open the account map file named ``setup.account_map``, located 
-in the wallet directory ``config.keosd_wallet_dir()``, to return its json 
+Attempt to open the account map file named ``setup.account_map``, located
+in the wallet directory ``config.keosd_wallet_dir()``, to return its json
 contents. If the file does not exist, return an empty json.
 
-If the file is corrupted, offer editing the file with the ``nano`` linux 
+If the file is corrupted, offer editing the file with the ``nano`` linux
 editor. Return ``None`` if the the offer is rejected.
     '''
     wallet_dir_ = config.keosd_wallet_dir()
@@ -349,14 +349,14 @@ editor. Return ``None`` if the the offer is rejected.
                 return {}
             else:
                 logger.ERROR('''
-            The json file 
+            The json file
             {}
             is misformed. The error message is:
             {}
-            
+
             Do you want to edit the file?
             '''.format(str(path), str(e)), translate=False)
-                    
+
                 answer = input("y/n <<< ")
                 if answer == "y":
                     utils.spawn([text_editor, path])
@@ -364,7 +364,7 @@ editor. Return ``None`` if the the offer is rejected.
                 else:
                     raise errors.Error('''
                     Use the function 'manager.edit_account_map()' to edit the file.
-                    ''', translate=False)                    
+                    ''', translate=False)
 
 
 def data_json(data):
