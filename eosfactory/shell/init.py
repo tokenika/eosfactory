@@ -64,7 +64,7 @@ CONTRACT_WORKSPACE = "_wslqwjvacdyugodewiyd"
 
 FACTORY_DIR = os.getenv("FACTORY_DIR")
 
-CONTRACT_WASM_PATH = FACTORY_DIR + "/eosfactory/templates/wasm/"
+CONTRACT_WASM_PATH = FACTORY_DIR + "/templates/wasm/"
 
 
 

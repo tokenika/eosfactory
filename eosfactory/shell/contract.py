@@ -62,7 +62,7 @@ class ContractBuilder():
         '''
         FACTORY_DIR = os.getenv("FACTORY_DIR")
 
-        build_path = FACTORY_DIR + "/eosfactory/templates/build_temp.sh"
+        build_path = FACTORY_DIR + "/templates/build_temp.sh"
         build_commond = "cd " + self.contract_dir + " && cp {} . && ./build_temp.sh && rm build_temp.sh".format(build_path)
         print(build_commond)
         res = os.popen(build_commond).read()
