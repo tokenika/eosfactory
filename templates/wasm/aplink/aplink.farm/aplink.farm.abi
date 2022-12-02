@@ -1,0 +1,347 @@
+{
+    "____comment": "This file was generated with amax-abigen. DO NOT EDIT ",
+    "version": "amax::abi/1.1",
+    "types": [],
+    "structs": [
+        {
+            "name": "allot",
+            "base": "",
+            "fields": [
+                {
+                    "name": "lease_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "farmer",
+                    "type": "name"
+                },
+                {
+                    "name": "quantity",
+                    "type": "asset"
+                },
+                {
+                    "name": "memo",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "allot_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "lease_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "farmer",
+                    "type": "name"
+                },
+                {
+                    "name": "apples",
+                    "type": "asset"
+                },
+                {
+                    "name": "alloted_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "expired_at",
+                    "type": "time_point_sec"
+                }
+            ]
+        },
+        {
+            "name": "global_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "landlord",
+                    "type": "name"
+                },
+                {
+                    "name": "jamfactory",
+                    "type": "name"
+                },
+                {
+                    "name": "last_lease_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "last_allot_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "init",
+            "base": "",
+            "fields": [
+                {
+                    "name": "landlord",
+                    "type": "name"
+                },
+                {
+                    "name": "jamfactory",
+                    "type": "name"
+                },
+                {
+                    "name": "last_lease_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "last_allot_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "lease",
+            "base": "",
+            "fields": [
+                {
+                    "name": "tenant",
+                    "type": "name"
+                },
+                {
+                    "name": "lese_title",
+                    "type": "string"
+                },
+                {
+                    "name": "land_uri",
+                    "type": "string"
+                },
+                {
+                    "name": "banner_uri",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "lease_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "tenant",
+                    "type": "name"
+                },
+                {
+                    "name": "land_title",
+                    "type": "string"
+                },
+                {
+                    "name": "land_uri",
+                    "type": "string"
+                },
+                {
+                    "name": "banner_uri",
+                    "type": "string"
+                },
+                {
+                    "name": "alloted_apples",
+                    "type": "asset"
+                },
+                {
+                    "name": "available_apples",
+                    "type": "asset"
+                },
+                {
+                    "name": "status",
+                    "type": "name"
+                },
+                {
+                    "name": "opened_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "closed_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "created_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "updated_at",
+                    "type": "time_point_sec"
+                }
+            ]
+        },
+        {
+            "name": "pick",
+            "base": "",
+            "fields": [
+                {
+                    "name": "farmer",
+                    "type": "name"
+                },
+                {
+                    "name": "allot_ids",
+                    "type": "uint64[]"
+                }
+            ]
+        },
+        {
+            "name": "reclaimallot",
+            "base": "",
+            "fields": [
+                {
+                    "name": "issuer",
+                    "type": "name"
+                },
+                {
+                    "name": "allot_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "memo",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "reclaimlease",
+            "base": "",
+            "fields": [
+                {
+                    "name": "issuer",
+                    "type": "name"
+                },
+                {
+                    "name": "lease_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "memo",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "setlease",
+            "base": "",
+            "fields": [
+                {
+                    "name": "lease_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "land_uri",
+                    "type": "string"
+                },
+                {
+                    "name": "banner_uri",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "setstatus",
+            "base": "",
+            "fields": [
+                {
+                    "name": "lease_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "status",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "settenant",
+            "base": "",
+            "fields": [
+                {
+                    "name": "lease_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "tenant",
+                    "type": "name"
+                }
+            ]
+        }
+    ],
+    "actions": [
+        {
+            "name": "allot",
+            "type": "allot",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "init",
+            "type": "init",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "lease",
+            "type": "lease",
+            "ricardian_contract": "---\nspec_version: \"0.1.0\"\ntitle: aplink farming\nsummary: 'lease a land for cropping APL'\nicon: http://127.0.0.1/ricardian_assets/amax.contracts/icons/\n---\n\nlord can lease a land to farmer for croping APL to customer"
+        },
+        {
+            "name": "pick",
+            "type": "pick",
+            "ricardian_contract": "---\nspec_version: \"0.1.0\"\ntitle: farmer pick apples\nsummary: 'farmer pick apples or collect expired apples'\nicon: http://127.0.0.1/ricardian_assets/amax.contracts/icons/\n---\n\nfarmer pick apples or collect expired apples"
+        },
+        {
+            "name": "reclaimallot",
+            "type": "reclaimallot",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "reclaimlease",
+            "type": "reclaimlease",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setlease",
+            "type": "setlease",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setstatus",
+            "type": "setstatus",
+            "ricardian_contract": "---\nspec_version: \"0.1.0\"\ntitle: change a land's status\nsummary: 'Enable/Disable a land'\nicon: http://127.0.0.1/ricardian_assets/amax.contracts/icons/\n---\n\nparam status  0:NONE 1:Enable 2:Disable"
+        },
+        {
+            "name": "settenant",
+            "type": "settenant",
+            "ricardian_contract": ""
+        }
+    ],
+    "tables": [
+        {
+            "name": "allots",
+            "type": "allot_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "global",
+            "type": "global_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "leases",
+            "type": "lease_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        }
+    ],
+    "ricardian_clauses": [],
+    "variants": []
+}

@@ -1,0 +1,214 @@
+{
+    "____comment": "This file was generated with amax-abigen. DO NOT EDIT ",
+    "version": "amax::abi/1.1",
+    "types": [],
+    "structs": [
+        {
+            "name": "create",
+            "base": "",
+            "fields": [
+                {
+                    "name": "dao_code",
+                    "type": "name"
+                },
+                {
+                    "name": "propose_strategy_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "vote_strategy_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "require_participation",
+                    "type": "uint32"
+                },
+                {
+                    "name": "require_pass",
+                    "type": "uint32"
+                },
+                {
+                    "name": "update_interval",
+                    "type": "uint16"
+                },
+                {
+                    "name": "voting_period",
+                    "type": "uint16"
+                }
+            ]
+        },
+        {
+            "name": "governance_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "dao_code",
+                    "type": "name"
+                },
+                {
+                    "name": "strategies",
+                    "type": "pair_name_uint64[]"
+                },
+                {
+                    "name": "require_participation",
+                    "type": "uint32"
+                },
+                {
+                    "name": "require_pass",
+                    "type": "uint32"
+                },
+                {
+                    "name": "update_interval",
+                    "type": "uint16"
+                },
+                {
+                    "name": "voting_period",
+                    "type": "uint16"
+                },
+                {
+                    "name": "updated_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "proposal_model",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "pair_name_uint64",
+            "base": "",
+            "fields": [
+                {
+                    "name": "key",
+                    "type": "name"
+                },
+                {
+                    "name": "value",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "setlocktime",
+            "base": "",
+            "fields": [
+                {
+                    "name": "dao_code",
+                    "type": "name"
+                },
+                {
+                    "name": "update_interval",
+                    "type": "uint16"
+                }
+            ]
+        },
+        {
+            "name": "setpropmodel",
+            "base": "",
+            "fields": [
+                {
+                    "name": "dao_code",
+                    "type": "name"
+                },
+                {
+                    "name": "propose_model",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "setproposestg",
+            "base": "",
+            "fields": [
+                {
+                    "name": "dao_code",
+                    "type": "name"
+                },
+                {
+                    "name": "propose_strategy_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "setvotestg",
+            "base": "",
+            "fields": [
+                {
+                    "name": "dao_code",
+                    "type": "name"
+                },
+                {
+                    "name": "vote_strategy_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "require_participation",
+                    "type": "uint32"
+                },
+                {
+                    "name": "require_pass",
+                    "type": "uint32"
+                }
+            ]
+        },
+        {
+            "name": "setvotetime",
+            "base": "",
+            "fields": [
+                {
+                    "name": "dao_code",
+                    "type": "name"
+                },
+                {
+                    "name": "voting_period",
+                    "type": "uint16"
+                }
+            ]
+        }
+    ],
+    "actions": [
+        {
+            "name": "create",
+            "type": "create",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setlocktime",
+            "type": "setlocktime",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setpropmodel",
+            "type": "setpropmodel",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setproposestg",
+            "type": "setproposestg",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setvotestg",
+            "type": "setvotestg",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setvotetime",
+            "type": "setvotetime",
+            "ricardian_contract": ""
+        }
+    ],
+    "tables": [
+        {
+            "name": "governances",
+            "type": "governance_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        }
+    ],
+    "ricardian_clauses": [],
+    "variants": []
+}

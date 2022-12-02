@@ -9,7 +9,7 @@ import eosfactory.core.interface as interface
 import eosfactory.shell.wallet as wallet
 import eosfactory.shell.account as account
 import eosfactory.shell.contract as contract
-
+import eosfactory.shell.init as init
 
 verbosity =  logger.verbosity
 Verbosity =  logger.Verbosity
@@ -56,3 +56,4 @@ status = manager.status
 Testnet =  testnet.Testnet
 get_testnet =  testnet.get_testnet
 testnets =  testnet.testnets
+

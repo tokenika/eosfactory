@@ -1,0 +1,526 @@
+{
+    "____comment": "This file was generated with amax-abigen. DO NOT EDIT ",
+    "version": "amax::abi/1.1",
+    "types": [],
+    "structs": [
+        {
+            "name": "action",
+            "base": "",
+            "fields": [
+                {
+                    "name": "account",
+                    "type": "name"
+                },
+                {
+                    "name": "name",
+                    "type": "name"
+                },
+                {
+                    "name": "authorization",
+                    "type": "permission_level[]"
+                },
+                {
+                    "name": "data",
+                    "type": "bytes"
+                }
+            ]
+        },
+        {
+            "name": "cancel",
+            "base": "",
+            "fields": [
+                {
+                    "name": "issuer",
+                    "type": "name"
+                },
+                {
+                    "name": "proposal_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "collectfee",
+            "base": "",
+            "fields": [
+                {
+                    "name": "from",
+                    "type": "name"
+                },
+                {
+                    "name": "to",
+                    "type": "name"
+                },
+                {
+                    "name": "quantity",
+                    "type": "asset"
+                }
+            ]
+        },
+        {
+            "name": "delmulsigner",
+            "base": "",
+            "fields": [
+                {
+                    "name": "issuer",
+                    "type": "name"
+                },
+                {
+                    "name": "wallet_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "mulsigner",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "execute",
+            "base": "",
+            "fields": [
+                {
+                    "name": "issuer",
+                    "type": "name"
+                },
+                {
+                    "name": "proposal_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "extended_symbol",
+            "base": "",
+            "fields": [
+                {
+                    "name": "sym",
+                    "type": "symbol"
+                },
+                {
+                    "name": "contract",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "global_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "fee_collector",
+                    "type": "name"
+                },
+                {
+                    "name": "wallet_fee",
+                    "type": "asset"
+                },
+                {
+                    "name": "support_contracts",
+                    "type": "name[]"
+                }
+            ]
+        },
+        {
+            "name": "init",
+            "base": "",
+            "fields": [
+                {
+                    "name": "fee_collector",
+                    "type": "name"
+                },
+                {
+                    "name": "wallet_fee",
+                    "type": "asset"
+                }
+            ]
+        },
+        {
+            "name": "pair_extended_symbol_int64",
+            "base": "",
+            "fields": [
+                {
+                    "name": "key",
+                    "type": "extended_symbol"
+                },
+                {
+                    "name": "value",
+                    "type": "int64"
+                }
+            ]
+        },
+        {
+            "name": "pair_name_uint32",
+            "base": "",
+            "fields": [
+                {
+                    "name": "key",
+                    "type": "name"
+                },
+                {
+                    "name": "value",
+                    "type": "uint32"
+                }
+            ]
+        },
+        {
+            "name": "permission_level",
+            "base": "",
+            "fields": [
+                {
+                    "name": "actor",
+                    "type": "name"
+                },
+                {
+                    "name": "permission",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "proposal_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "wallet_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "proposer",
+                    "type": "name"
+                },
+                {
+                    "name": "execution",
+                    "type": "action"
+                },
+                {
+                    "name": "excerpt",
+                    "type": "string"
+                },
+                {
+                    "name": "description",
+                    "type": "string"
+                },
+                {
+                    "name": "approvers",
+                    "type": "pair_name_uint32[]"
+                },
+                {
+                    "name": "recv_votes",
+                    "type": "uint32"
+                },
+                {
+                    "name": "created_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "expired_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "updated_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "status",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "propose",
+            "base": "",
+            "fields": [
+                {
+                    "name": "issuer",
+                    "type": "name"
+                },
+                {
+                    "name": "wallet_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "action_name",
+                    "type": "name"
+                },
+                {
+                    "name": "action_account",
+                    "type": "name"
+                },
+                {
+                    "name": "packed_action_data",
+                    "type": "bytes"
+                },
+                {
+                    "name": "excerpt",
+                    "type": "string"
+                },
+                {
+                    "name": "description",
+                    "type": "string"
+                },
+                {
+                    "name": "duration",
+                    "type": "uint32"
+                }
+            ]
+        },
+        {
+            "name": "proposeact",
+            "base": "",
+            "fields": [
+                {
+                    "name": "issuer",
+                    "type": "name"
+                },
+                {
+                    "name": "wallet_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "execution",
+                    "type": "action"
+                },
+                {
+                    "name": "excerpt",
+                    "type": "string"
+                },
+                {
+                    "name": "description",
+                    "type": "string"
+                },
+                {
+                    "name": "duration",
+                    "type": "uint32"
+                }
+            ]
+        },
+        {
+            "name": "respond",
+            "base": "",
+            "fields": [
+                {
+                    "name": "issuer",
+                    "type": "name"
+                },
+                {
+                    "name": "proposal_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "vote",
+                    "type": "uint8"
+                }
+            ]
+        },
+        {
+            "name": "setfee",
+            "base": "",
+            "fields": [
+                {
+                    "name": "wallet_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "wallet_fee",
+                    "type": "asset"
+                }
+            ]
+        },
+        {
+            "name": "setmulsigner",
+            "base": "",
+            "fields": [
+                {
+                    "name": "issuer",
+                    "type": "name"
+                },
+                {
+                    "name": "wallet_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "mulsigner",
+                    "type": "name"
+                },
+                {
+                    "name": "weight",
+                    "type": "uint32"
+                }
+            ]
+        },
+        {
+            "name": "setmulsignm",
+            "base": "",
+            "fields": [
+                {
+                    "name": "issuer",
+                    "type": "name"
+                },
+                {
+                    "name": "wallet_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "mulsignm",
+                    "type": "uint32"
+                }
+            ]
+        },
+        {
+            "name": "setproexpiry",
+            "base": "",
+            "fields": [
+                {
+                    "name": "issuer",
+                    "type": "name"
+                },
+                {
+                    "name": "wallet_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "expiry_sec",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "wallet_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "title",
+                    "type": "string"
+                },
+                {
+                    "name": "mulsign_m",
+                    "type": "uint32"
+                },
+                {
+                    "name": "mulsign_n",
+                    "type": "uint32"
+                },
+                {
+                    "name": "mulsigners",
+                    "type": "pair_name_uint32[]"
+                },
+                {
+                    "name": "assets",
+                    "type": "pair_extended_symbol_int64[]"
+                },
+                {
+                    "name": "proposal_expiry_sec",
+                    "type": "uint64"
+                },
+                {
+                    "name": "creator",
+                    "type": "name"
+                },
+                {
+                    "name": "created_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "updated_at",
+                    "type": "time_point_sec"
+                }
+            ]
+        }
+    ],
+    "actions": [
+        {
+            "name": "cancel",
+            "type": "cancel",
+            "ricardian_contract": "---\nspec_version: \"0.1.0\"\ntitle: cancel a proposal before it expires\nsummary: 'cancel a proposal before it expires'\nicon: http://127.0.0.1/ricardian_assets/amax.contracts/icons/token.png#207ff68b0406eaa56618b08bda81d6a0954543f36adc328ab3065f31a5c5d654\n---\n\ncancel a proposal before it expires"
+        },
+        {
+            "name": "collectfee",
+            "type": "collectfee",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "delmulsigner",
+            "type": "delmulsigner",
+            "ricardian_contract": "---\nspec_version: \"0.1.0\"\ntitle: delete a multisigner\nsummary: 'delete a multisginer from a multisign wallet'\nicon: http://127.0.0.1/ricardian_assets/amax.contracts/icons/token.png#207ff68b0406eaa56618b08bda81d6a0954543f36adc328ab3065f31a5c5d654\n---\n\na multisign wallet owner can choose to delete a multisigner from his or her wallet"
+        },
+        {
+            "name": "execute",
+            "type": "execute",
+            "ricardian_contract": "---\nspec_version: \"0.1.0\"\ntitle: execute a proposal action\nsummary: 'execute a proposal action'\nicon: http://127.0.0.1/ricardian_assets/amax.contracts/icons/token.png#207ff68b0406eaa56618b08bda81d6a0954543f36adc328ab3065f31a5c5d654\n---\n\nexecute a proposal action"
+        },
+        {
+            "name": "init",
+            "type": "init",
+            "ricardian_contract": "---\nspec_version: \"0.1.0\"\ntitle: set a collector for fee\nsummary: 'set a collector for fee'\nicon: http://127.0.0.1/ricardian_assets/amax.contracts/icons/token.png#207ff68b0406eaa56618b08bda81d6a0954543f36adc328ab3065f31a5c5d654\n---\nset a collector for fee"
+        },
+        {
+            "name": "propose",
+            "type": "propose",
+            "ricardian_contract": "---\nspec_version: \"0.1.0\"\ntitle: propose an action for a mulsign wallet\nsummary: 'mulsigner can propose an action'\nicon: http://127.0.0.1/ricardian_assets/amax.contracts/icons/token.png#207ff68b0406eaa56618b08bda81d6a0954543f36adc328ab3065f31a5c5d654\n---\nmulsign wallet operation: include 'transfer','setmulsignm','setmulsigner','delmulsigner'\noperation's params, settings with string: \n    transefer: name from, name to, asset quantity, memo, contract\n    setmulsignm: uint8_t m\n    setmulsigner: name mulsigner, uint8_t weight\n    delmulsigner: name mulsigner"
+        },
+        {
+            "name": "proposeact",
+            "type": "proposeact",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "respond",
+            "type": "respond",
+            "ricardian_contract": "---\nspec_version: \"0.1.0\"\ntitle: respond result for a multisign wallet proposal\nsummary: 'respond result for a multisign wallet proposal'\nicon: http://127.0.0.1/ricardian_assets/amax.contracts/icons/token.png#207ff68b0406eaa56618b08bda81d6a0954543f36adc328ab3065f31a5c5d654\n---\n\nrespond result for a multisign wallet proposal\nvote type: 0, against; 1, approve"
+        },
+        {
+            "name": "setfee",
+            "type": "setfee",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setmulsigner",
+            "type": "setmulsigner",
+            "ricardian_contract": "---\nspec_version: \"0.1.0\"\ntitle: set a multisigner to a multisign wallet\nsummary: 'set a multisigner to a multisgin wallet that has been created'\nicon: http://127.0.0.1/ricardian_assets/amax.contracts/icons/token.png#207ff68b0406eaa56618b08bda81d6a0954543f36adc328ab3065f31a5c5d654\n---\n\na multisign wallet owner can add or update a multisigner to his or her wallet according to the limit of n co-signer;"
+        },
+        {
+            "name": "setmulsignm",
+            "type": "setmulsignm",
+            "ricardian_contract": "---\nspec_version: \"0.1.0\"\ntitle: update a mulsign wallet proposal approve votes\nsummary: 'update a mulsign wallet proposal approve votes'\nicon: http://127.0.0.1/ricardian_assets/amax.contracts/icons/token.png#207ff68b0406eaa56618b08bda81d6a0954543f36adc328ab3065f31a5c5d654\n---\n\nupdate a mulsign wallet proposal approve votes"
+        },
+        {
+            "name": "setproexpiry",
+            "type": "setproexpiry",
+            "ricardian_contract": ""
+        }
+    ],
+    "tables": [
+        {
+            "name": "global",
+            "type": "global_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "proposals",
+            "type": "proposal_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "wallets",
+            "type": "wallet_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        }
+    ],
+    "ricardian_clauses": [],
+    "variants": []
+}

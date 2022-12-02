@@ -1,0 +1,455 @@
+{
+    "____comment": "This file was generated with amax-abigen. DO NOT EDIT ",
+    "version": "amax::abi/1.1",
+    "types": [],
+    "structs": [
+        {
+            "name": "account",
+            "base": "",
+            "fields": [
+                {
+                    "name": "owner",
+                    "type": "name"
+                },
+                {
+                    "name": "last_plan_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "addplan",
+            "base": "",
+            "fields": [
+                {
+                    "name": "owner",
+                    "type": "name"
+                },
+                {
+                    "name": "title",
+                    "type": "string"
+                },
+                {
+                    "name": "asset_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "asset_symbol",
+                    "type": "nsymbol"
+                },
+                {
+                    "name": "unlock_interval_days",
+                    "type": "uint64"
+                },
+                {
+                    "name": "unlock_times",
+                    "type": "int64"
+                }
+            ]
+        },
+        {
+            "name": "endlock",
+            "base": "",
+            "fields": [
+                {
+                    "name": "locker",
+                    "type": "name"
+                },
+                {
+                    "name": "plan_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "lock_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "global_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "plan_fee",
+                    "type": "asset"
+                },
+                {
+                    "name": "fee_receiver",
+                    "type": "name"
+                },
+                {
+                    "name": "last_plan_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "init",
+            "base": "",
+            "fields": []
+        },
+        {
+            "name": "lock_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "locker",
+                    "type": "name"
+                },
+                {
+                    "name": "receiver",
+                    "type": "name"
+                },
+                {
+                    "name": "issued",
+                    "type": "nasset"
+                },
+                {
+                    "name": "locked",
+                    "type": "nasset"
+                },
+                {
+                    "name": "unlocked",
+                    "type": "nasset"
+                },
+                {
+                    "name": "first_unlock_days",
+                    "type": "uint64"
+                },
+                {
+                    "name": "unlock_interval_days",
+                    "type": "uint64"
+                },
+                {
+                    "name": "unlock_times",
+                    "type": "uint64"
+                },
+                {
+                    "name": "status",
+                    "type": "name"
+                },
+                {
+                    "name": "locked_at",
+                    "type": "time_point"
+                },
+                {
+                    "name": "updated_at",
+                    "type": "time_point"
+                }
+            ]
+        },
+        {
+            "name": "move_log_s",
+            "base": "",
+            "fields": [
+                {
+                    "name": "plan_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "from_lock_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "asset",
+                    "type": "nasset"
+                },
+                {
+                    "name": "owner",
+                    "type": "name"
+                },
+                {
+                    "name": "receiver",
+                    "type": "name"
+                },
+                {
+                    "name": "created_at",
+                    "type": "time_point"
+                }
+            ]
+        },
+        {
+            "name": "move_window_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "plan_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "symbol",
+                    "type": "nsymbol"
+                },
+                {
+                    "name": "started_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "finished_at",
+                    "type": "time_point_sec"
+                }
+            ]
+        },
+        {
+            "name": "movetrace",
+            "base": "",
+            "fields": [
+                {
+                    "name": "trace",
+                    "type": "move_log_s"
+                }
+            ]
+        },
+        {
+            "name": "nasset",
+            "base": "",
+            "fields": [
+                {
+                    "name": "amount",
+                    "type": "int64"
+                },
+                {
+                    "name": "symbol",
+                    "type": "nsymbol"
+                }
+            ]
+        },
+        {
+            "name": "nsymbol",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint32"
+                },
+                {
+                    "name": "parent_id",
+                    "type": "uint32"
+                }
+            ]
+        },
+        {
+            "name": "plan_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "owner",
+                    "type": "name"
+                },
+                {
+                    "name": "title",
+                    "type": "string"
+                },
+                {
+                    "name": "asset_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "asset_symbol",
+                    "type": "nsymbol"
+                },
+                {
+                    "name": "unlock_interval_days",
+                    "type": "uint64"
+                },
+                {
+                    "name": "unlock_times",
+                    "type": "uint64"
+                },
+                {
+                    "name": "total_issued",
+                    "type": "nasset"
+                },
+                {
+                    "name": "total_locked",
+                    "type": "nasset"
+                },
+                {
+                    "name": "total_unlocked",
+                    "type": "nasset"
+                },
+                {
+                    "name": "total_refunded",
+                    "type": "nasset"
+                },
+                {
+                    "name": "status",
+                    "type": "name"
+                },
+                {
+                    "name": "last_lock_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "created_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "updated_at",
+                    "type": "time_point_sec"
+                }
+            ]
+        },
+        {
+            "name": "setconfig",
+            "base": "",
+            "fields": [
+                {
+                    "name": "plan_fee",
+                    "type": "asset"
+                },
+                {
+                    "name": "fee_receiver",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "setmovwindow",
+            "base": "",
+            "fields": [
+                {
+                    "name": "plan_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "symbol",
+                    "type": "nsymbol"
+                },
+                {
+                    "name": "started_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "finished_at",
+                    "type": "time_point_sec"
+                }
+            ]
+        },
+        {
+            "name": "setplanowner",
+            "base": "",
+            "fields": [
+                {
+                    "name": "owner",
+                    "type": "name"
+                },
+                {
+                    "name": "plan_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "new_owner",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "unlock",
+            "base": "",
+            "fields": [
+                {
+                    "name": "locker",
+                    "type": "name"
+                },
+                {
+                    "name": "plan_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "lock_id",
+                    "type": "uint64"
+                }
+            ]
+        }
+    ],
+    "actions": [
+        {
+            "name": "addplan",
+            "type": "addplan",
+            "ricardian_contract": "---\nspec_version: \"0.1.0\"\ntitle: create a lock plan\nsummary: 'create a lock plan for a particular bank asset'\nicon: http://127.0.0.1/ricardian_assets/amax.contracts/icons/\n---\n\nSuper admin to create a lock plan to a particular bank asset"
+        },
+        {
+            "name": "endlock",
+            "type": "endlock",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "init",
+            "type": "init",
+            "ricardian_contract": "---\nspec_version: \"0.1.0\"\ntitle: init\nsummary: 'initilize & maintain'\nicon: http://127.0.0.1/ricardian_assets/amax.contracts/icons/\n---\n\ninitilize & maintain contract states"
+        },
+        {
+            "name": "movetrace",
+            "type": "movetrace",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setconfig",
+            "type": "setconfig",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setmovwindow",
+            "type": "setmovwindow",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setplanowner",
+            "type": "setplanowner",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "unlock",
+            "type": "unlock",
+            "ricardian_contract": ""
+        }
+    ],
+    "tables": [
+        {
+            "name": "global",
+            "type": "global_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "locks",
+            "type": "lock_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "movewindows",
+            "type": "move_window_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "payaccounts",
+            "type": "account",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "plans",
+            "type": "plan_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        }
+    ],
+    "ricardian_clauses": [],
+    "variants": []
+}

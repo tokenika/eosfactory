@@ -1,0 +1,35 @@
+{
+    "____comment": "This file was generated with amax-abigen. DO NOT EDIT ",
+    "version": "amax::abi/1.1",
+    "types": [],
+    "structs": [
+        {
+            "name": "powupresult",
+            "base": "",
+            "fields": [
+                {
+                    "name": "fee",
+                    "type": "asset"
+                },
+                {
+                    "name": "powup_net",
+                    "type": "int64"
+                },
+                {
+                    "name": "powup_cpu",
+                    "type": "int64"
+                }
+            ]
+        }
+    ],
+    "actions": [
+        {
+            "name": "powupresult",
+            "type": "powupresult",
+            "ricardian_contract": ""
+        }
+    ],
+    "tables": [],
+    "ricardian_clauses": [],
+    "variants": []
+}

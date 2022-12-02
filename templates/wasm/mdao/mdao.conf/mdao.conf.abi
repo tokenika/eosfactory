@@ -1,0 +1,242 @@
+{
+    "____comment": "This file was generated with amax-abigen. DO NOT EDIT ",
+    "version": "amax::abi/1.1",
+    "types": [],
+    "structs": [
+        {
+            "name": "app_info",
+            "base": "",
+            "fields": [
+                {
+                    "name": "app_name",
+                    "type": "name"
+                },
+                {
+                    "name": "app_version",
+                    "type": "string"
+                },
+                {
+                    "name": "url",
+                    "type": "string"
+                },
+                {
+                    "name": "logo",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "conf_global_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "appinfo",
+                    "type": "app_info"
+                },
+                {
+                    "name": "status",
+                    "type": "name"
+                },
+                {
+                    "name": "fee_taker",
+                    "type": "name"
+                },
+                {
+                    "name": "upgrade_fee",
+                    "type": "asset"
+                },
+                {
+                    "name": "dapp_seats_max",
+                    "type": "uint16"
+                },
+                {
+                    "name": "admin",
+                    "type": "name"
+                },
+                {
+                    "name": "token_create_fee",
+                    "type": "asset"
+                },
+                {
+                    "name": "managers",
+                    "type": "pair_name_name[]"
+                },
+                {
+                    "name": "token_contracts",
+                    "type": "name[]"
+                },
+                {
+                    "name": "ntoken_contracts",
+                    "type": "name[]"
+                },
+                {
+                    "name": "stake_period_days",
+                    "type": "uint16"
+                },
+                {
+                    "name": "black_symbols",
+                    "type": "symbol_code[]"
+                },
+                {
+                    "name": "enable_metaverse",
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "init",
+            "base": "",
+            "fields": [
+                {
+                    "name": "fee_taker",
+                    "type": "name"
+                },
+                {
+                    "name": "app_info",
+                    "type": "app_info"
+                },
+                {
+                    "name": "dao_upg_fee",
+                    "type": "asset"
+                },
+                {
+                    "name": "admin",
+                    "type": "name"
+                },
+                {
+                    "name": "status",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "migrate",
+            "base": "",
+            "fields": []
+        },
+        {
+            "name": "pair_name_name",
+            "base": "",
+            "fields": [
+                {
+                    "name": "key",
+                    "type": "name"
+                },
+                {
+                    "name": "value",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "setmanager",
+            "base": "",
+            "fields": [
+                {
+                    "name": "manage_type",
+                    "type": "name"
+                },
+                {
+                    "name": "manager",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "setmetaverse",
+            "base": "",
+            "fields": [
+                {
+                    "name": "enable_metaverse",
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "setseat",
+            "base": "",
+            "fields": [
+                {
+                    "name": "dappmax",
+                    "type": "uint16"
+                }
+            ]
+        },
+        {
+            "name": "setsystem",
+            "base": "",
+            "fields": [
+                {
+                    "name": "token_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "ntoken_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "stake_delay_days",
+                    "type": "uint16"
+                }
+            ]
+        },
+        {
+            "name": "settokenfee",
+            "base": "",
+            "fields": [
+                {
+                    "name": "quantity",
+                    "type": "asset"
+                }
+            ]
+        }
+    ],
+    "actions": [
+        {
+            "name": "init",
+            "type": "init",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "migrate",
+            "type": "migrate",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setmanager",
+            "type": "setmanager",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setmetaverse",
+            "type": "setmetaverse",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setseat",
+            "type": "setseat",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setsystem",
+            "type": "setsystem",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "settokenfee",
+            "type": "settokenfee",
+            "ricardian_contract": ""
+        }
+    ],
+    "tables": [
+        {
+            "name": "global",
+            "type": "conf_global_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        }
+    ],
+    "ricardian_clauses": [],
+    "variants": []
+}

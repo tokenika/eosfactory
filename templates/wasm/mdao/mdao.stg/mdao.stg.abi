@@ -1,0 +1,333 @@
+{
+    "____comment": "This file was generated with amax-abigen. DO NOT EDIT ",
+    "version": "amax::abi/1.1",
+    "types": [
+        {
+            "new_type_name": "refsymbol",
+            "type": "variant_symbol_code_nsymbol_symbol"
+        }
+    ],
+    "structs": [
+        {
+            "name": "balancestg",
+            "base": "",
+            "fields": [
+                {
+                    "name": "creator",
+                    "type": "name"
+                },
+                {
+                    "name": "stg_name",
+                    "type": "string"
+                },
+                {
+                    "name": "weight_value",
+                    "type": "uint64"
+                },
+                {
+                    "name": "type",
+                    "type": "name"
+                },
+                {
+                    "name": "ref_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "ref_sym",
+                    "type": "refsymbol"
+                }
+            ]
+        },
+        {
+            "name": "create",
+            "base": "",
+            "fields": [
+                {
+                    "name": "creator",
+                    "type": "name"
+                },
+                {
+                    "name": "stg_name",
+                    "type": "string"
+                },
+                {
+                    "name": "stg_algo",
+                    "type": "string"
+                },
+                {
+                    "name": "type",
+                    "type": "name"
+                },
+                {
+                    "name": "ref_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "ref_sym",
+                    "type": "refsymbol"
+                }
+            ]
+        },
+        {
+            "name": "nsymbol",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint32"
+                },
+                {
+                    "name": "parent_id",
+                    "type": "uint32"
+                }
+            ]
+        },
+        {
+            "name": "pair_name_string",
+            "base": "",
+            "fields": [
+                {
+                    "name": "key",
+                    "type": "name"
+                },
+                {
+                    "name": "value",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "publish",
+            "base": "",
+            "fields": [
+                {
+                    "name": "creator",
+                    "type": "name"
+                },
+                {
+                    "name": "stg_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "remove",
+            "base": "",
+            "fields": [
+                {
+                    "name": "creator",
+                    "type": "name"
+                },
+                {
+                    "name": "stg_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "setalgo",
+            "base": "",
+            "fields": [
+                {
+                    "name": "creator",
+                    "type": "name"
+                },
+                {
+                    "name": "stg_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "stg_algo",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "stg_global_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "conf_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "algos",
+                    "type": "pair_name_string[]"
+                }
+            ]
+        },
+        {
+            "name": "strategy_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "creator",
+                    "type": "name"
+                },
+                {
+                    "name": "status",
+                    "type": "name"
+                },
+                {
+                    "name": "type",
+                    "type": "name"
+                },
+                {
+                    "name": "stg_name",
+                    "type": "string"
+                },
+                {
+                    "name": "stg_algo",
+                    "type": "string"
+                },
+                {
+                    "name": "ref_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "ref_sym",
+                    "type": "refsymbol"
+                },
+                {
+                    "name": "created_at",
+                    "type": "time_point_sec"
+                }
+            ]
+        },
+        {
+            "name": "testalgo",
+            "base": "",
+            "fields": [
+                {
+                    "name": "account",
+                    "type": "name"
+                },
+                {
+                    "name": "stg_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "thresholdstg",
+            "base": "",
+            "fields": [
+                {
+                    "name": "creator",
+                    "type": "name"
+                },
+                {
+                    "name": "stg_name",
+                    "type": "string"
+                },
+                {
+                    "name": "threshold_value",
+                    "type": "uint64"
+                },
+                {
+                    "name": "type",
+                    "type": "name"
+                },
+                {
+                    "name": "ref_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "ref_sym",
+                    "type": "refsymbol"
+                }
+            ]
+        },
+        {
+            "name": "verify",
+            "base": "",
+            "fields": [
+                {
+                    "name": "creator",
+                    "type": "name"
+                },
+                {
+                    "name": "stg_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "value",
+                    "type": "uint64"
+                },
+                {
+                    "name": "expect_weight",
+                    "type": "uint64"
+                }
+            ]
+        }
+    ],
+    "actions": [
+        {
+            "name": "balancestg",
+            "type": "balancestg",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "create",
+            "type": "create",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "publish",
+            "type": "publish",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "remove",
+            "type": "remove",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setalgo",
+            "type": "setalgo",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "testalgo",
+            "type": "testalgo",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "thresholdstg",
+            "type": "thresholdstg",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "verify",
+            "type": "verify",
+            "ricardian_contract": ""
+        }
+    ],
+    "tables": [
+        {
+            "name": "global",
+            "type": "stg_global_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "stglist",
+            "type": "strategy_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        }
+    ],
+    "ricardian_clauses": [],
+    "variants": [
+        {
+            "name": "variant_symbol_code_nsymbol_symbol",
+            "types": ["symbol_code","nsymbol","symbol"]
+        }
+    ]
+}

@@ -18,7 +18,9 @@ import eosfactory.core.cleos_sys as cleos_sys
 import eosfactory.core.manager as manager
 import eosfactory.core.testnet as testnet
 import eosfactory.core.account as account
+import eosfactory.core.interface as interface
 import eosfactory.shell.wallet as wallet
+Permission = interface.Permission
 
 
 wallet_globals = None
@@ -278,6 +280,17 @@ class Account():
 
         self.action_permission = result
 
+    def pushaction(self, action, data,submitter,expect_asset=True):
+        if expect_asset:
+            self.push_action(action,data,(submitter, Permission.ACTIVE))
+        else:
+            try:
+                self.push_action(action,data,(submitter, Permission.ACTIVE))
+                raise "Expected operation failed, actual operation passed"
+            except Exception as e:
+                logger.INFO(''' Expected operation failed, actual operation failed : ''')
+                print('except:', e)
+
 
     def push_action(
             self, action, data="{}",
@@ -312,14 +325,6 @@ class Account():
         if not permission:
             permission = self
 
-        result = cleos.PushAction(
-            self, action, data,
-            permission, expiration_sec,
-            skip_sign, dont_broadcast, force_unique,
-            max_cpu_usage, max_net_usage,
-            ref_block,
-            is_verbose=False, json=True)
-
         logger.INFO('''
             * push action ``{}``:
             '''.format(action))
@@ -328,14 +333,58 @@ class Account():
             {}
         '''.format(re.sub(' +',' ', data)))
 
+        result = cleos.PushAction(
+            self, action, data,
+            permission, expiration_sec,
+            skip_sign, dont_broadcast, force_unique,
+            max_cpu_usage, max_net_usage,
+            ref_block,
+            is_verbose=False, json=True)
+
+
         self.action = result
         try:
             self._console = result.console
             logger.DEBUG(self._console)
-        except:
+        except :
             pass
 
         self.action = result
+
+    def transfer(
+            self,to,quantity,memo=''
+        ):
+        contract = None
+        if "AMAX" in quantity:
+            amaxtoken = new_account("amax.token",restore=True)
+            contract = amaxtoken
+        elif "APL" in quantity:
+            aplinktoken = new_account("aplink.token",restore=True)
+            contract = aplinktoken
+        elif "MBTC" in quantity:
+            amaxmtoken = new_account("amax.mtoken",restore=True)
+            contract = amaxmtoken
+        elif "MBNB" in quantity:
+            amaxmtoken = new_account("amax.mtoken",restore=True)
+            contract = amaxmtoken
+        elif "METH" in quantity:
+            amaxmtoken = new_account("amax.mtoken",restore=True)
+            contract = amaxmtoken
+        elif "MUSDT" in quantity:
+            amaxmtoken = new_account("amax.mtoken",restore=True)
+            contract = amaxmtoken
+        elif "MUSDC" in quantity:
+            amaxmtoken = new_account("amax.mtoken",restore=True)
+            contract = amaxmtoken
+        else:
+            raise "coin type error"
+        contract.push_action(
+        "transfer",
+        {
+            "from": self, "to": to, 
+            "quantity": quantity, "memo": memo
+        },
+        permission=(self, Permission.ACTIVE))
 
     def show_action(
             self, action, data, permission=None,
@@ -565,7 +614,7 @@ def create_master_account(
     in the global namespace already.
 
     If a local testnet is running, create an account object representing
-    the *eosio* account. Put the account into the wallet. Put the account
+    the *eosio* account. Put the account into the wallet. Put the apython3ccount
     object into the global namespace of the caller, and return.
 
     Otherwise, an outer testnet has to be defined with the function

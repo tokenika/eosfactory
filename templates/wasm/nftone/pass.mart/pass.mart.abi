@@ -1,0 +1,335 @@
+{
+    "____comment": "This file was generated with amax-abigen. DO NOT EDIT ",
+    "version": "amax::abi/1.1",
+    "types": [],
+    "structs": [
+        {
+            "name": "addpass",
+            "base": "",
+            "fields": [
+                {
+                    "name": "owner",
+                    "type": "name"
+                },
+                {
+                    "name": "title",
+                    "type": "string"
+                },
+                {
+                    "name": "nft_symbol",
+                    "type": "nsymbol"
+                },
+                {
+                    "name": "gift_symbol",
+                    "type": "nsymbol"
+                },
+                {
+                    "name": "price",
+                    "type": "asset"
+                },
+                {
+                    "name": "started_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "ended_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "custody_plan_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "token_split_plan_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "closepass",
+            "base": "",
+            "fields": [
+                {
+                    "name": "pass_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "global_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "admin",
+                    "type": "name"
+                },
+                {
+                    "name": "custody_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "nft_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "gift_nft_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "token_split_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "last_pass_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "last_order_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "init",
+            "base": "",
+            "fields": [
+                {
+                    "name": "admin",
+                    "type": "name"
+                },
+                {
+                    "name": "nft_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "gift_nft_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "custody_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "token_split_contract",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "nasset",
+            "base": "",
+            "fields": [
+                {
+                    "name": "amount",
+                    "type": "int64"
+                },
+                {
+                    "name": "symbol",
+                    "type": "nsymbol"
+                }
+            ]
+        },
+        {
+            "name": "nsymbol",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint32"
+                },
+                {
+                    "name": "parent_id",
+                    "type": "uint32"
+                }
+            ]
+        },
+        {
+            "name": "order_s",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "pass_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "owner",
+                    "type": "name"
+                },
+                {
+                    "name": "quantity",
+                    "type": "asset"
+                },
+                {
+                    "name": "nft_quantity",
+                    "type": "nasset"
+                },
+                {
+                    "name": "gift_quantity",
+                    "type": "nasset"
+                },
+                {
+                    "name": "created_at",
+                    "type": "time_point_sec"
+                }
+            ]
+        },
+        {
+            "name": "ordertrace",
+            "base": "",
+            "fields": [
+                {
+                    "name": "order",
+                    "type": "order_s"
+                }
+            ]
+        },
+        {
+            "name": "pass_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "title",
+                    "type": "string"
+                },
+                {
+                    "name": "owner",
+                    "type": "name"
+                },
+                {
+                    "name": "nft_total",
+                    "type": "nasset"
+                },
+                {
+                    "name": "nft_available",
+                    "type": "nasset"
+                },
+                {
+                    "name": "price",
+                    "type": "asset"
+                },
+                {
+                    "name": "custody_plan_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "status",
+                    "type": "name"
+                },
+                {
+                    "name": "gift_nft_total",
+                    "type": "nasset"
+                },
+                {
+                    "name": "gift_nft_available",
+                    "type": "nasset"
+                },
+                {
+                    "name": "token_split_plan_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "created_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "updated_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "sell_started_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "sell_ended_at",
+                    "type": "time_point_sec"
+                }
+            ]
+        },
+        {
+            "name": "setendtime",
+            "base": "",
+            "fields": [
+                {
+                    "name": "pass_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "sell_ended_at",
+                    "type": "time_point_sec"
+                }
+            ]
+        },
+        {
+            "name": "setowner",
+            "base": "",
+            "fields": [
+                {
+                    "name": "pass_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "owner",
+                    "type": "name"
+                }
+            ]
+        }
+    ],
+    "actions": [
+        {
+            "name": "addpass",
+            "type": "addpass",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "closepass",
+            "type": "closepass",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "init",
+            "type": "init",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "ordertrace",
+            "type": "ordertrace",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setendtime",
+            "type": "setendtime",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setowner",
+            "type": "setowner",
+            "ricardian_contract": ""
+        }
+    ],
+    "tables": [
+        {
+            "name": "global",
+            "type": "global_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "passes",
+            "type": "pass_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        }
+    ],
+    "ricardian_clauses": [],
+    "variants": []
+}

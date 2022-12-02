@@ -1,0 +1,365 @@
+{
+    "____comment": "This file was generated with amax-abigen. DO NOT EDIT ",
+    "version": "amax::abi/1.1",
+    "types": [],
+    "structs": [
+        {
+            "name": "collectint",
+            "base": "",
+            "fields": [
+                {
+                    "name": "issuer",
+                    "type": "name"
+                },
+                {
+                    "name": "owner",
+                    "type": "name"
+                },
+                {
+                    "name": "save_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "delplan",
+            "base": "",
+            "fields": [
+                {
+                    "name": "plan_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "extended_symbol",
+            "base": "",
+            "fields": [
+                {
+                    "name": "sym",
+                    "type": "symbol"
+                },
+                {
+                    "name": "contract",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "global_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "admin",
+                    "type": "name"
+                },
+                {
+                    "name": "penalty_share_account",
+                    "type": "name"
+                },
+                {
+                    "name": "principal_token",
+                    "type": "extended_symbol"
+                },
+                {
+                    "name": "interest_token",
+                    "type": "extended_symbol"
+                },
+                {
+                    "name": "mini_deposit_amount",
+                    "type": "asset"
+                },
+                {
+                    "name": "share_pool_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "last_save_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "init",
+            "base": "",
+            "fields": [
+                {
+                    "name": "admin",
+                    "type": "name"
+                },
+                {
+                    "name": "ptoken",
+                    "type": "extended_symbol"
+                },
+                {
+                    "name": "itoken",
+                    "type": "extended_symbol"
+                },
+                {
+                    "name": "pc",
+                    "type": "plan_conf_s"
+                },
+                {
+                    "name": "mini_deposit_amount",
+                    "type": "asset"
+                },
+                {
+                    "name": "share_pool_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "intcolllog",
+            "base": "",
+            "fields": [
+                {
+                    "name": "account",
+                    "type": "name"
+                },
+                {
+                    "name": "account_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "plan_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "quantity",
+                    "type": "asset"
+                },
+                {
+                    "name": "created_at",
+                    "type": "time_point"
+                }
+            ]
+        },
+        {
+            "name": "intrefuellog",
+            "base": "",
+            "fields": [
+                {
+                    "name": "refueller",
+                    "type": "name"
+                },
+                {
+                    "name": "plan_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "quantity",
+                    "type": "asset"
+                },
+                {
+                    "name": "created_at",
+                    "type": "time_point"
+                }
+            ]
+        },
+        {
+            "name": "plan_conf_s",
+            "base": "",
+            "fields": [
+                {
+                    "name": "type",
+                    "type": "name"
+                },
+                {
+                    "name": "ir_scheme",
+                    "type": "name"
+                },
+                {
+                    "name": "deposit_term_days",
+                    "type": "uint64"
+                },
+                {
+                    "name": "allow_advance_redeem",
+                    "type": "bool"
+                },
+                {
+                    "name": "advance_redeem_fine_rate",
+                    "type": "uint64"
+                },
+                {
+                    "name": "effective_from",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "effective_to",
+                    "type": "time_point_sec"
+                }
+            ]
+        },
+        {
+            "name": "save_account_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "save_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "plan_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "interest_rate",
+                    "type": "uint64"
+                },
+                {
+                    "name": "deposit_quant",
+                    "type": "asset"
+                },
+                {
+                    "name": "interest_term_quant",
+                    "type": "asset"
+                },
+                {
+                    "name": "interest_collected",
+                    "type": "asset"
+                },
+                {
+                    "name": "created_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "term_ended_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "last_collected_at",
+                    "type": "time_point_sec"
+                }
+            ]
+        },
+        {
+            "name": "save_plan_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "conf",
+                    "type": "plan_conf_s"
+                },
+                {
+                    "name": "deposit_available",
+                    "type": "asset"
+                },
+                {
+                    "name": "deposit_redeemed",
+                    "type": "asset"
+                },
+                {
+                    "name": "interest_available",
+                    "type": "asset"
+                },
+                {
+                    "name": "interest_redeemed",
+                    "type": "asset"
+                },
+                {
+                    "name": "created_at",
+                    "type": "time_point_sec"
+                }
+            ]
+        },
+        {
+            "name": "setplan",
+            "base": "",
+            "fields": [
+                {
+                    "name": "plan_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "pc",
+                    "type": "plan_conf_s"
+                }
+            ]
+        },
+        {
+            "name": "withdraw",
+            "base": "",
+            "fields": [
+                {
+                    "name": "issuer",
+                    "type": "name"
+                },
+                {
+                    "name": "owner",
+                    "type": "name"
+                },
+                {
+                    "name": "save_id",
+                    "type": "uint64"
+                }
+            ]
+        }
+    ],
+    "actions": [
+        {
+            "name": "collectint",
+            "type": "collectint",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "delplan",
+            "type": "delplan",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "init",
+            "type": "init",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "intcolllog",
+            "type": "intcolllog",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "intrefuellog",
+            "type": "intrefuellog",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setplan",
+            "type": "setplan",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "withdraw",
+            "type": "withdraw",
+            "ricardian_contract": ""
+        }
+    ],
+    "tables": [
+        {
+            "name": "global",
+            "type": "global_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "saveaccounts",
+            "type": "save_account_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "saveplans",
+            "type": "save_plan_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        }
+    ],
+    "ricardian_clauses": [],
+    "variants": []
+}

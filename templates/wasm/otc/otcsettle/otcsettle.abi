@@ -1,0 +1,208 @@
+{
+    "____comment": "This file was generated with amax-abigen. DO NOT EDIT ",
+    "version": "amax::abi/1.1",
+    "types": [],
+    "structs": [
+        {
+            "name": "claim",
+            "base": "",
+            "fields": [
+                {
+                    "name": "reciptian",
+                    "type": "name"
+                },
+                {
+                    "name": "rewards",
+                    "type": "uint64[]"
+                }
+            ]
+        },
+        {
+            "name": "deal",
+            "base": "",
+            "fields": [
+                {
+                    "name": "deal_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "merchant",
+                    "type": "name"
+                },
+                {
+                    "name": "user",
+                    "type": "name"
+                },
+                {
+                    "name": "quantity",
+                    "type": "asset"
+                },
+                {
+                    "name": "fee",
+                    "type": "asset"
+                },
+                {
+                    "name": "arbit_status",
+                    "type": "uint8"
+                },
+                {
+                    "name": "start_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "end_at",
+                    "type": "time_point_sec"
+                }
+            ]
+        },
+        {
+            "name": "gsettle_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "conf_contract",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "reward_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "deal_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "reciptian",
+                    "type": "name"
+                },
+                {
+                    "name": "cash",
+                    "type": "asset"
+                },
+                {
+                    "name": "score",
+                    "type": "asset"
+                },
+                {
+                    "name": "created_at",
+                    "type": "time_point_sec"
+                }
+            ]
+        },
+        {
+            "name": "setconf",
+            "base": "",
+            "fields": [
+                {
+                    "name": "conf_contract",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "setlevel",
+            "base": "",
+            "fields": [
+                {
+                    "name": "user",
+                    "type": "name"
+                },
+                {
+                    "name": "level",
+                    "type": "uint8"
+                }
+            ]
+        },
+        {
+            "name": "settle_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "account",
+                    "type": "name"
+                },
+                {
+                    "name": "level",
+                    "type": "uint8"
+                },
+                {
+                    "name": "sum_deal",
+                    "type": "uint64"
+                },
+                {
+                    "name": "sum_fee",
+                    "type": "uint32"
+                },
+                {
+                    "name": "sum_deal_count",
+                    "type": "uint16"
+                },
+                {
+                    "name": "sum_arbit_count",
+                    "type": "uint32"
+                },
+                {
+                    "name": "sum_deal_time",
+                    "type": "uint32"
+                },
+                {
+                    "name": "sum_child_deal",
+                    "type": "uint64"
+                }
+            ]
+        }
+    ],
+    "actions": [
+        {
+            "name": "claim",
+            "type": "claim",
+            "ricardian_contract": "---\nspec_version: \"0.1.0\"\ntitle: claim settlement rewards\nsummary: 'claim settlement rewards, support 20 rewards'\nicon: http://127.0.0.1/ricardian_assets/amax.contracts/icons/\n---"
+        },
+        {
+            "name": "deal",
+            "type": "deal",
+            "ricardian_contract": "---\nspec_version: \"0.1.0\"\ntitle: settle deal for user\nsummary: 'settle deal for user'\nicon: http://127.0.0.1/ricardian_assets/amax.contracts/icons/\n---\n\nsettle a deal , will send reward to user if user has a level."
+        },
+        {
+            "name": "setconf",
+            "type": "setconf",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setlevel",
+            "type": "setlevel",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: set level for user\nsummary: 'set level for user'\nicon: http://127.0.0.1/ricardian_assets/amax.contracts/icons/\n---"
+        }
+    ],
+    "tables": [
+        {
+            "name": "global",
+            "type": "gsettle_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "rewards",
+            "type": "reward_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "settles",
+            "type": "settle_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        }
+    ],
+    "ricardian_clauses": [],
+    "variants": []
+}

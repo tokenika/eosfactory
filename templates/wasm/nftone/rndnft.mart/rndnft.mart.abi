@@ -1,0 +1,400 @@
+{
+    "____comment": "This file was generated with amax-abigen. DO NOT EDIT ",
+    "version": "amax::abi/1.1",
+    "types": [],
+    "structs": [
+        {
+            "name": "booth_nftbox_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "booth_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "nfts",
+                    "type": "pair_nsymbol_uint64[]"
+                }
+            ]
+        },
+        {
+            "name": "booth_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "owner",
+                    "type": "name"
+                },
+                {
+                    "name": "title",
+                    "type": "string"
+                },
+                {
+                    "name": "nft_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "fund_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "split_plan_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "price",
+                    "type": "asset"
+                },
+                {
+                    "name": "fund_recd",
+                    "type": "asset"
+                },
+                {
+                    "name": "nft_box_num",
+                    "type": "uint64"
+                },
+                {
+                    "name": "nft_num",
+                    "type": "uint64"
+                },
+                {
+                    "name": "nft_num_sum",
+                    "type": "uint64"
+                },
+                {
+                    "name": "status",
+                    "type": "name"
+                },
+                {
+                    "name": "created_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "updated_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "opened_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "closed_at",
+                    "type": "time_point_sec"
+                }
+            ]
+        },
+        {
+            "name": "closebooth",
+            "base": "",
+            "fields": [
+                {
+                    "name": "owner",
+                    "type": "name"
+                },
+                {
+                    "name": "booth_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "createbooth",
+            "base": "",
+            "fields": [
+                {
+                    "name": "owner",
+                    "type": "name"
+                },
+                {
+                    "name": "title",
+                    "type": "string"
+                },
+                {
+                    "name": "nft_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "fund_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "split_plan_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "price",
+                    "type": "asset"
+                },
+                {
+                    "name": "opened_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "duration_days",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "deal_trace_s_s",
+            "base": "",
+            "fields": [
+                {
+                    "name": "booth_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "buyer",
+                    "type": "name"
+                },
+                {
+                    "name": "nft_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "fund_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "paid_quant",
+                    "type": "asset"
+                },
+                {
+                    "name": "sold_quant",
+                    "type": "nasset"
+                },
+                {
+                    "name": "created_at",
+                    "type": "time_point_sec"
+                }
+            ]
+        },
+        {
+            "name": "dealtrace",
+            "base": "",
+            "fields": [
+                {
+                    "name": "trace",
+                    "type": "deal_trace_s_s"
+                }
+            ]
+        },
+        {
+            "name": "delboothbox",
+            "base": "",
+            "fields": [
+                {
+                    "name": "booth_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "nsymb",
+                    "type": "nsymbol"
+                }
+            ]
+        },
+        {
+            "name": "enablebooth",
+            "base": "",
+            "fields": [
+                {
+                    "name": "owner",
+                    "type": "name"
+                },
+                {
+                    "name": "booth_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "enabled",
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "fixboothbox",
+            "base": "",
+            "fields": [
+                {
+                    "name": "booth_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "nfts",
+                    "type": "nasset"
+                }
+            ]
+        },
+        {
+            "name": "global_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "admin",
+                    "type": "name"
+                },
+                {
+                    "name": "fund_distributor",
+                    "type": "name"
+                },
+                {
+                    "name": "max_booth_boxes",
+                    "type": "uint16"
+                },
+                {
+                    "name": "last_booth_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "init",
+            "base": "",
+            "fields": [
+                {
+                    "name": "admin",
+                    "type": "name"
+                },
+                {
+                    "name": "fund_distributor",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "nasset",
+            "base": "",
+            "fields": [
+                {
+                    "name": "amount",
+                    "type": "int64"
+                },
+                {
+                    "name": "symbol",
+                    "type": "nsymbol"
+                }
+            ]
+        },
+        {
+            "name": "nsymbol",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint32"
+                },
+                {
+                    "name": "parent_id",
+                    "type": "uint32"
+                }
+            ]
+        },
+        {
+            "name": "pair_nsymbol_uint64",
+            "base": "",
+            "fields": [
+                {
+                    "name": "key",
+                    "type": "nsymbol"
+                },
+                {
+                    "name": "value",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "setboothtime",
+            "base": "",
+            "fields": [
+                {
+                    "name": "owner",
+                    "type": "name"
+                },
+                {
+                    "name": "booth_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "opened_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "closed_at",
+                    "type": "time_point_sec"
+                }
+            ]
+        }
+    ],
+    "actions": [
+        {
+            "name": "closebooth",
+            "type": "closebooth",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "createbooth",
+            "type": "createbooth",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "dealtrace",
+            "type": "dealtrace",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "delboothbox",
+            "type": "delboothbox",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "enablebooth",
+            "type": "enablebooth",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "fixboothbox",
+            "type": "fixboothbox",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "init",
+            "type": "init",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setboothtime",
+            "type": "setboothtime",
+            "ricardian_contract": ""
+        }
+    ],
+    "tables": [
+        {
+            "name": "boothboxes",
+            "type": "booth_nftbox_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "booths",
+            "type": "booth_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "global",
+            "type": "global_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        }
+    ],
+    "ricardian_clauses": [],
+    "variants": []
+}

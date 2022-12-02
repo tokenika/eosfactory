@@ -1,0 +1,127 @@
+{
+    "____comment": "This file was generated with amax-abigen. DO NOT EDIT ",
+    "version": "amax::abi/1.1",
+    "types": [],
+    "structs": [
+        {
+            "name": "bind",
+            "base": "",
+            "fields": [
+                {
+                    "name": "account",
+                    "type": "name"
+                },
+                {
+                    "name": "tgid",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "bind_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "tgid",
+                    "type": "uint64"
+                },
+                {
+                    "name": "account",
+                    "type": "name"
+                },
+                {
+                    "name": "confirmed",
+                    "type": "bool"
+                },
+                {
+                    "name": "updated_at",
+                    "type": "time_point_sec"
+                }
+            ]
+        },
+        {
+            "name": "confirm",
+            "base": "",
+            "fields": [
+                {
+                    "name": "tgid",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "delbind",
+            "base": "",
+            "fields": [
+                {
+                    "name": "tgid",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "global_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "enable",
+                    "type": "bool"
+                },
+                {
+                    "name": "tg_admin",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "init",
+            "base": "",
+            "fields": [
+                {
+                    "name": "account",
+                    "type": "name"
+                }
+            ]
+        }
+    ],
+    "actions": [
+        {
+            "name": "bind",
+            "type": "bind",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "confirm",
+            "type": "confirm",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "delbind",
+            "type": "delbind",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "init",
+            "type": "init",
+            "ricardian_contract": ""
+        }
+    ],
+    "tables": [
+        {
+            "name": "binds",
+            "type": "bind_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "global",
+            "type": "global_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        }
+    ],
+    "ricardian_clauses": [],
+    "variants": []
+}

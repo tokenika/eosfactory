@@ -38,6 +38,10 @@ TEMPLATE_DIR = ("TEMPLATE_DIR", "templates/contracts")
 PROJECT_0 = "empty_project"
 SYSTEM_ACCOUNT="amax"
 
+AMAX_DIR = os.getenv("AMAX_DIR")
+FACTORY_DIR = os.getenv("FACTORY_DIR")
+WALLET_DIR = os.getenv("WALLET_DIR")
+
 eosfactory_data_ = ("EOSFACTORY_DATA_DIR",
             [os.path.expandvars("${HOME}/.local/" + EOSFACTORY_DIR),\
                 "/usr/local/" + EOSFACTORY_DIR,],
@@ -50,7 +54,7 @@ nodeos_config_dir_ = ("NODEOS_CONFIG_DIR", [None])
 nodeos_data_dir_ = ("NODEOS_DATA_DIR", [None])
 nodeos_options_ = ("NODEOS_OPTIONS", [])
 
-keosd_wallet_dir_ = ("KEOSD_WALLET_DIR", ["/root/amax-wallet/"])
+keosd_wallet_dir_ = ("KEOSD_WALLET_DIR", [WALLET_DIR+"/"])
 chain_state_db_size_mb_ = ("EOSIO_SHARED_MEMORY_SIZE_MB", ["300"])
 
 wsl_root_ = ("WSL_ROOT", [None])
@@ -60,15 +64,15 @@ libs_ = ("LIBS", "libs")
 
 
 cli_exe_ = ("EOSIO_CLI_EXECUTABLE", 
-                        ["amcli", "/usr/bin/amcli", "/usr/opt/amax/0.5.0/bin/amcli"])
+                        ["amcli", "/usr/bin/amcli", "{}/amax/0.5.0/bin/amcli".format(AMAX_DIR)])
 keosd_exe_ = ("KEOSD_EXECUTABLE", 
-                        ["amkey","/usr/bin/amkey", "/usr/opt/amax/0.5.0/bin/amkey"])
+                        ["amkey","/usr/bin/amkey", "{}/amax/0.5.0/bin/amkey".format(AMAX_DIR)])
 node_exe_ = ("LOCAL_NODE_EXECUTABLE", 
-                        ["amnod","/usr/bin/amnod", "/usr/opt/amax/0.5.0/bin/amnod"])
+                        ["amnod","/usr/bin/amnod", "{}/amax/0.5.0/bin/amnod".format(AMAX_DIR)])
 eosio_cpp_ = ("EOSIO_CPP",
-            ["amax-cpp", "/usr/bin/amax-cpp", "/usr/local/amax.cdt/bin/amax-cpp", "${HOME}/amax.cdt/bin/amax-cpp"])
+            ["amax-cpp", "/usr/bin/amax-cpp", "/usr/local/amax.cdt/bin/amax-cpp", "/usr/local/amax.cdt/bin/amax-cpp"])
 eosio_cdt_root_ = ("EOSIO_CDT_ROOT",
-    ["/usr/local/amax.cdt", "${HOME}/amax.cdt"])
+    ["/usr/local/amax.cdt", "{}/amax.cdt"])
 eosio_cpp_includes_ = (
     "EOSIO_CPP_INCLUDES",
     [["include", "include/libcxx", "include/eosiolib/core", \

@@ -1,0 +1,169 @@
+{
+    "____comment": "This file was generated with amax-abigen. DO NOT EDIT ",
+    "version": "amax::abi/1.1",
+    "types": [],
+    "structs": [
+        {
+            "name": "aplink_farm",
+            "base": "",
+            "fields": [
+                {
+                    "name": "contract",
+                    "type": "name"
+                },
+                {
+                    "name": "lease_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "parent_inviter_reward",
+                    "type": "asset"
+                },
+                {
+                    "name": "grandparent_inviter_reward",
+                    "type": "asset"
+                }
+            ]
+        },
+        {
+            "name": "claimreward",
+            "base": "",
+            "fields": [
+                {
+                    "name": "newbies",
+                    "type": "name[]"
+                }
+            ]
+        },
+        {
+            "name": "global_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "newbie_reward",
+                    "type": "asset"
+                },
+                {
+                    "name": "aplink_token_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "aplink_admin",
+                    "type": "name"
+                },
+                {
+                    "name": "batch_issue_size",
+                    "type": "uint8"
+                },
+                {
+                    "name": "apl_farm",
+                    "type": "aplink_farm"
+                },
+                {
+                    "name": "enable",
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "init",
+            "base": "",
+            "fields": [
+                {
+                    "name": "lease_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "farm_contract",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "rewardinvite",
+            "base": "",
+            "fields": [
+                {
+                    "name": "to",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "setbatchsize",
+            "base": "",
+            "fields": [
+                {
+                    "name": "batch_issue_size",
+                    "type": "uint8"
+                }
+            ]
+        },
+        {
+            "name": "setleaseid",
+            "base": "",
+            "fields": []
+        },
+        {
+            "name": "setstate",
+            "base": "",
+            "fields": [
+                {
+                    "name": "newbie_reward",
+                    "type": "asset"
+                },
+                {
+                    "name": "aplink_token_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "aplink_admin",
+                    "type": "name"
+                }
+            ]
+        }
+    ],
+    "actions": [
+        {
+            "name": "claimreward",
+            "type": "claimreward",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "init",
+            "type": "init",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "rewardinvite",
+            "type": "rewardinvite",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setbatchsize",
+            "type": "setbatchsize",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setleaseid",
+            "type": "setleaseid",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setstate",
+            "type": "setstate",
+            "ricardian_contract": ""
+        }
+    ],
+    "tables": [
+        {
+            "name": "global",
+            "type": "global_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        }
+    ],
+    "ricardian_clauses": [],
+    "variants": []
+}

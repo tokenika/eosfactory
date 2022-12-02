@@ -1,0 +1,334 @@
+{
+    "____comment": "This file was generated with amax-abigen. DO NOT EDIT ",
+    "version": "amax::abi/1.1",
+    "types": [],
+    "structs": [
+        {
+            "name": "booth_conf_s",
+            "base": "",
+            "fields": [
+                {
+                    "name": "owner",
+                    "type": "name"
+                },
+                {
+                    "name": "title",
+                    "type": "string"
+                },
+                {
+                    "name": "base_nft_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "quote_nft_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "quote_nft_price",
+                    "type": "nasset"
+                },
+                {
+                    "name": "opened_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "closed_at",
+                    "type": "time_point_sec"
+                }
+            ]
+        },
+        {
+            "name": "booth_nftbox_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "nfts",
+                    "type": "nasset"
+                }
+            ]
+        },
+        {
+            "name": "booth_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "conf",
+                    "type": "booth_conf_s"
+                },
+                {
+                    "name": "id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "base_nft_sum",
+                    "type": "uint64"
+                },
+                {
+                    "name": "base_nft_num",
+                    "type": "uint64"
+                },
+                {
+                    "name": "base_nftbox_sum",
+                    "type": "uint64"
+                },
+                {
+                    "name": "base_nftbox_num",
+                    "type": "uint64"
+                },
+                {
+                    "name": "quote_nft_recd",
+                    "type": "nasset"
+                },
+                {
+                    "name": "status",
+                    "type": "name"
+                },
+                {
+                    "name": "created_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "updated_at",
+                    "type": "time_point_sec"
+                }
+            ]
+        },
+        {
+            "name": "closebooth",
+            "base": "",
+            "fields": [
+                {
+                    "name": "owner",
+                    "type": "name"
+                },
+                {
+                    "name": "quote_nft_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "symbol_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "createbooth",
+            "base": "",
+            "fields": [
+                {
+                    "name": "conf",
+                    "type": "booth_conf_s"
+                }
+            ]
+        },
+        {
+            "name": "deal_trace_s_s",
+            "base": "",
+            "fields": [
+                {
+                    "name": "booth_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "user",
+                    "type": "name"
+                },
+                {
+                    "name": "base_nft_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "quote_nft_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "paid_quant",
+                    "type": "nasset"
+                },
+                {
+                    "name": "sold_quant",
+                    "type": "nasset"
+                },
+                {
+                    "name": "created_at",
+                    "type": "time_point_sec"
+                }
+            ]
+        },
+        {
+            "name": "dealtrace",
+            "base": "",
+            "fields": [
+                {
+                    "name": "trace",
+                    "type": "deal_trace_s_s"
+                }
+            ]
+        },
+        {
+            "name": "enablebooth",
+            "base": "",
+            "fields": [
+                {
+                    "name": "owner",
+                    "type": "name"
+                },
+                {
+                    "name": "quote_nft_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "symbol_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "enabled",
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "global_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "admin",
+                    "type": "name"
+                },
+                {
+                    "name": "batch_swap_max_nfts",
+                    "type": "uint64"
+                },
+                {
+                    "name": "last_booth_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "init",
+            "base": "",
+            "fields": [
+                {
+                    "name": "admin",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "nasset",
+            "base": "",
+            "fields": [
+                {
+                    "name": "amount",
+                    "type": "int64"
+                },
+                {
+                    "name": "symbol",
+                    "type": "nsymbol"
+                }
+            ]
+        },
+        {
+            "name": "nsymbol",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint32"
+                },
+                {
+                    "name": "parent_id",
+                    "type": "uint32"
+                }
+            ]
+        },
+        {
+            "name": "setboothtime",
+            "base": "",
+            "fields": [
+                {
+                    "name": "owner",
+                    "type": "name"
+                },
+                {
+                    "name": "quote_nft_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "symbol_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "opened_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "closed_at",
+                    "type": "time_point_sec"
+                }
+            ]
+        }
+    ],
+    "actions": [
+        {
+            "name": "closebooth",
+            "type": "closebooth",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "createbooth",
+            "type": "createbooth",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "dealtrace",
+            "type": "dealtrace",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "enablebooth",
+            "type": "enablebooth",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "init",
+            "type": "init",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setboothtime",
+            "type": "setboothtime",
+            "ricardian_contract": ""
+        }
+    ],
+    "tables": [
+        {
+            "name": "boothboxes",
+            "type": "booth_nftbox_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "booths",
+            "type": "booth_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "global",
+            "type": "global_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        }
+    ],
+    "ricardian_clauses": [],
+    "variants": []
+}

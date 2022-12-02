@@ -71,6 +71,22 @@ class Test(unittest.TestCase):
             host.push_action(
                 "hi", {"user":carol}, permission=(bob, Permission.ACTIVE))
  
+
+        COMMENT('''
+        Create, build and deploy the contract: amax.token
+        ''')
+        # host = new_account(master)
+        amax_toeken = Contract(host, 
+            wasm_file='/root/contracts/amax.contracts/src_system/build/contracts/amax.token/amax.token.wasm',
+            abi_file="/root/contracts/amax.contracts/src_system/build/contracts/amax.token/amax.token.abi")
+        amax_toeken.deploy()
+
+        COMMENT('''
+        Test an action for Alice, including the debug buffer:
+        ''')
+        host.push_action(
+            "hi", {"user":alice}, permission=(amax_toeken, Permission.ACTIVE))
+            
     @classmethod
     def tearDownClass(cls):
         stop()

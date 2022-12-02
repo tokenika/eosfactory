@@ -1,0 +1,415 @@
+{
+    "____comment": "This file was generated with amax-abigen. DO NOT EDIT ",
+    "version": "amax::abi/1.1",
+    "types": [
+        {
+            "new_type_name": "symbol_set",
+            "type": "symbol[]"
+        }
+    ],
+    "structs": [
+        {
+            "name": "AppInfo_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "app_name",
+                    "type": "name"
+                },
+                {
+                    "name": "app_version",
+                    "type": "string"
+                },
+                {
+                    "name": "url",
+                    "type": "string"
+                },
+                {
+                    "name": "logo",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "addcoin",
+            "base": "",
+            "fields": [
+                {
+                    "name": "is_buy",
+                    "type": "bool"
+                },
+                {
+                    "name": "coin",
+                    "type": "symbol"
+                },
+                {
+                    "name": "stake_coin",
+                    "type": "symbol"
+                }
+            ]
+        },
+        {
+            "name": "deletecoin",
+            "base": "",
+            "fields": [
+                {
+                    "name": "is_buy",
+                    "type": "bool"
+                },
+                {
+                    "name": "coin",
+                    "type": "symbol"
+                }
+            ]
+        },
+        {
+            "name": "global_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "status",
+                    "type": "uint8"
+                },
+                {
+                    "name": "app_info",
+                    "type": "AppInfo_t"
+                },
+                {
+                    "name": "managers",
+                    "type": "pair_name_name[]"
+                },
+                {
+                    "name": "pay_type",
+                    "type": "name[]"
+                },
+                {
+                    "name": "fiat_type",
+                    "type": "symbol"
+                },
+                {
+                    "name": "fee_pct",
+                    "type": "uint64"
+                },
+                {
+                    "name": "stake_assets_contract",
+                    "type": "pair_symbol_name[]"
+                },
+                {
+                    "name": "coin_as_stake",
+                    "type": "pair_symbol_symbol[]"
+                },
+                {
+                    "name": "buy_coins_conf",
+                    "type": "symbol_set"
+                },
+                {
+                    "name": "sell_coins_conf",
+                    "type": "symbol_set"
+                },
+                {
+                    "name": "accepted_timeout",
+                    "type": "uint64"
+                },
+                {
+                    "name": "payed_timeout",
+                    "type": "uint64"
+                },
+                {
+                    "name": "settle_levels",
+                    "type": "settle_level_config[]"
+                },
+                {
+                    "name": "farm_scales",
+                    "type": "pair_symbol_code_uint32[]"
+                },
+                {
+                    "name": "farm_lease_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "swap_steps",
+                    "type": "swap_step_config[]"
+                }
+            ]
+        },
+        {
+            "name": "init",
+            "base": "",
+            "fields": [
+                {
+                    "name": "admin",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "pair_name_name",
+            "base": "",
+            "fields": [
+                {
+                    "name": "key",
+                    "type": "name"
+                },
+                {
+                    "name": "value",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "pair_symbol_code_uint32",
+            "base": "",
+            "fields": [
+                {
+                    "name": "key",
+                    "type": "symbol_code"
+                },
+                {
+                    "name": "value",
+                    "type": "uint32"
+                }
+            ]
+        },
+        {
+            "name": "pair_symbol_name",
+            "base": "",
+            "fields": [
+                {
+                    "name": "key",
+                    "type": "symbol"
+                },
+                {
+                    "name": "value",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "pair_symbol_symbol",
+            "base": "",
+            "fields": [
+                {
+                    "name": "key",
+                    "type": "symbol"
+                },
+                {
+                    "name": "value",
+                    "type": "symbol"
+                }
+            ]
+        },
+        {
+            "name": "setappname",
+            "base": "",
+            "fields": [
+                {
+                    "name": "otc_name",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "setfarm",
+            "base": "",
+            "fields": [
+                {
+                    "name": "farmname",
+                    "type": "name"
+                },
+                {
+                    "name": "farm_lease_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "symcode",
+                    "type": "symbol_code"
+                },
+                {
+                    "name": "farm_scale",
+                    "type": "uint32"
+                }
+            ]
+        },
+        {
+            "name": "setfeepct",
+            "base": "",
+            "fields": [
+                {
+                    "name": "feepct",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "setmanager",
+            "base": "",
+            "fields": [
+                {
+                    "name": "type",
+                    "type": "name"
+                },
+                {
+                    "name": "account",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "setsettlelv",
+            "base": "",
+            "fields": [
+                {
+                    "name": "configs",
+                    "type": "settle_level_config[]"
+                }
+            ]
+        },
+        {
+            "name": "setstatus",
+            "base": "",
+            "fields": [
+                {
+                    "name": "status",
+                    "type": "uint8"
+                }
+            ]
+        },
+        {
+            "name": "setswapstep",
+            "base": "",
+            "fields": [
+                {
+                    "name": "rates",
+                    "type": "swap_step_config[]"
+                }
+            ]
+        },
+        {
+            "name": "settimeout",
+            "base": "",
+            "fields": [
+                {
+                    "name": "accepted_timeout",
+                    "type": "uint64"
+                },
+                {
+                    "name": "payed_timeout",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "settle_level_config",
+            "base": "",
+            "fields": [
+                {
+                    "name": "sum_limit",
+                    "type": "uint64"
+                },
+                {
+                    "name": "cash_rate",
+                    "type": "uint16"
+                },
+                {
+                    "name": "score_rate",
+                    "type": "uint16"
+                }
+            ]
+        },
+        {
+            "name": "swap_step_config",
+            "base": "",
+            "fields": [
+                {
+                    "name": "quantity_step",
+                    "type": "uint64"
+                },
+                {
+                    "name": "quote_reward_pct",
+                    "type": "uint16"
+                }
+            ]
+        }
+    ],
+    "actions": [
+        {
+            "name": "addcoin",
+            "type": "addcoin",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "deletecoin",
+            "type": "deletecoin",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "init",
+            "type": "init",
+            "ricardian_contract": "---\nspec_version: \"0.1.0\"\ntitle: initialize otcconf\nsummary: 'Init OTC Config'\nicon: http://127.0.0.1/ricardian_assets/amax.contracts/icons/\n---\nInitialize otcconf"
+        },
+        {
+            "name": "setappname",
+            "type": "setappname",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setfarm",
+            "type": "setfarm",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setfeepct",
+            "type": "setfeepct",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setmanager",
+            "type": "setmanager",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setsettlelv",
+            "type": "setsettlelv",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setstatus",
+            "type": "setstatus",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setswapstep",
+            "type": "setswapstep",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "settimeout",
+            "type": "settimeout",
+            "ricardian_contract": ""
+        }
+    ],
+    "tables": [
+        {
+            "name": "global",
+            "type": "global_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        }
+    ],
+    "ricardian_clauses": [
+        {
+            "id": "UserAgreement",
+            "body": "User agreement for the decentralized OTC (over-the-counter) can go here."
+        },
+        {
+            "id": "OTC_Conf_Agreement",
+            "body": "This is to provide a decentralized configuration for OTC environment"
+        },
+        {
+            "id": "ContractVersion",
+            "body": "0.2.0-develop2-2a3e7537dc87164831deb594ae6a8c73eae78b57"
+        }
+    ],
+    "variants": []
+}

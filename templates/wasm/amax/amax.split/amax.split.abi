@@ -1,0 +1,152 @@
+{
+    "____comment": "This file was generated with amax-abigen. DO NOT EDIT ",
+    "version": "amax::abi/1.1",
+    "types": [],
+    "structs": [
+        {
+            "name": "addplan",
+            "base": "",
+            "fields": [
+                {
+                    "name": "plan_sender_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "token_symbol",
+                    "type": "symbol"
+                },
+                {
+                    "name": "split_by_rate",
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "delplan",
+            "base": "",
+            "fields": [
+                {
+                    "name": "plan_sender_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "plan_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "global_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "admin",
+                    "type": "name"
+                },
+                {
+                    "name": "last_plan_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "init",
+            "base": "",
+            "fields": []
+        },
+        {
+            "name": "setplan",
+            "base": "",
+            "fields": [
+                {
+                    "name": "plan_sender_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "plan_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "conf",
+                    "type": "split_unit_s[]"
+                }
+            ]
+        },
+        {
+            "name": "split_plan_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "token_symbol",
+                    "type": "symbol"
+                },
+                {
+                    "name": "split_by_rate",
+                    "type": "bool"
+                },
+                {
+                    "name": "split_conf",
+                    "type": "split_unit_s[]"
+                }
+            ]
+        },
+        {
+            "name": "split_unit_s",
+            "base": "",
+            "fields": [
+                {
+                    "name": "token_receiver",
+                    "type": "name"
+                },
+                {
+                    "name": "token_split_amount",
+                    "type": "uint64"
+                }
+            ]
+        }
+    ],
+    "actions": [
+        {
+            "name": "addplan",
+            "type": "addplan",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "delplan",
+            "type": "delplan",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "init",
+            "type": "init",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setplan",
+            "type": "setplan",
+            "ricardian_contract": ""
+        }
+    ],
+    "tables": [
+        {
+            "name": "global",
+            "type": "global_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "splitplans",
+            "type": "split_plan_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        }
+    ],
+    "ricardian_clauses": [],
+    "variants": []
+}

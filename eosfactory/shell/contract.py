@@ -57,6 +57,20 @@ class ContractBuilder():
         if force or not self.is_built():
             teos.build(self.contract_dir, self.c_cpp_properties_path)
 
+    def build_sh(self, contract_name):
+        '''Make both, ABI and WASM files.
+        '''
+        FACTORY_DIR = os.getenv("FACTORY_DIR")
+
+        build_path = FACTORY_DIR + "/eosfactory/templates/build_temp.sh"
+        build_commond = "cd " + self.contract_dir + " && cp {} . && ./build_temp.sh && rm build_temp.sh".format(build_path)
+        print(build_commond)
+        res = os.popen(build_commond).read()
+        print(res)
+
+        self.wasm_file = self.contract_dir + "/build/contracts/" + contract_name + "/" + contract_name + ".wasm"
+        self.abi_file = self.contract_dir + "/build/contracts/" + contract_name + "/" + contract_name + ".abi"
+
     def is_built(self):
         '''Check whether both the ABI and WASM files exist.
         '''

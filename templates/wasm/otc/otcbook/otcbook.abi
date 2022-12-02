@@ -1,0 +1,1073 @@
+{
+    "____comment": "This file was generated with amax-abigen. DO NOT EDIT ",
+    "version": "amax::abi/1.1",
+    "types": [],
+    "structs": [
+        {
+            "name": "AppInfo_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "app_name",
+                    "type": "name"
+                },
+                {
+                    "name": "app_version",
+                    "type": "string"
+                },
+                {
+                    "name": "url",
+                    "type": "string"
+                },
+                {
+                    "name": "logo",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "addarbiter",
+            "base": "",
+            "fields": [
+                {
+                    "name": "sender",
+                    "type": "name"
+                },
+                {
+                    "name": "account",
+                    "type": "name"
+                },
+                {
+                    "name": "email",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "admin_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "account",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "arbiter_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "account",
+                    "type": "name"
+                },
+                {
+                    "name": "email",
+                    "type": "string"
+                },
+                {
+                    "name": "failed_case_num",
+                    "type": "uint64"
+                },
+                {
+                    "name": "closed_case_num",
+                    "type": "uint64"
+                },
+                {
+                    "name": "total_quant",
+                    "type": "asset"
+                }
+            ]
+        },
+        {
+            "name": "asset_stake",
+            "base": "",
+            "fields": [
+                {
+                    "name": "balance",
+                    "type": "uint64"
+                },
+                {
+                    "name": "frozen",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "blacklist_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "account",
+                    "type": "name"
+                },
+                {
+                    "name": "expired_at",
+                    "type": "time_point_sec"
+                }
+            ]
+        },
+        {
+            "name": "cancelarbit",
+            "base": "",
+            "fields": [
+                {
+                    "name": "account_type",
+                    "type": "uint8"
+                },
+                {
+                    "name": "account",
+                    "type": "name"
+                },
+                {
+                    "name": "deal_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "canceldeal",
+            "base": "",
+            "fields": [
+                {
+                    "name": "account",
+                    "type": "name"
+                },
+                {
+                    "name": "account_type",
+                    "type": "uint8"
+                },
+                {
+                    "name": "deal_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "is_taker_black",
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "closearbit",
+            "base": "",
+            "fields": [
+                {
+                    "name": "account",
+                    "type": "name"
+                },
+                {
+                    "name": "deal_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "arbit_result",
+                    "type": "uint8"
+                }
+            ]
+        },
+        {
+            "name": "closedeal",
+            "base": "",
+            "fields": [
+                {
+                    "name": "account",
+                    "type": "name"
+                },
+                {
+                    "name": "account_type",
+                    "type": "uint8"
+                },
+                {
+                    "name": "deal_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "close_msg",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "closeorder",
+            "base": "",
+            "fields": [
+                {
+                    "name": "owner",
+                    "type": "name"
+                },
+                {
+                    "name": "order_side",
+                    "type": "name"
+                },
+                {
+                    "name": "order_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "deal_change_info",
+            "base": "",
+            "fields": [
+                {
+                    "name": "deal_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "order_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "order_side",
+                    "type": "name"
+                },
+                {
+                    "name": "merchant",
+                    "type": "name"
+                },
+                {
+                    "name": "taker",
+                    "type": "name"
+                },
+                {
+                    "name": "arbiter",
+                    "type": "name"
+                },
+                {
+                    "name": "status",
+                    "type": "uint8"
+                },
+                {
+                    "name": "arbit_status",
+                    "type": "uint8"
+                },
+                {
+                    "name": "quant",
+                    "type": "asset"
+                }
+            ]
+        },
+        {
+            "name": "deal_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "order_side",
+                    "type": "name"
+                },
+                {
+                    "name": "order_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "order_price",
+                    "type": "asset"
+                },
+                {
+                    "name": "deal_quantity",
+                    "type": "asset"
+                },
+                {
+                    "name": "order_maker",
+                    "type": "name"
+                },
+                {
+                    "name": "merchant_name",
+                    "type": "string"
+                },
+                {
+                    "name": "order_taker",
+                    "type": "name"
+                },
+                {
+                    "name": "deal_fee",
+                    "type": "asset"
+                },
+                {
+                    "name": "fine_amount",
+                    "type": "asset"
+                },
+                {
+                    "name": "pay_type",
+                    "type": "name"
+                },
+                {
+                    "name": "status",
+                    "type": "uint8"
+                },
+                {
+                    "name": "arbit_status",
+                    "type": "uint8"
+                },
+                {
+                    "name": "arbiter",
+                    "type": "name"
+                },
+                {
+                    "name": "created_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "closed_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "updated_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "order_sn",
+                    "type": "uint64"
+                },
+                {
+                    "name": "merchant_accepted_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "merchant_paid_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "close_msg",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "dealnotifyv2",
+            "base": "",
+            "fields": [
+                {
+                    "name": "account",
+                    "type": "name"
+                },
+                {
+                    "name": "info",
+                    "type": "AppInfo_t"
+                },
+                {
+                    "name": "action_type",
+                    "type": "uint8"
+                },
+                {
+                    "name": "deal",
+                    "type": "deal_change_info"
+                }
+            ]
+        },
+        {
+            "name": "delarbiter",
+            "base": "",
+            "fields": [
+                {
+                    "name": "sender",
+                    "type": "name"
+                },
+                {
+                    "name": "account",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "delmerchant",
+            "base": "",
+            "fields": [
+                {
+                    "name": "sender",
+                    "type": "name"
+                },
+                {
+                    "name": "merchant_acct",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "global_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "conf_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "sell_order_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "buy_order_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "deal_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "arbiter_count",
+                    "type": "uint64"
+                },
+                {
+                    "name": "token_split_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "token_split_plan_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "merchant_info",
+            "base": "",
+            "fields": [
+                {
+                    "name": "account",
+                    "type": "name"
+                },
+                {
+                    "name": "merchant_name",
+                    "type": "string"
+                },
+                {
+                    "name": "status",
+                    "type": "uint8"
+                },
+                {
+                    "name": "merchant_detail",
+                    "type": "string"
+                },
+                {
+                    "name": "email",
+                    "type": "string"
+                },
+                {
+                    "name": "memo",
+                    "type": "string"
+                },
+                {
+                    "name": "reject_reason",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "merchant_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "owner",
+                    "type": "name"
+                },
+                {
+                    "name": "merchant_name",
+                    "type": "string"
+                },
+                {
+                    "name": "merchant_detail",
+                    "type": "string"
+                },
+                {
+                    "name": "email",
+                    "type": "string"
+                },
+                {
+                    "name": "memo",
+                    "type": "string"
+                },
+                {
+                    "name": "status",
+                    "type": "uint8"
+                },
+                {
+                    "name": "assets",
+                    "type": "pair_symbol_asset_stake[]"
+                },
+                {
+                    "name": "updated_at",
+                    "type": "time_point_sec"
+                }
+            ]
+        },
+        {
+            "name": "opendeal",
+            "base": "",
+            "fields": [
+                {
+                    "name": "taker",
+                    "type": "name"
+                },
+                {
+                    "name": "order_side",
+                    "type": "name"
+                },
+                {
+                    "name": "order_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "deal_quantity",
+                    "type": "asset"
+                },
+                {
+                    "name": "order_sn",
+                    "type": "uint64"
+                },
+                {
+                    "name": "pay_type",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "openorder",
+            "base": "",
+            "fields": [
+                {
+                    "name": "owner",
+                    "type": "name"
+                },
+                {
+                    "name": "order_side",
+                    "type": "name"
+                },
+                {
+                    "name": "pay_methods",
+                    "type": "name[]"
+                },
+                {
+                    "name": "va_quantity",
+                    "type": "asset"
+                },
+                {
+                    "name": "va_price",
+                    "type": "asset"
+                },
+                {
+                    "name": "va_min_take_quantity",
+                    "type": "asset"
+                },
+                {
+                    "name": "va_max_take_quantity",
+                    "type": "asset"
+                },
+                {
+                    "name": "memo",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "order_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "owner",
+                    "type": "name"
+                },
+                {
+                    "name": "merchant_name",
+                    "type": "string"
+                },
+                {
+                    "name": "accepted_payments",
+                    "type": "name[]"
+                },
+                {
+                    "name": "va_price",
+                    "type": "asset"
+                },
+                {
+                    "name": "va_quantity",
+                    "type": "asset"
+                },
+                {
+                    "name": "va_min_take_quantity",
+                    "type": "asset"
+                },
+                {
+                    "name": "va_max_take_quantity",
+                    "type": "asset"
+                },
+                {
+                    "name": "va_frozen_quantity",
+                    "type": "asset"
+                },
+                {
+                    "name": "va_fulfilled_quantity",
+                    "type": "asset"
+                },
+                {
+                    "name": "stake_frozen",
+                    "type": "asset"
+                },
+                {
+                    "name": "memo",
+                    "type": "string"
+                },
+                {
+                    "name": "status",
+                    "type": "uint8"
+                },
+                {
+                    "name": "created_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "closed_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "updated_at",
+                    "type": "time_point_sec"
+                }
+            ]
+        },
+        {
+            "name": "pair_symbol_asset_stake",
+            "base": "",
+            "fields": [
+                {
+                    "name": "key",
+                    "type": "symbol"
+                },
+                {
+                    "name": "value",
+                    "type": "asset_stake"
+                }
+            ]
+        },
+        {
+            "name": "pauseorder",
+            "base": "",
+            "fields": [
+                {
+                    "name": "owner",
+                    "type": "name"
+                },
+                {
+                    "name": "order_side",
+                    "type": "name"
+                },
+                {
+                    "name": "order_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "processdeal",
+            "base": "",
+            "fields": [
+                {
+                    "name": "account",
+                    "type": "name"
+                },
+                {
+                    "name": "account_type",
+                    "type": "uint8"
+                },
+                {
+                    "name": "deal_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "action",
+                    "type": "uint8"
+                }
+            ]
+        },
+        {
+            "name": "rejectmerch",
+            "base": "",
+            "fields": [
+                {
+                    "name": "account",
+                    "type": "name"
+                },
+                {
+                    "name": "reject_reason",
+                    "type": "string"
+                },
+                {
+                    "name": "curr_ts",
+                    "type": "time_point_sec"
+                }
+            ]
+        },
+        {
+            "name": "remerchant",
+            "base": "",
+            "fields": [
+                {
+                    "name": "mi",
+                    "type": "merchant_info"
+                }
+            ]
+        },
+        {
+            "name": "resetdeal",
+            "base": "",
+            "fields": [
+                {
+                    "name": "account",
+                    "type": "name"
+                },
+                {
+                    "name": "deal_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "resumeorder",
+            "base": "",
+            "fields": [
+                {
+                    "name": "owner",
+                    "type": "name"
+                },
+                {
+                    "name": "order_side",
+                    "type": "name"
+                },
+                {
+                    "name": "order_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "setadmin",
+            "base": "",
+            "fields": [
+                {
+                    "name": "admin",
+                    "type": "name"
+                },
+                {
+                    "name": "to_add",
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "setblacklist",
+            "base": "",
+            "fields": [
+                {
+                    "name": "account",
+                    "type": "name"
+                },
+                {
+                    "name": "duration_second",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "setconf",
+            "base": "",
+            "fields": [
+                {
+                    "name": "conf_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "token_split_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "token_split_plan_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "setdearbiter",
+            "base": "",
+            "fields": [
+                {
+                    "name": "deal_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "new_arbiter",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "setmerchant",
+            "base": "",
+            "fields": [
+                {
+                    "name": "sender",
+                    "type": "name"
+                },
+                {
+                    "name": "mi",
+                    "type": "merchant_info"
+                }
+            ]
+        },
+        {
+            "name": "stakechanged",
+            "base": "",
+            "fields": [
+                {
+                    "name": "account",
+                    "type": "name"
+                },
+                {
+                    "name": "quantity",
+                    "type": "asset"
+                },
+                {
+                    "name": "memo",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "startarbit",
+            "base": "",
+            "fields": [
+                {
+                    "name": "account",
+                    "type": "name"
+                },
+                {
+                    "name": "account_type",
+                    "type": "uint8"
+                },
+                {
+                    "name": "deal_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "withdraw",
+            "base": "",
+            "fields": [
+                {
+                    "name": "owner",
+                    "type": "name"
+                },
+                {
+                    "name": "quantity",
+                    "type": "asset"
+                }
+            ]
+        }
+    ],
+    "actions": [
+        {
+            "name": "addarbiter",
+            "type": "addarbiter",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "cancelarbit",
+            "type": "cancelarbit",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "canceldeal",
+            "type": "canceldeal",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "closearbit",
+            "type": "closearbit",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "closedeal",
+            "type": "closedeal",
+            "ricardian_contract": "---\nspec_version: \"0.1.0\"\ntitle: close a deal\nsummary: 'Close a deal to an order'\nicon: http://127.0.0.1/ricardian_assets/amax.contracts/icons/\n---\n\nA deal creator can actively close a deal such that either the correspondig order locked funds\nhas been either settled or unfrozen."
+        },
+        {
+            "name": "closeorder",
+            "type": "closeorder",
+            "ricardian_contract": "---\nspec_version: \"0.1.0\"\ntitle: close order\nsummary: 'Close one's order'\nicon: http://127.0.0.1/ricardian_assets/amax.contracts/icons/\n---\n\nClose one's order to stop from others to deal with it.\nOnce the order has been fully fulfilled, it can be also triggered to be closed.\nWhen the order is in a closed status, it can no longer be entered by any counterparty."
+        },
+        {
+            "name": "dealnotifyv2",
+            "type": "dealnotifyv2",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "delarbiter",
+            "type": "delarbiter",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "delmerchant",
+            "type": "delmerchant",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "opendeal",
+            "type": "opendeal",
+            "ricardian_contract": "---\nspec_version: \"0.1.0\"\ntitle: open deal\nsummary: 'Open a deal to an order'\nicon: http://127.0.0.1/ricardian_assets/amax.contracts/icons/\n---\n\nA counterparty can actively seek through a list of open orders and claim one\nto deal with. Once a deal is openned, a certain amount of funds will be thus frozen\nor locked in the order from others to spend it until either the fund is unfrozne or settled."
+        },
+        {
+            "name": "openorder",
+            "type": "openorder",
+            "ricardian_contract": "---\nspec_version: \"0.1.0\"\ntitle: open an order\nsummary: 'Open an OTC order'\nicon: http://127.0.0.1/ricardian_assets/amax.contracts/icons/\n---\n\nOpen an OTC order. Currently only merchant orders are allowed to open."
+        },
+        {
+            "name": "pauseorder",
+            "type": "pauseorder",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "processdeal",
+            "type": "processdeal",
+            "ricardian_contract": "---\nspec_version: \"0.1.0\"\ntitle: pass a deal\nsummary: 'Pass a deal to an order'\nicon: http://127.0.0.1/ricardian_assets/amax.contracts/icons/\n---\n\nA deal that is processed by a maker/taker or admin."
+        },
+        {
+            "name": "rejectmerch",
+            "type": "rejectmerch",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "remerchant",
+            "type": "remerchant",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "resetdeal",
+            "type": "resetdeal",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "resumeorder",
+            "type": "resumeorder",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setadmin",
+            "type": "setadmin",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setblacklist",
+            "type": "setblacklist",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setconf",
+            "type": "setconf",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setdearbiter",
+            "type": "setdearbiter",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setmerchant",
+            "type": "setmerchant",
+            "ricardian_contract": "---\nspec_version: \"0.1.0\"\ntitle: Set merchant info\nsummary: 'Set merchant's info'\nicon: http://127.0.0.1/ricardian_assets/amax.contracts/icons/\n---\n\nMerchant to set one's info including selling conditions/memo"
+        },
+        {
+            "name": "stakechanged",
+            "type": "stakechanged",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "startarbit",
+            "type": "startarbit",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "withdraw",
+            "type": "withdraw",
+            "ricardian_contract": "---\nspec_version: \"0.1.0\"\ntitle: withdraw balance amount\nsummary: 'Merchant to withdraw balance amount from the otcbook contract'\nicon: http://127.0.0.1/ricardian_assets/amax.contracts/icons/\n---\nAfter a merchant wants to stop making orders, remaining amount must be withdrawn in order to reach\nmerchant's personal account"
+        }
+    ],
+    "tables": [
+        {
+            "name": "admins",
+            "type": "admin_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "arbiters",
+            "type": "arbiter_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "blacklist",
+            "type": "blacklist_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "buyorders",
+            "type": "order_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "deals",
+            "type": "deal_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "global",
+            "type": "global_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "merchants",
+            "type": "merchant_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "sellorders",
+            "type": "order_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        }
+    ],
+    "ricardian_clauses": [
+        {
+            "id": "UserAgreement",
+            "body": "User agreement for the decentralized OTC (over-the-counter) can go here."
+        },
+        {
+            "id": "DeOTC_Agreement",
+            "body": "This is a decentralized OTC (over-the-counter) contract."
+        },
+        {
+            "id": "ContractVersion",
+            "body": "0.2.0-develop2-0e6a7fc3881e82e552d9f0f659dd685f4e84c0a3"
+        }
+    ],
+    "variants": []
+}

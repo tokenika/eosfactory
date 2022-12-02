@@ -1,0 +1,370 @@
+{
+    "____comment": "This file was generated with amax-abigen. DO NOT EDIT ",
+    "version": "amax::abi/1.1",
+    "types": [],
+    "structs": [
+        {
+            "name": "aplink_farm",
+            "base": "",
+            "fields": [
+                {
+                    "name": "contract",
+                    "type": "name"
+                },
+                {
+                    "name": "lease_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "unit_reward",
+                    "type": "asset"
+                }
+            ]
+        },
+        {
+            "name": "buyer_bid_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "sell_order_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "price",
+                    "type": "price_s"
+                },
+                {
+                    "name": "frozen",
+                    "type": "asset"
+                },
+                {
+                    "name": "buyer",
+                    "type": "name"
+                },
+                {
+                    "name": "created_at",
+                    "type": "time_point_sec"
+                }
+            ]
+        },
+        {
+            "name": "cancelbid",
+            "base": "",
+            "fields": [
+                {
+                    "name": "buyer",
+                    "type": "name"
+                },
+                {
+                    "name": "buyer_bid_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "cancelorder",
+            "base": "",
+            "fields": [
+                {
+                    "name": "maker",
+                    "type": "name"
+                },
+                {
+                    "name": "token_id",
+                    "type": "uint32"
+                },
+                {
+                    "name": "order_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "deal_trace_s",
+            "base": "",
+            "fields": [
+                {
+                    "name": "seller_order_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "bid_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "maker",
+                    "type": "name"
+                },
+                {
+                    "name": "buyer",
+                    "type": "name"
+                },
+                {
+                    "name": "price",
+                    "type": "price_s"
+                },
+                {
+                    "name": "fee",
+                    "type": "asset"
+                },
+                {
+                    "name": "count",
+                    "type": "int64"
+                },
+                {
+                    "name": "created_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "ipowner",
+                    "type": "name"
+                },
+                {
+                    "name": "ipfee",
+                    "type": "asset"
+                }
+            ]
+        },
+        {
+            "name": "dealtrace",
+            "base": "",
+            "fields": [
+                {
+                    "name": "trace",
+                    "type": "deal_trace_s"
+                }
+            ]
+        },
+        {
+            "name": "global_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "admin",
+                    "type": "name"
+                },
+                {
+                    "name": "dev_fee_collector",
+                    "type": "name"
+                },
+                {
+                    "name": "dev_fee_rate",
+                    "type": "float64"
+                },
+                {
+                    "name": "creator_fee_rate",
+                    "type": "float64"
+                },
+                {
+                    "name": "ipowner_fee_rate",
+                    "type": "float64"
+                },
+                {
+                    "name": "notary_fee_rate",
+                    "type": "float64"
+                },
+                {
+                    "name": "order_expiry_hours",
+                    "type": "uint32"
+                },
+                {
+                    "name": "pay_symbol",
+                    "type": "symbol"
+                },
+                {
+                    "name": "pay_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "apl_farm",
+                    "type": "aplink_farm"
+                },
+                {
+                    "name": "last_buy_order_idx",
+                    "type": "uint64"
+                },
+                {
+                    "name": "last_deal_idx",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "init",
+            "base": "",
+            "fields": [
+                {
+                    "name": "pay_symbol",
+                    "type": "symbol"
+                },
+                {
+                    "name": "pay_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "admin",
+                    "type": "name"
+                },
+                {
+                    "name": "devfeerate",
+                    "type": "float64"
+                },
+                {
+                    "name": "feecollector",
+                    "type": "name"
+                },
+                {
+                    "name": "ipfeerate",
+                    "type": "float64"
+                }
+            ]
+        },
+        {
+            "name": "nsymbol",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint32"
+                },
+                {
+                    "name": "parent_id",
+                    "type": "uint32"
+                }
+            ]
+        },
+        {
+            "name": "order_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "price",
+                    "type": "price_s"
+                },
+                {
+                    "name": "frozen",
+                    "type": "int64"
+                },
+                {
+                    "name": "maker",
+                    "type": "name"
+                },
+                {
+                    "name": "created_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "updated_at",
+                    "type": "time_point_sec"
+                }
+            ]
+        },
+        {
+            "name": "price_s",
+            "base": "",
+            "fields": [
+                {
+                    "name": "value",
+                    "type": "asset"
+                },
+                {
+                    "name": "symbol",
+                    "type": "nsymbol"
+                }
+            ]
+        },
+        {
+            "name": "setfeecollec",
+            "base": "",
+            "fields": [
+                {
+                    "name": "dev_fee_collector",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "takebuybid",
+            "base": "",
+            "fields": [
+                {
+                    "name": "issuer",
+                    "type": "name"
+                },
+                {
+                    "name": "token_id",
+                    "type": "uint32"
+                },
+                {
+                    "name": "buyer_bid_id",
+                    "type": "uint64"
+                }
+            ]
+        }
+    ],
+    "actions": [
+        {
+            "name": "cancelbid",
+            "type": "cancelbid",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "cancelorder",
+            "type": "cancelorder",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "dealtrace",
+            "type": "dealtrace",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "init",
+            "type": "init",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setfeecollec",
+            "type": "setfeecollec",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "takebuybid",
+            "type": "takebuybid",
+            "ricardian_contract": ""
+        }
+    ],
+    "tables": [
+        {
+            "name": "buyerbids",
+            "type": "buyer_bid_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "global",
+            "type": "global_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "sellorders",
+            "type": "order_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        }
+    ],
+    "ricardian_clauses": [],
+    "variants": []
+}

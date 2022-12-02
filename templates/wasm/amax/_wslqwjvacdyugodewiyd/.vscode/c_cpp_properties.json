@@ -1,0 +1,32 @@
+{
+    "configurations": [
+        {
+            "includePath": [
+                "/usr/local/amax.cdtinclude",
+                "/usr/local/amax.cdtinclude/libcxx",
+                "/usr/local/amax.cdtinclude/eosiolib/core",
+                "/usr/local/amax.cdtinclude/eosiolib/contracts",
+                "${workspaceFolder}",
+                "${workspaceFolder}/include"
+            ],
+            "libs": [],
+            "codeOptions": [],
+            "testOptions": [],
+            "defines": [],
+            "intelliSenseMode": "clang-x64",
+            "browse": {
+                "path": [
+                    "/usr/local/amax.cdtinclude",
+                    "/usr/local/amax.cdtinclude/libcxx",
+                    "/usr/local/amax.cdtinclude/eosiolib/core",
+                    "/usr/local/amax.cdtinclude/eosiolib/contracts",
+                    "${workspaceFolder}",
+                    "${workspaceFolder}/include"
+                ],
+                "limitSymbolsToIncludedHeaders": true,
+                "databaseFilename": ""
+            }
+        }
+    ],
+    "version": 4
+}

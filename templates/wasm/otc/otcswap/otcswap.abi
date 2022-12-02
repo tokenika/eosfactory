@@ -1,0 +1,106 @@
+{
+    "____comment": "This file was generated with amax-abigen. DO NOT EDIT ",
+    "version": "amax::abi/1.1",
+    "types": [],
+    "structs": [
+        {
+            "name": "account_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "admin",
+                    "type": "name"
+                },
+                {
+                    "name": "balance",
+                    "type": "uint32"
+                },
+                {
+                    "name": "sum",
+                    "type": "uint32"
+                }
+            ]
+        },
+        {
+            "name": "gswap_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "conf_contract",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "setconf",
+            "base": "",
+            "fields": [
+                {
+                    "name": "conf_contract",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "settleto",
+            "base": "",
+            "fields": [
+                {
+                    "name": "user",
+                    "type": "name"
+                },
+                {
+                    "name": "fee",
+                    "type": "asset"
+                },
+                {
+                    "name": "quantity",
+                    "type": "asset"
+                }
+            ]
+        }
+    ],
+    "actions": [
+        {
+            "name": "setconf",
+            "type": "setconf",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "settleto",
+            "type": "settleto",
+            "ricardian_contract": "---\nspec_version: \"0.1.0\"\ntitle: settle deal for user\nsummary: 'settle deal for user'\nicon: http://127.0.0.1/ricardian_assets/amax.contracts/icons/\n---\n\nwill add user's swap quote for deal"
+        }
+    ],
+    "tables": [
+        {
+            "name": "accounts",
+            "type": "account_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "global",
+            "type": "gswap_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        }
+    ],
+    "ricardian_clauses": [
+        {
+            "id": "UserAgreement",
+            "body": "User agreement for the decentralized OTC (over-the-counter) can go here."
+        },
+        {
+            "id": "DeOTC_Agreement",
+            "body": "This is a decentralized OTC (over-the-counter) contract."
+        },
+        {
+            "id": "ContractVersion",
+            "body": "0.2.0-develop2-2a3e7537dc87164831deb594ae6a8c73eae78b57"
+        }
+    ],
+    "variants": []
+}

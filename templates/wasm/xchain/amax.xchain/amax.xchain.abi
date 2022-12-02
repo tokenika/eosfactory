@@ -1,0 +1,862 @@
+{
+    "____comment": "This file was generated with amax-abigen. DO NOT EDIT ",
+    "version": "amax::abi/1.1",
+    "types": [],
+    "structs": [
+        {
+            "name": "account_xchain_address_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "account",
+                    "type": "name"
+                },
+                {
+                    "name": "base_chain",
+                    "type": "name"
+                },
+                {
+                    "name": "mulsign_wallet_id",
+                    "type": "uint32"
+                },
+                {
+                    "name": "xin_to",
+                    "type": "string"
+                },
+                {
+                    "name": "created_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "updated_at",
+                    "type": "time_point_sec"
+                }
+            ]
+        },
+        {
+            "name": "addchain",
+            "base": "",
+            "fields": [
+                {
+                    "name": "chain",
+                    "type": "name"
+                },
+                {
+                    "name": "base_chain",
+                    "type": "name"
+                },
+                {
+                    "name": "common_xin_account",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "addchaincoin",
+            "base": "",
+            "fields": [
+                {
+                    "name": "chain",
+                    "type": "name"
+                },
+                {
+                    "name": "coin",
+                    "type": "symbol"
+                },
+                {
+                    "name": "fee",
+                    "type": "asset"
+                }
+            ]
+        },
+        {
+            "name": "addcoin",
+            "base": "",
+            "fields": [
+                {
+                    "name": "coin",
+                    "type": "symbol"
+                }
+            ]
+        },
+        {
+            "name": "aplink_farm",
+            "base": "",
+            "fields": [
+                {
+                    "name": "contract",
+                    "type": "name"
+                },
+                {
+                    "name": "lease_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "xin_reward_conf",
+                    "type": "pair_string_asset[]"
+                }
+            ]
+        },
+        {
+            "name": "cancelxinord",
+            "base": "",
+            "fields": [
+                {
+                    "name": "order_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "cancel_reason",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "cancelxouord",
+            "base": "",
+            "fields": [
+                {
+                    "name": "order_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "cancel_reason",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "chain_coin_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "chain",
+                    "type": "name"
+                },
+                {
+                    "name": "coin",
+                    "type": "symbol"
+                },
+                {
+                    "name": "fee",
+                    "type": "asset"
+                }
+            ]
+        },
+        {
+            "name": "chain_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "chain",
+                    "type": "name"
+                },
+                {
+                    "name": "base_chain",
+                    "type": "name"
+                },
+                {
+                    "name": "common_xin_account",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "checkxinord",
+            "base": "",
+            "fields": [
+                {
+                    "name": "order_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "checkxouord",
+            "base": "",
+            "fields": [
+                {
+                    "name": "order_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "coin_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "coin",
+                    "type": "symbol"
+                }
+            ]
+        },
+        {
+            "name": "delchain",
+            "base": "",
+            "fields": [
+                {
+                    "name": "chain",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "delchaincoin",
+            "base": "",
+            "fields": [
+                {
+                    "name": "chain",
+                    "type": "name"
+                },
+                {
+                    "name": "coin",
+                    "type": "symbol"
+                }
+            ]
+        },
+        {
+            "name": "delcoin",
+            "base": "",
+            "fields": [
+                {
+                    "name": "coin",
+                    "type": "symbol"
+                }
+            ]
+        },
+        {
+            "name": "getacctchain",
+            "base": "",
+            "fields": [
+                {
+                    "name": "account",
+                    "type": "name"
+                },
+                {
+                    "name": "base_chain",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "getxintoaddr",
+            "base": "",
+            "fields": [
+                {
+                    "name": "xin_to_addr",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "global1_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "last_xinaddr_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "last_xinorder_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "last_xoutorder_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "global_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "admin",
+                    "type": "name"
+                },
+                {
+                    "name": "maker",
+                    "type": "name"
+                },
+                {
+                    "name": "checker",
+                    "type": "name"
+                },
+                {
+                    "name": "fee_collector",
+                    "type": "name"
+                },
+                {
+                    "name": "fee_rate",
+                    "type": "uint64"
+                },
+                {
+                    "name": "apl_farm",
+                    "type": "aplink_farm"
+                },
+                {
+                    "name": "active",
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "init",
+            "base": "",
+            "fields": [
+                {
+                    "name": "admin",
+                    "type": "name"
+                },
+                {
+                    "name": "maker",
+                    "type": "name"
+                },
+                {
+                    "name": "checker",
+                    "type": "name"
+                },
+                {
+                    "name": "fee_collector",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "mkxinorder",
+            "base": "",
+            "fields": [
+                {
+                    "name": "to",
+                    "type": "name"
+                },
+                {
+                    "name": "chain_name",
+                    "type": "name"
+                },
+                {
+                    "name": "coin_name",
+                    "type": "symbol"
+                },
+                {
+                    "name": "txid",
+                    "type": "string"
+                },
+                {
+                    "name": "xin_from",
+                    "type": "string"
+                },
+                {
+                    "name": "xin_to",
+                    "type": "string"
+                },
+                {
+                    "name": "quantity",
+                    "type": "asset"
+                }
+            ]
+        },
+        {
+            "name": "pair_string_asset",
+            "base": "",
+            "fields": [
+                {
+                    "name": "key",
+                    "type": "string"
+                },
+                {
+                    "name": "value",
+                    "type": "asset"
+                }
+            ]
+        },
+        {
+            "name": "reqxintoaddr",
+            "base": "",
+            "fields": [
+                {
+                    "name": "applicant",
+                    "type": "name"
+                },
+                {
+                    "name": "applicant_account",
+                    "type": "name"
+                },
+                {
+                    "name": "base_chain",
+                    "type": "name"
+                },
+                {
+                    "name": "mulsign_wallet_id",
+                    "type": "uint32"
+                }
+            ]
+        },
+        {
+            "name": "resetxout",
+            "base": "",
+            "fields": [
+                {
+                    "name": "order_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "xout_order_statu",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "setaddress",
+            "base": "",
+            "fields": [
+                {
+                    "name": "applicant",
+                    "type": "name"
+                },
+                {
+                    "name": "base_chain",
+                    "type": "name"
+                },
+                {
+                    "name": "mulsign_wallet_id",
+                    "type": "uint32"
+                },
+                {
+                    "name": "xin_to",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "setaplfarm",
+            "base": "",
+            "fields": [
+                {
+                    "name": "symb",
+                    "type": "string"
+                },
+                {
+                    "name": "apl",
+                    "type": "asset"
+                },
+                {
+                    "name": "to_add",
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "setchaincoin",
+            "base": "",
+            "fields": [
+                {
+                    "name": "chaincoin_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "new_chain_name",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "setfeerate",
+            "base": "",
+            "fields": [
+                {
+                    "name": "fee_rate",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "setxouconfm",
+            "base": "",
+            "fields": [
+                {
+                    "name": "order_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "setxousent",
+            "base": "",
+            "fields": [
+                {
+                    "name": "order_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "txid",
+                    "type": "string"
+                },
+                {
+                    "name": "xout_from",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "xin_order_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "txid",
+                    "type": "string"
+                },
+                {
+                    "name": "amc_txid",
+                    "type": "checksum256"
+                },
+                {
+                    "name": "account",
+                    "type": "name"
+                },
+                {
+                    "name": "mulsign_wallet_id",
+                    "type": "uint32"
+                },
+                {
+                    "name": "xin_from",
+                    "type": "string"
+                },
+                {
+                    "name": "xin_to",
+                    "type": "string"
+                },
+                {
+                    "name": "chain",
+                    "type": "name"
+                },
+                {
+                    "name": "coin_name",
+                    "type": "symbol"
+                },
+                {
+                    "name": "quantity",
+                    "type": "asset"
+                },
+                {
+                    "name": "status",
+                    "type": "name"
+                },
+                {
+                    "name": "close_reason",
+                    "type": "string"
+                },
+                {
+                    "name": "maker",
+                    "type": "name"
+                },
+                {
+                    "name": "checker",
+                    "type": "name"
+                },
+                {
+                    "name": "created_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "closed_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "updated_at",
+                    "type": "time_point_sec"
+                }
+            ]
+        },
+        {
+            "name": "xinaddrmapid",
+            "base": "",
+            "fields": [
+                {
+                    "name": "account",
+                    "type": "name"
+                },
+                {
+                    "name": "base_chain",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "xout_order_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "txid",
+                    "type": "string"
+                },
+                {
+                    "name": "amc_txid",
+                    "type": "checksum256"
+                },
+                {
+                    "name": "account",
+                    "type": "name"
+                },
+                {
+                    "name": "mulsign_wallet_id",
+                    "type": "uint32"
+                },
+                {
+                    "name": "xout_from",
+                    "type": "string"
+                },
+                {
+                    "name": "xout_to",
+                    "type": "string"
+                },
+                {
+                    "name": "chain",
+                    "type": "name"
+                },
+                {
+                    "name": "coin_name",
+                    "type": "symbol"
+                },
+                {
+                    "name": "apply_quantity",
+                    "type": "asset"
+                },
+                {
+                    "name": "quantity",
+                    "type": "asset"
+                },
+                {
+                    "name": "fee",
+                    "type": "asset"
+                },
+                {
+                    "name": "status",
+                    "type": "name"
+                },
+                {
+                    "name": "memo",
+                    "type": "string"
+                },
+                {
+                    "name": "close_reason",
+                    "type": "string"
+                },
+                {
+                    "name": "maker",
+                    "type": "name"
+                },
+                {
+                    "name": "checker",
+                    "type": "name"
+                },
+                {
+                    "name": "created_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "closed_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "updated_at",
+                    "type": "time_point_sec"
+                }
+            ]
+        }
+    ],
+    "actions": [
+        {
+            "name": "addchain",
+            "type": "addchain",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "addchaincoin",
+            "type": "addchaincoin",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "addcoin",
+            "type": "addcoin",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "cancelxinord",
+            "type": "cancelxinord",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "cancelxouord",
+            "type": "cancelxouord",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "checkxinord",
+            "type": "checkxinord",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "checkxouord",
+            "type": "checkxouord",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "delchain",
+            "type": "delchain",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "delchaincoin",
+            "type": "delchaincoin",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "delcoin",
+            "type": "delcoin",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "getacctchain",
+            "type": "getacctchain",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "getxintoaddr",
+            "type": "getxintoaddr",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "init",
+            "type": "init",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "mkxinorder",
+            "type": "mkxinorder",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "reqxintoaddr",
+            "type": "reqxintoaddr",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "resetxout",
+            "type": "resetxout",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setaddress",
+            "type": "setaddress",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setaplfarm",
+            "type": "setaplfarm",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setchaincoin",
+            "type": "setchaincoin",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setfeerate",
+            "type": "setfeerate",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setxouconfm",
+            "type": "setxouconfm",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setxousent",
+            "type": "setxousent",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "xinaddrmapid",
+            "type": "xinaddrmapid",
+            "ricardian_contract": ""
+        }
+    ],
+    "tables": [
+        {
+            "name": "chaincoins",
+            "type": "chain_coin_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "chains",
+            "type": "chain_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "coins",
+            "type": "coin_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "global",
+            "type": "global_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "global1",
+            "type": "global1_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "xinaddrmap",
+            "type": "account_xchain_address_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "xinorders",
+            "type": "xin_order_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "xoutorders",
+            "type": "xout_order_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        }
+    ],
+    "ricardian_clauses": [],
+    "variants": []
+}

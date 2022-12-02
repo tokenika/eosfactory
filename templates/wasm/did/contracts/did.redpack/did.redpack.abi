@@ -1,0 +1,299 @@
+{
+    "____comment": "This file was generated with amax-abigen. DO NOT EDIT ",
+    "version": "amax::abi/1.1",
+    "types": [],
+    "structs": [
+        {
+            "name": "addfee",
+            "base": "",
+            "fields": [
+                {
+                    "name": "fee",
+                    "type": "asset"
+                },
+                {
+                    "name": "contract",
+                    "type": "name"
+                },
+                {
+                    "name": "min_unit",
+                    "type": "uint16"
+                },
+                {
+                    "name": "did_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "did_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "cancel",
+            "base": "",
+            "fields": [
+                {
+                    "name": "code",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "claim_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "red_pack_code",
+                    "type": "name"
+                },
+                {
+                    "name": "sender",
+                    "type": "name"
+                },
+                {
+                    "name": "receiver",
+                    "type": "name"
+                },
+                {
+                    "name": "quantity",
+                    "type": "asset"
+                },
+                {
+                    "name": "claimed_at",
+                    "type": "time_point"
+                }
+            ]
+        },
+        {
+            "name": "claimredpack",
+            "base": "",
+            "fields": [
+                {
+                    "name": "claimer",
+                    "type": "name"
+                },
+                {
+                    "name": "code",
+                    "type": "name"
+                },
+                {
+                    "name": "pwhash",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "delfee",
+            "base": "",
+            "fields": [
+                {
+                    "name": "coin",
+                    "type": "symbol"
+                }
+            ]
+        },
+        {
+            "name": "delredpacks",
+            "base": "",
+            "fields": [
+                {
+                    "name": "code",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "fee_conf_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "coin",
+                    "type": "symbol"
+                },
+                {
+                    "name": "fee",
+                    "type": "asset"
+                },
+                {
+                    "name": "contract_name",
+                    "type": "name"
+                },
+                {
+                    "name": "min_unit",
+                    "type": "uint16"
+                },
+                {
+                    "name": "did_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "did_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "global_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "admin",
+                    "type": "name"
+                },
+                {
+                    "name": "expire_hours",
+                    "type": "uint16"
+                },
+                {
+                    "name": "data_failure_hours",
+                    "type": "uint16"
+                },
+                {
+                    "name": "did_supported",
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "init",
+            "base": "",
+            "fields": [
+                {
+                    "name": "admin",
+                    "type": "name"
+                },
+                {
+                    "name": "hours",
+                    "type": "uint16"
+                },
+                {
+                    "name": "did_supported",
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "redpack_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "code",
+                    "type": "name"
+                },
+                {
+                    "name": "sender",
+                    "type": "name"
+                },
+                {
+                    "name": "pw_hash",
+                    "type": "string"
+                },
+                {
+                    "name": "total_quantity",
+                    "type": "asset"
+                },
+                {
+                    "name": "receiver_count",
+                    "type": "uint64"
+                },
+                {
+                    "name": "remain_quantity",
+                    "type": "asset"
+                },
+                {
+                    "name": "remain_count",
+                    "type": "uint64"
+                },
+                {
+                    "name": "fee",
+                    "type": "asset"
+                },
+                {
+                    "name": "status",
+                    "type": "name"
+                },
+                {
+                    "name": "type",
+                    "type": "uint16"
+                },
+                {
+                    "name": "created_at",
+                    "type": "time_point"
+                },
+                {
+                    "name": "updated_at",
+                    "type": "time_point"
+                }
+            ]
+        }
+    ],
+    "actions": [
+        {
+            "name": "addfee",
+            "type": "addfee",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "cancel",
+            "type": "cancel",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "claimredpack",
+            "type": "claimredpack",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "delfee",
+            "type": "delfee",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "delredpacks",
+            "type": "delredpacks",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "init",
+            "type": "init",
+            "ricardian_contract": ""
+        }
+    ],
+    "tables": [
+        {
+            "name": "claims",
+            "type": "claim_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "feeconf",
+            "type": "fee_conf_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "global",
+            "type": "global_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "redpacks",
+            "type": "redpack_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        }
+    ],
+    "ricardian_clauses": [],
+    "variants": []
+}

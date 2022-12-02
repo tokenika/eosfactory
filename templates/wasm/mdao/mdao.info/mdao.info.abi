@@ -1,0 +1,356 @@
+{
+    "____comment": "This file was generated with amax-abigen. DO NOT EDIT ",
+    "version": "amax::abi/1.1",
+    "types": [],
+    "structs": [
+        {
+            "name": "app_info",
+            "base": "",
+            "fields": [
+                {
+                    "name": "app_name",
+                    "type": "name"
+                },
+                {
+                    "name": "app_version",
+                    "type": "string"
+                },
+                {
+                    "name": "url",
+                    "type": "string"
+                },
+                {
+                    "name": "logo",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "binddapps",
+            "base": "",
+            "fields": [
+                {
+                    "name": "owner",
+                    "type": "name"
+                },
+                {
+                    "name": "code",
+                    "type": "name"
+                },
+                {
+                    "name": "dapps",
+                    "type": "app_info[]"
+                }
+            ]
+        },
+        {
+            "name": "bindntoken",
+            "base": "",
+            "fields": [
+                {
+                    "name": "owner",
+                    "type": "name"
+                },
+                {
+                    "name": "code",
+                    "type": "name"
+                },
+                {
+                    "name": "ntoken",
+                    "type": "extended_nsymbol"
+                }
+            ]
+        },
+        {
+            "name": "bindtoken",
+            "base": "",
+            "fields": [
+                {
+                    "name": "owner",
+                    "type": "name"
+                },
+                {
+                    "name": "code",
+                    "type": "name"
+                },
+                {
+                    "name": "token",
+                    "type": "extended_symbol"
+                }
+            ]
+        },
+        {
+            "name": "dao_info_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "dao_code",
+                    "type": "name"
+                },
+                {
+                    "name": "title",
+                    "type": "string"
+                },
+                {
+                    "name": "logo",
+                    "type": "string"
+                },
+                {
+                    "name": "desc",
+                    "type": "string"
+                },
+                {
+                    "name": "tags",
+                    "type": "string[]"
+                },
+                {
+                    "name": "resource_links",
+                    "type": "pair_name_string[]"
+                },
+                {
+                    "name": "dapps",
+                    "type": "app_info[]"
+                },
+                {
+                    "name": "group_id",
+                    "type": "string"
+                },
+                {
+                    "name": "token",
+                    "type": "extended_symbol"
+                },
+                {
+                    "name": "ntoken",
+                    "type": "extended_nsymbol"
+                },
+                {
+                    "name": "status",
+                    "type": "name"
+                },
+                {
+                    "name": "creator",
+                    "type": "name"
+                },
+                {
+                    "name": "created_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "memo",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "deldao",
+            "base": "",
+            "fields": [
+                {
+                    "name": "admin",
+                    "type": "name"
+                },
+                {
+                    "name": "code",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "extended_nsymbol",
+            "base": "",
+            "fields": [
+                {
+                    "name": "sym",
+                    "type": "nsymbol"
+                },
+                {
+                    "name": "contract",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "extended_symbol",
+            "base": "",
+            "fields": [
+                {
+                    "name": "sym",
+                    "type": "symbol"
+                },
+                {
+                    "name": "contract",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "nsymbol",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint32"
+                },
+                {
+                    "name": "parent_id",
+                    "type": "uint32"
+                }
+            ]
+        },
+        {
+            "name": "pair_name_string",
+            "base": "",
+            "fields": [
+                {
+                    "name": "key",
+                    "type": "name"
+                },
+                {
+                    "name": "value",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "transferdao",
+            "base": "",
+            "fields": [
+                {
+                    "name": "owner",
+                    "type": "name"
+                },
+                {
+                    "name": "code",
+                    "type": "name"
+                },
+                {
+                    "name": "receiver",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "updatecode",
+            "base": "",
+            "fields": [
+                {
+                    "name": "admin",
+                    "type": "name"
+                },
+                {
+                    "name": "code",
+                    "type": "name"
+                },
+                {
+                    "name": "new_code",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "updatedao",
+            "base": "",
+            "fields": [
+                {
+                    "name": "owner",
+                    "type": "name"
+                },
+                {
+                    "name": "code",
+                    "type": "name"
+                },
+                {
+                    "name": "logo",
+                    "type": "string"
+                },
+                {
+                    "name": "desc",
+                    "type": "string"
+                },
+                {
+                    "name": "links",
+                    "type": "pair_name_string[]"
+                },
+                {
+                    "name": "symcode",
+                    "type": "string"
+                },
+                {
+                    "name": "symcontract",
+                    "type": "string"
+                },
+                {
+                    "name": "groupid",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "updatestatus",
+            "base": "",
+            "fields": [
+                {
+                    "name": "code",
+                    "type": "name"
+                },
+                {
+                    "name": "isenable",
+                    "type": "bool"
+                }
+            ]
+        }
+    ],
+    "actions": [
+        {
+            "name": "binddapps",
+            "type": "binddapps",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "bindntoken",
+            "type": "bindntoken",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "bindtoken",
+            "type": "bindtoken",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "deldao",
+            "type": "deldao",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "transferdao",
+            "type": "transferdao",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "updatecode",
+            "type": "updatecode",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "updatedao",
+            "type": "updatedao",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "updatestatus",
+            "type": "updatestatus",
+            "ricardian_contract": ""
+        }
+    ],
+    "tables": [
+        {
+            "name": "infos",
+            "type": "dao_info_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        }
+    ],
+    "ricardian_clauses": [],
+    "variants": []
+}

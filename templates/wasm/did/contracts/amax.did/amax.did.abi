@@ -1,0 +1,361 @@
+{
+    "____comment": "This file was generated with amax-abigen. DO NOT EDIT ",
+    "version": "amax::abi/1.1",
+    "types": [],
+    "structs": [
+        {
+            "name": "addvendor",
+            "base": "",
+            "fields": [
+                {
+                    "name": "vendor_name",
+                    "type": "string"
+                },
+                {
+                    "name": "vendor_account",
+                    "type": "name"
+                },
+                {
+                    "name": "kyc_level",
+                    "type": "uint32"
+                },
+                {
+                    "name": "user_reward_quant",
+                    "type": "asset"
+                },
+                {
+                    "name": "user_charge_quant",
+                    "type": "asset"
+                },
+                {
+                    "name": "nft_id",
+                    "type": "nsymbol"
+                }
+            ]
+        },
+        {
+            "name": "aplink_farm",
+            "base": "",
+            "fields": [
+                {
+                    "name": "contract",
+                    "type": "name"
+                },
+                {
+                    "name": "lease_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "auditlog",
+            "base": "",
+            "fields": [
+                {
+                    "name": "order_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "taker",
+                    "type": "name"
+                },
+                {
+                    "name": "vendor_name",
+                    "type": "string"
+                },
+                {
+                    "name": "vendor_account",
+                    "type": "name"
+                },
+                {
+                    "name": "kyc_level",
+                    "type": "uint32"
+                },
+                {
+                    "name": "vendor_charge_quant",
+                    "type": "asset"
+                },
+                {
+                    "name": "status",
+                    "type": "name"
+                },
+                {
+                    "name": "msg",
+                    "type": "string"
+                },
+                {
+                    "name": "created_at",
+                    "type": "time_point"
+                }
+            ]
+        },
+        {
+            "name": "chgvendor",
+            "base": "",
+            "fields": [
+                {
+                    "name": "vendor_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "status",
+                    "type": "name"
+                },
+                {
+                    "name": "user_reward_quant",
+                    "type": "asset"
+                },
+                {
+                    "name": "user_charge_quant",
+                    "type": "asset"
+                },
+                {
+                    "name": "nft_id",
+                    "type": "nsymbol"
+                }
+            ]
+        },
+        {
+            "name": "faildid",
+            "base": "",
+            "fields": [
+                {
+                    "name": "order_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "reason",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "finishdid",
+            "base": "",
+            "fields": [
+                {
+                    "name": "order_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "msg",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "global_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "admin",
+                    "type": "name"
+                },
+                {
+                    "name": "nft_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "fee_collector",
+                    "type": "name"
+                },
+                {
+                    "name": "apl_farm",
+                    "type": "aplink_farm"
+                },
+                {
+                    "name": "last_order_idx",
+                    "type": "uint64"
+                },
+                {
+                    "name": "last_vendor_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "init",
+            "base": "",
+            "fields": [
+                {
+                    "name": "admin",
+                    "type": "name"
+                },
+                {
+                    "name": "nft_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "fee_colletor",
+                    "type": "name"
+                },
+                {
+                    "name": "lease_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "nsymbol",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint32"
+                },
+                {
+                    "name": "parent_id",
+                    "type": "uint32"
+                }
+            ]
+        },
+        {
+            "name": "order_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "maker",
+                    "type": "name"
+                },
+                {
+                    "name": "vendor_account",
+                    "type": "name"
+                },
+                {
+                    "name": "kyc_level",
+                    "type": "uint32"
+                },
+                {
+                    "name": "secret_md5",
+                    "type": "string"
+                },
+                {
+                    "name": "created_at",
+                    "type": "time_point_sec"
+                }
+            ]
+        },
+        {
+            "name": "setadmin",
+            "base": "",
+            "fields": [
+                {
+                    "name": "admin",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "vendor_info_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "vendor_name",
+                    "type": "string"
+                },
+                {
+                    "name": "vendor_account",
+                    "type": "name"
+                },
+                {
+                    "name": "kyc_level",
+                    "type": "uint32"
+                },
+                {
+                    "name": "user_reward_quant",
+                    "type": "asset"
+                },
+                {
+                    "name": "user_charge_quant",
+                    "type": "asset"
+                },
+                {
+                    "name": "nft_id",
+                    "type": "nsymbol"
+                },
+                {
+                    "name": "status",
+                    "type": "name"
+                },
+                {
+                    "name": "created_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "updated_at",
+                    "type": "time_point_sec"
+                }
+            ]
+        }
+    ],
+    "actions": [
+        {
+            "name": "addvendor",
+            "type": "addvendor",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "auditlog",
+            "type": "auditlog",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "chgvendor",
+            "type": "chgvendor",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "faildid",
+            "type": "faildid",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "finishdid",
+            "type": "finishdid",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "init",
+            "type": "init",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setadmin",
+            "type": "setadmin",
+            "ricardian_contract": ""
+        }
+    ],
+    "tables": [
+        {
+            "name": "global",
+            "type": "global_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "orders",
+            "type": "order_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "vendorinfo",
+            "type": "vendor_info_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        }
+    ],
+    "ricardian_clauses": [],
+    "variants": []
+}

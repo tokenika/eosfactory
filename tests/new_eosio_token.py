@@ -51,9 +51,10 @@ class Test(unittest.TestCase):
         Create, build and deploy the contract:
         ''')
         host = new_account(master)
-        smart = Contract(host, project_from_template(
-            CONTRACT_WORKSPACE, template="eosio_token", remove_existing=True))
-        smart.build()
+        smart = Contract(host, 
+            wasm_file='templates/contracts/amax.token/amax.token.wasm',
+            abi_file="templates/contracts/amax.token/amax.token.abi")
+        # smart.build()
         smart.deploy()
 
         COMMENT('''
@@ -63,8 +64,8 @@ class Test(unittest.TestCase):
         host.push_action(
             "create",
             {
-                "issuer": master,
-                "maximum_supply": "1000000000.0000 EOS",
+                "issuer": alice,
+                "maximum_supply": "1000000000.00000000 AMAX",
                 "can_freeze": "0",
                 "can_recall": "0",
                 "can_whitelist": "0"
@@ -74,9 +75,9 @@ class Test(unittest.TestCase):
         host.push_action(
             "issue",
             {
-                "to": alice, "quantity": "100.0000 EOS", "memo": ""
+                "to": alice, "quantity": "100.00000000 AMAX", "memo": ""
             },
-            permission=(master, Permission.ACTIVE))
+            permission=(alice, Permission.ACTIVE))
 
         COMMENT('''
         Execute a series of transfers between the accounts:
@@ -86,7 +87,7 @@ class Test(unittest.TestCase):
             "transfer",
             {
                 "from": alice, "to": carol,
-                "quantity": "25.0000 EOS", "memo":""
+                "quantity": "25.00000000 AMAX", "memo":""
             },
             permission=(alice, Permission.ACTIVE))
 
@@ -94,7 +95,7 @@ class Test(unittest.TestCase):
             "transfer",
             {
                 "from": carol, "to": bob, 
-                "quantity": "11.0000 EOS", "memo": ""
+                "quantity": "11.00000000 AMAX", "memo": ""
             },
             permission=(carol, Permission.ACTIVE))
 
@@ -102,7 +103,7 @@ class Test(unittest.TestCase):
             "transfer",
             {
                 "from": carol, "to": bob, 
-                "quantity": "2.0000 EOS", "memo": ""
+                "quantity": "2.00000000 AMAX", "memo": ""
             },
             permission=(carol, Permission.ACTIVE))
 
@@ -110,7 +111,7 @@ class Test(unittest.TestCase):
             "transfer",
             {
                 "from": bob, "to": alice, \
-                "quantity": "2.0000 EOS", "memo":""
+                "quantity": "2.00000000 AMAX", "memo":""
             },
             permission=(bob, Permission.ACTIVE))
 
@@ -123,14 +124,14 @@ class Test(unittest.TestCase):
         table_carol = host.table("accounts", carol)
 
         self.assertEqual(
-            table_alice.json["rows"][0]["balance"], '77.0000 EOS',
-            '''assertEqual(table_alice.json["rows"][0]["balance"], '77.0000 EOS')''')
+            table_alice.json["rows"][0]["balance"], '77.00000000 AMAX',
+            '''assertEqual(table_alice.json["rows"][0]["balance"], '77.00000000 AMAX')''')
         self.assertEqual(
-            table_bob.json["rows"][0]["balance"], '11.0000 EOS',
-            '''assertEqual(table_bob.json["rows"][0]["balance"], '11.0000 EOS')''')
+            table_bob.json["rows"][0]["balance"], '11.00000000 AMAX',
+            '''assertEqual(table_bob.json["rows"][0]["balance"], '11.00000000 AMAX')''')
         self.assertEqual(
-            table_carol.json["rows"][0]["balance"], '12.0000 EOS',
-            '''assertEqual(table_carol.json["rows"][0]["balance"], '12.0000 EOS')''')
+            table_carol.json["rows"][0]["balance"], '12.00000000 AMAX',
+            '''assertEqual(table_carol.json["rows"][0]["balance"], '12.00000000 AMAX')''')
 
     @classmethod
     def tearDownClass(cls):
