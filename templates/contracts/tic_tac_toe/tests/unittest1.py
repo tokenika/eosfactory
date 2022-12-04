@@ -1,5 +1,5 @@
 import unittest, argparse, sys, time
-from eosfactory.eosf import *
+from amaxfactory.eosf import *
 
 verbosity([Verbosity.INFO, Verbosity.OUT, Verbosity.TRACE])
 

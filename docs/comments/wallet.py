@@ -1,5 +1,5 @@
 
-from eosfactory.eosf import *
+from amaxfactory.eosf import *
 
 reset()
 
@@ -11,7 +11,7 @@ get_wallet().keys()
 
 stop()
 
-from eosfactory.eosf import *
+from amaxfactory.eosf import *
 
 resume()
 
@@ -20,7 +20,7 @@ get_wallet().keys()
 
 stop()
 
-from eosfactory.eosf import *
+from amaxfactory.eosf import *
 
 reset()
 
@@ -29,7 +29,7 @@ get_wallet().keys()
 
 stop()
 
-from eosfactory.eosf import *
+from amaxfactory.eosf import *
 
 reset()
 create_master_account("master")

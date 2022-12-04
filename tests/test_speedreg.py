@@ -1,10 +1,10 @@
 import time
 import unittest
-from eosfactory.eosf import *
+from amaxfactory.eosf import *
 
 verbosity([Verbosity.INFO, Verbosity.OUT, Verbosity.TRACE, Verbosity.DEBUG])
 
-CONTRACT_WASM_PATH = "/root/contracts/charlie/eosfactory/templates/wasm/"
+CONTRACT_WASM_PATH = "/root/contracts/charlie/amaxfactory/templates/wasm/"
 
 class Test(unittest.TestCase):
 
@@ -26,7 +26,6 @@ class Test(unittest.TestCase):
 
         The account objects `master, host, alice, ...` which are of the global namespace, do not have to be explicitly declared (and still keep the linter silent).
         '''
-        create_wallet()
         
         master = new_master_account()
         

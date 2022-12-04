@@ -1,6 +1,6 @@
 shell.contract
 ==============
 
-.. automodule:: eosfactory.shell.contract
+.. automodule:: amaxfactory.shell.contract
     :members:
     :show-inheritance:

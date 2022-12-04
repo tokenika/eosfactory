@@ -1,6 +1,6 @@
 '''Issue set by Patric-Shih
 
-I follow https://eosfactory.io/build/html/patterns/set/set_account_permission.html#weights-and-threshold and try to add eosio.code permission to account as follow
+I follow https://amaxfactory.io/build/html/patterns/set/set_account_permission.html#weights-and-threshold and try to add eosio.code permission to account as follow
 
 ```
 ALICE.set_account_permission(
@@ -31,7 +31,7 @@ host.push_action("hi", {"player": ALICE}, permission=(ALICE, Permission.ACTIVE))
 it shows
 
 ```
-eosfactory.core.errors.Error: ERROR:
+amaxfactory.core.errors.Error: ERROR:
 Error 3090003: Provided keys, permissions, and delays do not satisfy declared authorizations
 Ensure that you have the related private keys inside your wallet and your wallet is unlocked.
 Error Details:
@@ -39,8 +39,8 @@ transaction declares authority '{"actor":"ALICE","permission":"active"}', but do
 ```
 '''
 import sys, os
-import eosfactory.core.config as config
-from eosfactory.eosf import *
+import amaxfactory.core.config as config
+from amaxfactory.eosf import *
 
 verbosity([Verbosity.INFO, Verbosity.OUT, Verbosity.DEBUG])
 

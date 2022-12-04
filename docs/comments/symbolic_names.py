@@ -1,6 +1,6 @@
 
-import eosfactory.core.setup as setup
-from eosfactory.eosf import *
+import amaxfactory.core.setup as setup
+from amaxfactory.eosf import *
 
 reset()
 

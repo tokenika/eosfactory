@@ -16,7 +16,7 @@ of the same creation name, pointing to different physical eosio accounts.
 '''
 
 import unittest
-from eosfactory.eosf import *
+from amaxfactory.eosf import *
 
 verbosity([Verbosity.INFO, Verbosity.OUT, Verbosity.TRACE, Verbosity.DEBUG])
 

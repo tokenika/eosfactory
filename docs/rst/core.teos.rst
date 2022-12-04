@@ -1,6 +1,6 @@
 core.teos
 =========
 
-.. automodule:: eosfactory.core.teos
+.. automodule:: amaxfactory.core.teos
     :members:
     :show-inheritance:

@@ -1,6 +1,6 @@
 import setuptools
 import os
-import eosfactory.core.config as config
+import amaxfactory.core.config as config
 from shutil import rmtree
 
 setuptools_name = config.SETUPTOOLS_NAME

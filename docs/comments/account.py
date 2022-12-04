@@ -1,5 +1,5 @@
 
-from eosfactory.eosf import *
+from amaxfactory.eosf import *
 
 reset()
 create_master_account("MASTER")

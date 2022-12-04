@@ -74,8 +74,8 @@ The workspace directory has to be places outside the Windows filesystem.
 ### mutable globals cannot be imported
 
 ```bash
-ERROR /mnt/hgfs/Workspaces/EOS/eosfactory/eosfactory/core/errors.py 44:
-Reading WASM from /mnt/hgfs/Workspaces/EOS/eosfactory/contracts_linux/_wslqwjvacdyugodewiyd/build/_wslqwjvacdyugodewiyd.wasm...
+ERROR /mnt/hgfs/Workspaces/EOS/amaxfactory/amaxfactory/core/errors.py 44:
+Reading WASM from /mnt/hgfs/Workspaces/EOS/amaxfactory/contracts_linux/_wslqwjvacdyugodewiyd/build/_wslqwjvacdyugodewiyd.wasm...
 Publishing contract...
 Error 3070003: Serialization Error Processing WASM
 Error Details:
@@ -85,7 +85,7 @@ pending console output:
 
 If `~/Workspaces` not `/mnt/hgfs/Workspaces`, the mutable globals error is replaced (masked) with hanging of `eosio_cpp`. If cpu cores increased from 1 to 4, everything is OK.
 
-If the workspace directory is moved from `/mnt/hgfs/Workspaces/EOS/contracts` to `/tmp/eosfactory/contracts`, the mutable globals error vanishes. Then, the problem is in coding of Ubuntu files written to a Windows file system.
+If the workspace directory is moved from `/mnt/hgfs/Workspaces/EOS/contracts` to `/tmp/amaxfactory/contracts`, the mutable globals error vanishes. Then, the problem is in coding of Ubuntu files written to a Windows file system.
 
 ### eosio_cpp hangs
 

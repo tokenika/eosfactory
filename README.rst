@@ -2,7 +2,7 @@
 Welcome to EOSFactory v3.4.0
 ============================
 
-`EOSFactory <http://eosfactory.io/>`_ is a Python-based `EOS <https://eos.io>`_ smart-contract development & testing framework, created by `Tokenika <https://tokenika.io>`_.
+`EOSFactory <http://amaxfactory.io/>`_ is a Python-based `EOS <https://eos.io>`_ smart-contract development & testing framework, created by `Tokenika <https://tokenika.io>`_.
 
 With a single command-line interface you can create a private testnet and then compile, test and deploy EOS smart-contracts.
 
@@ -46,25 +46,25 @@ We make sure everything we do is fully compatible with Windows - our toolset ena
 User documentation
 ------------------
 
-* `Introduction to EOSFactory <http://eosfactory.io/build/html/tutorials/00.IntroductionToEOSFactory.html>`_
-* `Installing EOSFactory <https://eosfactory.io/build/html/tutorials/01.InstallingEOSFactory.html>`_
-* `Interacting with EOS Contracts in EOSFactory <https://eosfactory.io/build/html/tutorials/02.InteractingWithEOSContractsInEOSFactory.html>`_
-* `Building and deploying EOS Contracts in EOSFactory <https://eosfactory.io/build/html/tutorials/03.BuildingAndDeployingEOSContractsInEOSFactory.html>`_
-* `Working with EOS Contracts using EOSFactory in VSC <https://eosfactory.io/build/html/tutorials/04.WorkingWithEOSContractsUsingEOSFactoryInVSC.html>`_
-* `Interacting with Public Testnet <https://eosfactory.io/build/html/tutorials/05.InteractingWithPublicTestnet.html>`_
+* `Introduction to EOSFactory <http://amaxfactory.io/build/html/tutorials/00.IntroductionToEOSFactory.html>`_
+* `Installing EOSFactory <https://amaxfactory.io/build/html/tutorials/01.InstallingEOSFactory.html>`_
+* `Interacting with EOS Contracts in EOSFactory <https://amaxfactory.io/build/html/tutorials/02.InteractingWithEOSContractsInEOSFactory.html>`_
+* `Building and deploying EOS Contracts in EOSFactory <https://amaxfactory.io/build/html/tutorials/03.BuildingAndDeployingEOSContractsInEOSFactory.html>`_
+* `Working with EOS Contracts using EOSFactory in VSC <https://amaxfactory.io/build/html/tutorials/04.WorkingWithEOSContractsUsingEOSFactoryInVSC.html>`_
+* `Interacting with Public Testnet <https://amaxfactory.io/build/html/tutorials/05.InteractingWithPublicTestnet.html>`_
 
 Use cases
 ---------
 
-* `Wallet Class <https://eosfactory.io/build/html/cases/wallet.html>`_
-* `Symbolic Names <https://eosfactory.io/build/html/cases/symbolic_names.html>`_
-* `Account Class <https://eosfactory.io/build/html/cases/account.html>`_
-* `Master Account <https://eosfactory.io/build/html/cases/master_account.html>`_
+* `Wallet Class <https://amaxfactory.io/build/html/cases/wallet.html>`_
+* `Symbolic Names <https://amaxfactory.io/build/html/cases/symbolic_names.html>`_
+* `Account Class <https://amaxfactory.io/build/html/cases/account.html>`_
+* `Master Account <https://amaxfactory.io/build/html/cases/master_account.html>`_
 
 Complete documentation
 ----------------------
 
-Please refer to the `table of contents <https://eosfactory.io/build/html/index.html>`_.
+Please refer to the `table of contents <https://amaxfactory.io/build/html/index.html>`_.
 
 
 Roadmap

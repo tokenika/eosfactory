@@ -5,7 +5,7 @@ SET( MODE "" CACHE STRING "Compilation mode: 'test_options' for native compilati
 
 include( CTest )
 
-add_custom_target( eosfactory.build ALL COMMAND python3 -m eosfactory.build \"${CMAKE_SOURCE_DIR}\" --c_cpp_prop \"${CMAKE_SOURCE_DIR}/.vscode/c_cpp_properties.json\" "${MODE}" )
+add_custom_target( amaxfactory.build ALL COMMAND python3 -m amaxfactory.build \"${CMAKE_SOURCE_DIR}\" --c_cpp_prop \"${CMAKE_SOURCE_DIR}/.vscode/c_cpp_properties.json\" "${MODE}" )
 
 add_test( NAME tests COMMAND python3 ${CMAKE_SOURCE_DIR}/tests/test.py )
 

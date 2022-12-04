@@ -1,6 +1,6 @@
 core.config
 ===========
 
-.. automodule:: eosfactory.core.config
+.. automodule:: amaxfactory.core.config
     :members:
     :show-inheritance:

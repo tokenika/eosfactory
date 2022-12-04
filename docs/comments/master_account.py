@@ -1,5 +1,5 @@
 
-from eosfactory.eosf import *
+from amaxfactory.eosf import *
 
 reset()
 
@@ -9,7 +9,7 @@ MASTER.info()
 create_account("ALICE", MASTER)
 ALICE.info()
 
-from eosfactory.eosf import *
+from amaxfactory.eosf import *
 
 testnet = Testnet(
     "nukjygmgkn3x",

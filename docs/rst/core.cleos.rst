@@ -1,6 +1,6 @@
 core.cleos
 ==========
 
-.. automodule:: eosfactory.core.cleos
+.. automodule:: amaxfactory.core.cleos
     :members:
     :show-inheritance:

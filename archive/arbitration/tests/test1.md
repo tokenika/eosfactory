@@ -6,8 +6,8 @@ There are two parities, `ALICE` and `CAROL`, both having their accounts with an 
 
 ```python
 import time, os, sys
-import eosfactory.core.config as config
-from eosfactory.eosf import *
+import amaxfactory.core.config as config
+from amaxfactory.eosf import *
 
 EOSIO = MasterAccount()
 ESCROW = Account()
@@ -221,5 +221,5 @@ stop()
 The python blocks in the current Markdown document can be executed with a provided bash tool. While the working directory is the root of the `EOSFactory` installation, do:
 
 ```bash
-eosfactory/pythonmd.sh archive/arbitration/tests/test1.md
+amaxfactory/pythonmd.sh archive/arbitration/tests/test1.md
 ```

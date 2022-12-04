@@ -1,6 +1,6 @@
 core.testnet
 ============
 
-.. automodule:: eosfactory.core.testnet
+.. automodule:: amaxfactory.core.testnet
     :members:
     :show-inheritance:

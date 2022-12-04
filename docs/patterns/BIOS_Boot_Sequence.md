@@ -14,15 +14,15 @@ The following chunk of code serves the prompt.
 
 import os
 
-import eosfactory.core.utils as utils
-from eosfactory.eosf import *
+import amaxfactory.core.utils as utils
+from amaxfactory.eosf import *
 ```
 
 ```python
 import pathlib
 from termcolor import colored
 
-import eosfactory.core.config as config
+import amaxfactory.core.config as config
 
 contract_dir = None
 

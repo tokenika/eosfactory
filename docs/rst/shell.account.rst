@@ -1,6 +1,6 @@
 shell.account
 =============
 
-.. automodule:: eosfactory.shell.account
+.. automodule:: amaxfactory.shell.account
     :members:
     :show-inheritance:

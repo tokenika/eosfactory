@@ -5,8 +5,8 @@ The `set_account_permission` command creates or updates an account's permission.
 **NOTE**: The Python code listed below is executable, as explained [here](../README.html).
 
 ```python
-from eosfactory.eosf import *
-import eosfactory.core.setup as setup
+from amaxfactory.eosf import *
+import amaxfactory.core.setup as setup
 ```
 
 ```python

@@ -1,5 +1,5 @@
-import eosfactory.core.config as config
-from eosfactory.eosf import *
+import amaxfactory.core.config as config
+from amaxfactory.eosf import *
 
 if __name__ == '__main__':
     stored = config.chain_state_db_size_mb_[1][0]

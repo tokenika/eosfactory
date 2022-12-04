@@ -5,7 +5,7 @@ The `set_account_permission` command sets authorization for a contract's specifi
 **NOTE**: The Python code listed below is executable, as explained [here](../README.html).
 
 ```python
-from eosfactory.eosf import *
+from amaxfactory.eosf import *
 ```
 
 ```python

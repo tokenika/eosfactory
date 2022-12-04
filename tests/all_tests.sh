@@ -27,26 +27,26 @@ python3 tests/new_tic_tac_toe.py &&\
 
 
 echo %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% &&\
-echo eosfactory/pythonmd.sh docs/comments/account.md &&\
+echo amaxfactory/pythonmd.sh docs/comments/account.md &&\
 echo %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% &&\
-eosfactory/pythonmd.sh docs/comments/account.md &&\
+amaxfactory/pythonmd.sh docs/comments/account.md &&\
 echo %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% &&\
-echo eosfactory/pythonmd.sh docs/comments/symbolic_names.md &&\
+echo amaxfactory/pythonmd.sh docs/comments/symbolic_names.md &&\
 echo %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% &&\
-eosfactory/pythonmd.sh docs/comments/symbolic_names.md &&\
+amaxfactory/pythonmd.sh docs/comments/symbolic_names.md &&\
 echo %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% &&\
-echo eosfactory/pythonmd.sh docs/comments/wallet.md &&\
+echo amaxfactory/pythonmd.sh docs/comments/wallet.md &&\
 echo %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% &&\
-eosfactory/pythonmd.sh docs/comments/wallet.md &&\
+amaxfactory/pythonmd.sh docs/comments/wallet.md &&\
 echo %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% &&\
-echo eosfactory/pythonmd.sh docs/patterns/set/set_account_permission.md &&\
+echo amaxfactory/pythonmd.sh docs/patterns/set/set_account_permission.md &&\
 echo %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% &&\
-eosfactory/pythonmd.sh docs/patterns/set/set_account_permission.md &&\
+amaxfactory/pythonmd.sh docs/patterns/set/set_account_permission.md &&\
 echo %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% &&\
-echo eosfactory/pythonmd.sh docs/tutorials/02.InteractingWithEOSContractsInEOSFactory.md &&\
+echo amaxfactory/pythonmd.sh docs/tutorials/02.InteractingWithEOSContractsInEOSFactory.md &&\
 echo %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% &&\
-eosfactory/pythonmd.sh docs/tutorials/02.InteractingWithEOSContractsInEOSFactory.md &&\
+amaxfactory/pythonmd.sh docs/tutorials/02.InteractingWithEOSContractsInEOSFactory.md &&\
 echo %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% &&\
-echo eosfactory/pythonmd.sh docs/tutorials/03.BuildingAndDeployingEOSContractsInEOSFactory.md 
+echo amaxfactory/pythonmd.sh docs/tutorials/03.BuildingAndDeployingEOSContractsInEOSFactory.md 
 echo %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% &&\
-eosfactory/pythonmd.sh docs/tutorials/03.BuildingAndDeployingEOSContractsInEOSFactory.md 
+amaxfactory/pythonmd.sh docs/tutorials/03.BuildingAndDeployingEOSContractsInEOSFactory.md 

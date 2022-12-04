@@ -35,10 +35,10 @@ EOSFactory converts the paths prior to zipping the file to the form `${eosio_cdt
 
 ## EOSFactory tools
 
-The tool is `eosfactory.pack_contract.py`. By default, it zips the contract folder that is the current working directory. The zip file is then placed in the contract folder, named after the name of the folder. If the contract folder does not contain its `.eosideignore` file, a default one is created.
+The tool is `amaxfactory.pack_contract.py`. By default, it zips the contract folder that is the current working directory. The zip file is then placed in the contract folder, named after the name of the folder. If the contract folder does not contain its `.eosideignore` file, a default one is created.
 
 ```
-$ python3 -m eosfactory.pack_contract
+$ python3 -m amaxfactory.pack_contract
 ERROR:
 There is not the '.eosideignore' file in the project directory
     /mnt/c/Workspaces/EOS/contracts/helloi
@@ -55,5 +55,5 @@ adding tests/unittest1.py
 Now, expand the zip file into a new project in the folder `../halloo`
 
 ```
-$ python3 -m eosfactory.pack_contract --unpack --dir ../helloo --zip ./helloi.zip
+$ python3 -m amaxfactory.pack_contract --unpack --dir ../helloo --zip ./helloi.zip
 ```

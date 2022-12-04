@@ -3,7 +3,7 @@
 '''
 import os
 import setuptools
-import eosfactory.core.config as config
+import amaxfactory.core.config as config
 from shutil import rmtree
 
 setuptools_name = config.SETUPTOOLS_NAME
@@ -60,7 +60,7 @@ setuptools.setup(
         'Topic :: Software Development :: Testing',
     ],
     keywords='EOSIO, smart contract unit testing',
-    url='https://github.com/tokenika/eosfactory',
+    url='https://github.com/tokenika/amaxfactory',
     author='Tokenika',
     author_email='contact@tokenika.io',
     license='MIT',

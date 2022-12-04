@@ -19,7 +19,7 @@ python3
 ```
 
 ```python
-from eosfactory.eosf import *
+from amaxfactory.eosf import *
 ```
 
 First, lets's start a local testnet:
@@ -65,7 +65,7 @@ python3
 ```
 
 ```python
-from eosfactory.eosf import *
+from amaxfactory.eosf import *
 ```
 
 Resume the testnet:
@@ -100,7 +100,7 @@ python3
 ```
 
 ```python
-from eosfactory.eosf import *
+from amaxfactory.eosf import *
 ```
 
 And this time we reset the testnet:
@@ -138,7 +138,7 @@ python3
 ```
 
 ```python
-from eosfactory.eosf import *
+from amaxfactory.eosf import *
 ```
 
 Then reset the local testnode and create an account. The singleton `Wallet` object is created automatically:
@@ -174,5 +174,5 @@ stop()
 The python blocks in the current Markdown document can be executed with a provided bash tool. While the working directory is the root of the `EOSFactory` installation, do:
 
 ```bash
-eosfactory/pythonmd.sh docs/comments/wallet.md
+amaxfactory/pythonmd.sh docs/comments/wallet.md
 ```

@@ -1,6 +1,6 @@
 # Welcome to EOSFactory v3.4.0
 
-[EOSFactory](http://eosfactory.io/) is a Python-based [EOS](https://eos.io) smart-contract development & testing framework, created by [Tokenika](https://tokenika.io).
+[EOSFactory](http://amaxfactory.io/) is a Python-based [EOS](https://eos.io) smart-contract development & testing framework, created by [Tokenika](https://tokenika.io).
 
 With a single command-line interface you can create a private testnet and then compile, test and deploy EOS smart-contracts.
 
@@ -53,7 +53,7 @@ We make sure everything we do is fully compatible with Windows - our toolset ena
 
 ## Complete documentation
 
-Please refer to the [table of contents](https://eosfactory.io/build/html/index.html).
+Please refer to the [table of contents](https://amaxfactory.io/build/html/index.html).
 
 
 ## Release notes

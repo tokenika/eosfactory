@@ -12,7 +12,7 @@ python3
 ```
 
 ```python
-from eosfactory.eosf import *
+from amaxfactory.eosf import *
 ```
 
 Start a local testnet, create a wallet and then create a special MASTER account referenced by a global variable called `MASTER`:
@@ -176,5 +176,5 @@ stop()
 The python blocks in the current Markdown document can be executed with a provided bash tool. While the working directory is the root of the `EOSFactory` installation, do:
 
 ```bash
-eosfactory/pythonmd.sh docs/comments/account.md
+amaxfactory/pythonmd.sh docs/comments/account.md
 ```

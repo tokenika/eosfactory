@@ -15,8 +15,8 @@ $ python3
 ```
 
 ```python
-import eosfactory.core.setup as setup
-from eosfactory.eosf import *
+import amaxfactory.core.setup as setup
+from amaxfactory.eosf import *
 ```
 
 Then run this code to initialize a local testnet, register a couple of accounts and deploy a smart-contract to one of them:
@@ -100,5 +100,5 @@ stop()
 The python blocks in the current Markdown document can be executed with a provided bash tool. While the working directory is the root of the `EOSFactory` installation, do:
 
 ```bash
-eosfactory/pythonmd.sh docs/comments/symbolic_names.md
+amaxfactory/pythonmd.sh docs/comments/symbolic_names.md
 ```

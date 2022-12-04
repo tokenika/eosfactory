@@ -5,7 +5,7 @@ eosio-cpp
 -abigen 
 -abigen_output=/mnt/c/Workspaces/EOS/contracts/helloq/build/helloq.abi 
 -I=/mnt/c/Workspaces/EOS/contracts/helloq 
--I=/mnt/c/Workspaces/EOS/eosfactory/includes 
+-I=/mnt/c/Workspaces/EOS/amaxfactory/includes 
 /mnt/c/Workspaces/EOS/contracts/helloq/src/helloq.cpp
 
 eosio-cpp 
@@ -14,7 +14,7 @@ eosio-cpp
 -abigen 
 -o /mnt/c/Workspaces/EOS/contracts/hello/build/hello.wasm 
 -I=/mnt/c/Workspaces/EOS/contracts/hello 
--I=/mnt/c/Workspaces/EOS/eosfactory/includes 
+-I=/mnt/c/Workspaces/EOS/amaxfactory/includes 
 /mnt/c/Workspaces/EOS/contracts/hello/src/hello.cpp
 
 
@@ -29,8 +29,8 @@ error message:
 eosio-cpp -contract=helloq -R=/mnt/c/Workspaces/EOS/contracts/helloq/src/../ricardian -abigen -abigen_output=/mnt/c/Workspaces/EOS/contracts/helloq/build/helloq.abi /mnt/c/Workspaces/EOS/contracts/helloq/src/helloq.cpp
 
 
-eosio-cpp -contract=hello -R=/mnt/c/Workspaces/EOS/contracts/hello/src/../ricardian -abigen -o /mnt/c/Workspaces/EOS/contracts/hello/build/hello.wasm -I=/mnt/c/Workspaces/EOS/contracts/hello -I=/mnt/c/Workspaces/EOS/eosfactory/includes /mnt/c/Workspaces/EOS/contracts/hello/src/hello.cpp
+eosio-cpp -contract=hello -R=/mnt/c/Workspaces/EOS/contracts/hello/src/../ricardian -abigen -o /mnt/c/Workspaces/EOS/contracts/hello/build/hello.wasm -I=/mnt/c/Workspaces/EOS/contracts/hello -I=/mnt/c/Workspaces/EOS/amaxfactory/includes /mnt/c/Workspaces/EOS/contracts/hello/src/hello.cpp
 
 
-eosio-cpp -contract=hello -R=/mnt/c/Workspaces/EOS/contracts/hello/src/../ricardian -abigen_output /mnt/c/Workspaces/EOS/contracts/hello/build/hello.abi -I=/mnt/c/Workspaces/EOS/contracts/hello -I=/mnt/c/Workspaces/EOS/eosfactory/includes /mnt/c/Workspaces/EOS/contracts/hello/src/hello.cpp
+eosio-cpp -contract=hello -R=/mnt/c/Workspaces/EOS/contracts/hello/src/../ricardian -abigen_output /mnt/c/Workspaces/EOS/contracts/hello/build/hello.abi -I=/mnt/c/Workspaces/EOS/contracts/hello -I=/mnt/c/Workspaces/EOS/amaxfactory/includes /mnt/c/Workspaces/EOS/contracts/hello/src/hello.cpp
 

@@ -1,22 +1,22 @@
 utils
 ====================
 
-.. automodule:: eosfactory.create_project
+.. automodule:: amaxfactory.create_project
     :members:
     :show-inheritance:
 
-.. automodule:: eosfactory.build
+.. automodule:: amaxfactory.build
     :members:
     :show-inheritance:
 
-.. automodule:: eosfactory.testnets
+.. automodule:: amaxfactory.testnets
     :members:
     :show-inheritance:    
 
-.. automodule:: eosfactory.register_testnet
+.. automodule:: amaxfactory.register_testnet
     :members:
     :show-inheritance:
 
-.. automodule:: eosfactory.register_testnet_via_faucet
+.. automodule:: amaxfactory.register_testnet_via_faucet
     :members:
     :show-inheritance:

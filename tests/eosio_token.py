@@ -12,7 +12,7 @@ are abundant: they are in place to satisfy the linter, whu complains about
 dynamically created objects. 
 '''
 import unittest
-from eosfactory.eosf import *
+from amaxfactory.eosf import *
 
 verbosity([Verbosity.INFO, Verbosity.OUT, Verbosity.TRACE, Verbosity.DEBUG])
 

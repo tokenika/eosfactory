@@ -8,7 +8,7 @@ There are practitioners of Python who preffer to restrain from using global
 variables. EOSFactory has tools that can satisfy them. This example presents 
 these tools. 
 
-For explanation see http://eosfactory.io/build/html/comments/account.html,
+For explanation see http://amaxfactory.io/build/html/comments/account.html,
 there the section 'Account objects reside in the global namespace'.
 
 With the standard EOSFactory, account objects are created with `create` factory 
@@ -25,7 +25,7 @@ The current script can be compared with `tests/tic_tac_toe.py` which is
 functionally identical, yet written with the standard EOSFactory style.
 '''
 import unittest, argparse, sys, time
-from eosfactory.eosf import *
+from amaxfactory.eosf import *
 
 verbosity([Verbosity.INFO, Verbosity.OUT, Verbosity.TRACE])
 
