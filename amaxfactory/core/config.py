@@ -64,11 +64,11 @@ libs_ = ("LIBS", "libs")
 
 
 cli_exe_ = ("EOSIO_CLI_EXECUTABLE", 
-                        ["amcli", "/usr/bin/amcli", "{}/amax/0.5.0/bin/amcli".format(AMAX_DIR)])
+                        ["amcli", "{}/bin/amcli".format(AMAX_DIR), "{}/bin/amcli".format(AMAX_DIR)])
 keosd_exe_ = ("KEOSD_EXECUTABLE", 
-                        ["amkey","/usr/bin/amkey", "{}/amax/0.5.0/bin/amkey".format(AMAX_DIR)])
+                        ["amkey","{}/bin/amkeyxx".format(AMAX_DIR), "{}/bin/amkeyxx".format(AMAX_DIR)])
 node_exe_ = ("LOCAL_NODE_EXECUTABLE", 
-                        ["amnod","/usr/bin/amnod", "{}/amax/0.5.0/bin/amnod".format(AMAX_DIR)])
+                        ["amnod","{}/bin/amnod".format(AMAX_DIR), "{}/bin/amnod".format(AMAX_DIR)])
 eosio_cpp_ = ("EOSIO_CPP",
             ["amax-cpp", "/usr/bin/amax-cpp", "/usr/local/amax.cdt/bin/amax-cpp", "/usr/local/amax.cdt/bin/amax-cpp"])
 eosio_cdt_root_ = ("EOSIO_CDT_ROOT",
