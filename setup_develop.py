@@ -25,7 +25,7 @@ def readme():
 setuptools.setup(
     name=setuptools_name,
     version='2.1.0',
-    description='Python-based EOS smart-contract development & testing framework',
+    description='Python-based AMAX smart-contract development & testing framework',
     long_description=readme(),
     classifiers=[
         "Programming Language :: Python :: 3.5",

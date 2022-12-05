@@ -51,7 +51,7 @@ DATA_FILES.extend(data_files_item('libs'))
 setuptools.setup(
     name=setuptools_name,
     version=config.VERSION,
-    description='Python-based EOS smart-contract development & testing framework',
+    description='Python-based AMAX smart-contract development & testing framework',
     long_description=readme(),
     classifiers=[
         "Programming Language :: Python :: 3.5",
