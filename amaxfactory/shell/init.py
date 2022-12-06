@@ -68,9 +68,10 @@ CONTRACT_WASM_PATH = FACTORY_DIR + "/templates/wasm/"
 
 
 
-def deploy_amax(admin):
+def deploy_amax():
 
     amax = new_master_account()
+    admin = new_account(amax,"admin")
     amaxtoken = new_account(amax,'amax.token')
     
     smart = Contract(amaxtoken, 
@@ -96,11 +97,14 @@ def deploy_amax(admin):
 
     table_admin = amaxtoken.table("accounts", admin)
     assert table_admin.json["rows"][0]["balance"] == '1000000000.00000000 AMAX'
+    
+    return amaxtoken
 
 
-def deploy_apl_newbie(admin):
+def deploy_apl_newbie():
 
     amax = new_master_account()
+    admin = new_account(amax,"admin")
     aplinktoken = new_account(amax,'aplink.token')
     aplinknewbie = new_account(amax,'aplinknewbie')
 
@@ -135,11 +139,14 @@ def deploy_apl_newbie(admin):
 
     table_admin = aplinktoken.table("accounts", admin)
     assert table_admin.json["rows"][0]["balance"] == '1000000000.0000 APL'
+    
+    return aplinktoken
 
 
-def deploy_mtoken(admin):
+def deploy_mtoken():
 
     amax = new_master_account()
+    admin = new_account(amax,"admin")
     amaxmtoken = new_account(amax,'amax.mtoken')
 
     smart = Contract(amaxmtoken, 
@@ -228,3 +235,44 @@ def deploy_mtoken(admin):
     assert table_admin.json["rows"][2]["balance"] == '1000000000.00000000 METH'
     assert table_admin.json["rows"][3]["balance"] == '1000000000.000000 MUSDC'
     assert table_admin.json["rows"][4]["balance"] == '1000000000.000000 MUSDT'
+    
+    return amaxmtoken
+
+
+def deploy_ntoken():
+
+    amax = new_master_account()
+    admin = new_account(amax,"admin")
+
+    amaxntoken = new_account(amax,'amax.ntoken')
+    
+    smart = Contract(amaxntoken, 
+        wasm_file=CONTRACT_WASM_PATH + 'nftone/amax.ntoken/amax.ntoken.wasm',
+        abi_file=CONTRACT_WASM_PATH + "nftone/amax.ntoken/amax.ntoken.abi")
+    smart.deploy()
+
+    amaxntoken.pushaction(
+        "create",
+        {
+            "issuer": admin,
+            "maximum_supply": "10000",
+            "symbol":[1,0],
+            "token_uri":"xx",
+            "ipowner":admin
+        },
+        admin)
+
+    amaxntoken.push_action(
+        "issue",
+        {
+            "to": admin, 
+            "quantity": [10000,[1,0]],
+            "memo": ""
+        },
+        admin)
+
+
+    table_admin = amaxntoken.table("accounts", admin)
+    assert table_admin.json["rows"][0]["balance"]["amount"] == 10000
+    
+    return amaxntoken

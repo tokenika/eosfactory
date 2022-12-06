@@ -201,9 +201,9 @@ class Contract(ContractBuilder):
                 json=False)
 
         logger.INFO('''
-        * Contract {} 
+        * Contract {} {}
             is deployed. 
-        '''.format(self.contract_dir))            
+        '''.format(self.contract_dir,self.account))            
         
         self.contract = result
 

@@ -157,7 +157,7 @@ def reset(nodeos_stdout=None):
         --http-server-address 127.0.0.1:8888
         --data-dir /mnt/c/Workspaces/EOS/amaxfactory/localnode/
         --config-dir /mnt/c/Workspaces/EOS/amaxfactory/localnode/
-        --chain-state-db-size-mb 200 --contracts-console --verbose-http-errors --enable-stale-production --producer-name eosio
+        --chain-state-db-size-mb 200 --contracts-console --verbose-http-errors --enable-stale-production --producer-name amax
         --signature-provider AM6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV=KEY:5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3
         --plugin eosio::producer_plugin
         --plugin eosio::chain_api_plugin
