@@ -1,4 +1,5 @@
 
+import json
 import os
 import amaxfactory.core.logger as logger
 import amaxfactory.core.errors as errors
@@ -276,3 +277,92 @@ def deploy_ntoken():
     assert table_admin.json["rows"][0]["balance"]["amount"] == 10000
     
     return amaxntoken
+
+
+def deploy_farm():
+
+    amax = new_master_account()
+    admin = new_account(amax,"admin")
+
+    farm = new_account(amax,'aplink.farm')
+    
+    smart = Contract(farm, 
+        wasm_file=CONTRACT_WASM_PATH + 'aplink/aplink.farm/aplink.farm.wasm',
+        abi_file=CONTRACT_WASM_PATH + "aplink/aplink.farm/aplink.farm.abi")
+    smart.deploy()
+
+    farm.set_account_permission(add_code=True)
+
+    farm.pushaction(
+        "init",
+        {
+            "landlord": admin,
+            "jamfactory": admin,
+            "last_lease_id":1,
+            "last_allot_id":1
+        },
+        farm)
+
+    return farm
+
+
+def create_action_demo(file_name,contract_name,abi_file_path,dir):
+        obj = json.load(open(abi_file_path))
+        
+        content = 'from amcli import runaction\nfrom base.baseClass import baseClass\n\n'
+        demo = 'from amaxfactory.eosf import * \n\n'
+        demo += f'def test_start():\n\treset()\n\tmaster = new_master_account()\n\t{file_name} = new_account("{contract_name}")\n'
+        for action in obj['actions']:
+            for struct in obj['structs']:
+                struct_name = struct['name']
+                if action['name'] == struct_name:
+                    print(struct_name)
+                    print(struct['fields'])
+                    func = '\tdef ' + struct_name + '(self,'
+                    body = f'''self.response = runaction(self.contract + f""" {struct_name} '['''
+                    kv = ''
+                    for key in struct['fields']:
+                        key_type = key['type']
+                        key_name = key['name']
+                        value = ""
+                        if key_type == 'name':
+                            value = "'user1'"
+                            body += '"{' + key_name + '}"' + ','
+                        elif key_type == 'string':
+                            value = "'x'"
+                            body += '"{' + key_name + '}"' + ','
+                        elif str(key_type).find('uint') >= 0:
+                            value = 1
+                            body += "{" + key_name + "}" + ','
+                        elif key_type == 'symbol':
+                            value = "'8,AMAX'"
+                            body += '"{' + key_name + '}"' + ','
+                        elif key_type == 'asset':
+                            value = '"0.10000000 AMAX"'
+                            body += '"{' + key_name + '}"' + ','
+                        elif key_type == 'bool':
+                            value = "'true'"
+                            body += '"{' + key_name + '}"' + ','
+                        else :
+                            value = '1'
+                            body += '"{' + key_name + '}"' + ','
+
+                        kv += f'"{key_name}":{value},'
+                    kv = "{"+kv+"},"
+                    kv += "admin"
+                    demo += f'\ndef test_{struct_name}():\n\t{file_name} = new_account("{contract_name}")\n\tadmin = new_account("admin")\n\t{file_name}.pushaction("{struct_name}",{kv}) \n'
+                    func += kv
+                    body = body[0:-1]
+                    content += func + '):\n\t\t'
+                    content += body + ''']' -p {suber}""") \n'''
+                    content += '\t\treturn self\n\n'
+        for table in obj['tables']:
+            name = table['name']
+            func = '\tdef ' + name + '(self,'
+        # os.popen(f"mkdir {contract}case")
+        # with open(f'/root/contracts/pythonProject1/{contract}case/{contract}.py', 'w', encoding='UTF-8') as file:
+        #     file.write(content)
+        
+        print(dir)
+        with open(f'{dir}/test_{file_name}demo.py', 'w', encoding='UTF-8') as file:
+            file.write(demo)

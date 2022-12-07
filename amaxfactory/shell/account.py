@@ -281,15 +281,19 @@ class Account():
         self.action_permission = result
 
     def pushaction(self, action, data,submitter,expect_asset=True):
+        error = False
         if expect_asset:
             self.push_action(action,data,(submitter, Permission.ACTIVE))
         else:
             try:
                 self.push_action(action,data,(submitter, Permission.ACTIVE))
-                raise "Expected operation failed, actual operation passed"
+                error = True
             except Exception as e:
                 logger.INFO(''' Expected operation failed, actual operation failed : ''')
                 print('except:', e)
+
+        if error:
+            raise "Expected operation failed, actual operation passed"
 
 
     def push_action(

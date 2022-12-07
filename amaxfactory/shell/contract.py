@@ -57,12 +57,28 @@ class ContractBuilder():
         if force or not self.is_built():
             teos.build(self.contract_dir, self.c_cpp_properties_path)
 
-    def build_sh(self, contract_name):
+    def build_sh(self, contract_name,git_pull=False):
         '''Make both, ABI and WASM files.
         '''
         FACTORY_DIR = os.getenv("FACTORY_DIR")
 
         build_path = FACTORY_DIR + "/templates/build_temp.sh"
+
+        if git_pull:
+            build_commond = "cd " + self.contract_dir + " && git stash save 'xx'&& git pull "
+            print(build_commond)
+            res = os.popen(build_commond).read()
+            print(res)
+
+        with open(self.contract_dir+'/contracts/CMakeLists.txt', 'a+') as f:
+            f.seek(0)
+            lines = f.readlines()
+            add_str = "add_subdirectory({})".format(contract_name)
+            if add_str in lines:
+                pass
+            else:
+                f.write('\n{}'.format(add_str))
+
         build_commond = "cd " + self.contract_dir + " && cp {} . && ./build_temp.sh && rm build_temp.sh".format(build_path)
         print(build_commond)
         res = os.popen(build_commond).read()
