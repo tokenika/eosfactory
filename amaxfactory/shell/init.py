@@ -73,22 +73,22 @@ def deploy_amax():
 
     amax = new_master_account()
     admin = new_account(amax,"admin")
-    amaxtoken = new_account(amax,'amax.token')
+    amax_token = new_account(amax,'amax.token')
     
-    smart = Contract(amaxtoken, 
+    smart = Contract(amax_token, 
         wasm_file=CONTRACT_WASM_PATH + 'amax/amax.token/amax.token.wasm',
         abi_file=CONTRACT_WASM_PATH + "amax/amax.token/amax.token.abi")
     smart.deploy()
 
-    amaxtoken.push_action(
+    amax_token.push_action(
         "create",
         {
             "issuer": admin,
             "maximum_supply": "1000000000.00000000 AMAX"
         },
-        permission=[(admin, Permission.ACTIVE), (amaxtoken, Permission.ACTIVE)])
+        permission=[(admin, Permission.ACTIVE), (amax_token, Permission.ACTIVE)])
 
-    amaxtoken.push_action(
+    amax_token.push_action(
         "issue",
         {
             "to": admin, "quantity": "1000000000.00000000 AMAX", "memo": ""
@@ -96,20 +96,20 @@ def deploy_amax():
         permission=(admin, Permission.ACTIVE))
 
 
-    table_admin = amaxtoken.table("accounts", admin)
+    table_admin = amax_token.table("accounts", admin)
     assert table_admin.json["rows"][0]["balance"] == '1000000000.00000000 AMAX'
     
-    return amaxtoken
+    return amax_token
 
 
 def deploy_apl_newbie():
 
     amax = new_master_account()
     admin = new_account(amax,"admin")
-    aplinktoken = new_account(amax,'aplink.token')
+    aplink_token = new_account(amax,'aplink.token')
     aplinknewbie = new_account(amax,'aplinknewbie')
 
-    smart = Contract(aplinktoken, 
+    smart = Contract(aplink_token, 
         wasm_file=CONTRACT_WASM_PATH + 'aplink/aplink.token/aplink.token.wasm',
         abi_file=CONTRACT_WASM_PATH + "aplink/aplink.token/aplink.token.abi")
     smart.deploy()
@@ -119,18 +119,18 @@ def deploy_apl_newbie():
         abi_file=CONTRACT_WASM_PATH + "aplink/aplink.newbie/aplink.newbie.abi")
     smart.deploy()
 
-    aplinktoken.set_account_permission(add_code=True)
+    aplink_token.set_account_permission(add_code=True)
     aplinknewbie.set_account_permission(add_code=True)
 
-    aplinktoken.push_action(
+    aplink_token.push_action(
         "create",
         {
             "issuer": admin,
             "maximum_supply": "1000000000.0000 APL"
         },
-        permission=[(admin, Permission.ACTIVE), (aplinktoken, Permission.ACTIVE)])
+        permission=[(admin, Permission.ACTIVE), (aplink_token, Permission.ACTIVE)])
 
-    aplinktoken.push_action(
+    aplink_token.push_action(
         "issue",
         {
             "to": admin, "quantity": "1000000000.0000 APL", "memo": ""
@@ -138,121 +138,121 @@ def deploy_apl_newbie():
         permission=(admin, Permission.ACTIVE))
 
 
-    table_admin = aplinktoken.table("accounts", admin)
+    table_admin = aplink_token.table("accounts", admin)
     assert table_admin.json["rows"][0]["balance"] == '1000000000.0000 APL'
     
-    return aplinktoken
+    return aplink_token
 
 
 def deploy_mtoken():
 
     amax = new_master_account()
     admin = new_account(amax,"admin")
-    amaxmtoken = new_account(amax,'amax.mtoken')
+    amax_mtoken = new_account(amax,'amax.mtoken')
 
-    smart = Contract(amaxmtoken, 
+    smart = Contract(amax_mtoken, 
         wasm_file=CONTRACT_WASM_PATH + 'xchain/amax.mtoken/amax.mtoken.wasm',
         abi_file=CONTRACT_WASM_PATH + "xchain/amax.mtoken/amax.mtoken.abi")
     smart.deploy()
 
-    amaxmtoken.push_action(
+    amax_mtoken.push_action(
         "create",
         {
             "issuer": admin,
             "maximum_supply": "1000000000.00000000 MBTC"
         },
-        permission=[(admin, Permission.ACTIVE), (amaxmtoken, Permission.ACTIVE)])
+        permission=[(admin, Permission.ACTIVE), (amax_mtoken, Permission.ACTIVE)])
 
-    amaxmtoken.push_action(
+    amax_mtoken.push_action(
         "issue",
         {
             "to": admin, "quantity": "1000000000.00000000 MBTC", "memo": ""
         },
         permission=(admin, Permission.ACTIVE))
 
-    amaxmtoken.push_action(
+    amax_mtoken.push_action(
         "create",
         {
             "issuer": admin,
             "maximum_supply": "1000000000.00000000 METH"
         },
-        permission=[(admin, Permission.ACTIVE), (amaxmtoken, Permission.ACTIVE)])
+        permission=[(admin, Permission.ACTIVE), (amax_mtoken, Permission.ACTIVE)])
 
-    amaxmtoken.push_action(
+    amax_mtoken.push_action(
         "issue",
         {
             "to": admin, "quantity": "1000000000.00000000 METH", "memo": ""
         },
         permission=(admin, Permission.ACTIVE))
 
-    amaxmtoken.push_action(
+    amax_mtoken.push_action(
         "create",
         {
             "issuer": admin,
             "maximum_supply": "1000000000.00000000 MBNB"
         },
-        permission=[(admin, Permission.ACTIVE), (amaxmtoken, Permission.ACTIVE)])
+        permission=[(admin, Permission.ACTIVE), (amax_mtoken, Permission.ACTIVE)])
 
-    amaxmtoken.push_action(
+    amax_mtoken.push_action(
         "issue",
         {
             "to": admin, "quantity": "1000000000.00000000 MBNB", "memo": ""
         },
         permission=(admin, Permission.ACTIVE))
 
-    amaxmtoken.push_action(
+    amax_mtoken.push_action(
         "create",
         {
             "issuer": admin,
             "maximum_supply": "1000000000.000000 MUSDT"
         },
-        permission=[(admin, Permission.ACTIVE), (amaxmtoken, Permission.ACTIVE)])
+        permission=[(admin, Permission.ACTIVE), (amax_mtoken, Permission.ACTIVE)])
 
-    amaxmtoken.push_action(
+    amax_mtoken.push_action(
         "issue",
         {
             "to": admin, "quantity": "1000000000.000000 MUSDT", "memo": ""
         },
         permission=(admin, Permission.ACTIVE))
 
-    amaxmtoken.push_action(
+    amax_mtoken.push_action(
         "create",
         {
             "issuer": admin,
             "maximum_supply": "1000000000.000000 MUSDC"
         },
-        permission=[(admin, Permission.ACTIVE), (amaxmtoken, Permission.ACTIVE)])
+        permission=[(admin, Permission.ACTIVE), (amax_mtoken, Permission.ACTIVE)])
 
-    amaxmtoken.push_action(
+    amax_mtoken.push_action(
         "issue",
         {
             "to": admin, "quantity": "1000000000.000000 MUSDC", "memo": ""
         },
         permission=(admin, Permission.ACTIVE))
 
-    table_admin = amaxmtoken.table("accounts", admin)
+    table_admin = amax_mtoken.table("accounts", admin)
     assert table_admin.json["rows"][0]["balance"] == '1000000000.00000000 MBNB'
     assert table_admin.json["rows"][1]["balance"] == '1000000000.00000000 MBTC'
     assert table_admin.json["rows"][2]["balance"] == '1000000000.00000000 METH'
     assert table_admin.json["rows"][3]["balance"] == '1000000000.000000 MUSDC'
     assert table_admin.json["rows"][4]["balance"] == '1000000000.000000 MUSDT'
     
-    return amaxmtoken
+    return amax_mtoken
 
 
-def deploy_ntoken():
+def deploy_ntoken(name = "amax.ntoken"):
 
     amax = new_master_account()
     admin = new_account(amax,"admin")
 
-    amaxntoken = new_account(amax,'amax.ntoken')
+    amax_ntoken = new_account(amax,name)
     
-    smart = Contract(amaxntoken, 
+    smart = Contract(amax_ntoken, 
         wasm_file=CONTRACT_WASM_PATH + 'nftone/amax.ntoken/amax.ntoken.wasm',
         abi_file=CONTRACT_WASM_PATH + "nftone/amax.ntoken/amax.ntoken.abi")
     smart.deploy()
 
-    amaxntoken.pushaction(
+    amax_ntoken.pushaction(
         "create",
         {
             "issuer": admin,
@@ -263,7 +263,7 @@ def deploy_ntoken():
         },
         admin)
 
-    amaxntoken.push_action(
+    amax_ntoken.push_action(
         "issue",
         {
             "to": admin, 
@@ -272,11 +272,32 @@ def deploy_ntoken():
         },
         admin)
 
+    amax_ntoken.pushaction(
+        "create",
+        {
+            "issuer": admin,
+            "maximum_supply": "10000",
+            "symbol":[2,0],
+            "token_uri":"xxx",
+            "ipowner":admin
+        },
+        admin)
 
-    table_admin = amaxntoken.table("accounts", admin)
+    amax_ntoken.push_action(
+        "issue",
+        {
+            "to": admin, 
+            "quantity": [10000,[2,0]],
+            "memo": ""
+        },
+        admin)
+
+
+
+    table_admin = amax_ntoken.table("accounts", admin)
     assert table_admin.json["rows"][0]["balance"]["amount"] == 10000
     
-    return amaxntoken
+    return amax_ntoken
 
 
 def deploy_farm():
@@ -284,16 +305,16 @@ def deploy_farm():
     amax = new_master_account()
     admin = new_account(amax,"admin")
 
-    farm = new_account(amax,'aplink.farm')
+    aplink_farm = new_account(amax,'aplink.farm')
     
-    smart = Contract(farm, 
+    smart = Contract(aplink_farm, 
         wasm_file=CONTRACT_WASM_PATH + 'aplink/aplink.farm/aplink.farm.wasm',
         abi_file=CONTRACT_WASM_PATH + "aplink/aplink.farm/aplink.farm.abi")
     smart.deploy()
 
-    farm.set_account_permission(add_code=True)
+    aplink_farm.set_account_permission(add_code=True)
 
-    farm.pushaction(
+    aplink_farm.pushaction(
         "init",
         {
             "landlord": admin,
@@ -301,9 +322,9 @@ def deploy_farm():
             "last_lease_id":1,
             "last_allot_id":1
         },
-        farm)
+        aplink_farm)
 
-    return farm
+    return aplink_farm
 
 
 def create_action_demo(file_name,contract_name,abi_file_path,dir):

@@ -74,7 +74,7 @@ class ContractBuilder():
             f.seek(0)
             lines = f.readlines()
             add_str = "add_subdirectory({})".format(contract_name)
-            if add_str in lines:
+            if add_str in str(lines):
                 pass
             else:
                 f.write('\n{}'.format(add_str))

@@ -330,8 +330,8 @@ class Account():
             permission = self
 
         logger.INFO('''
-            * push action ``{}``:
-            '''.format(action))
+            * push action ``{} {}``:
+            '''.format(self.name,action))
 
         logger.INFO('''
             {}
@@ -349,14 +349,14 @@ class Account():
         self.action = result
         try:
             self._console = result.console
-            logger.DEBUG(self._console)
+            logger.INFO(self._console)
         except :
             pass
 
         self.action = result
 
     def transfer(
-            self,to,quantity,memo=''
+            self,to,quantity,memo='',expect_asset=True
         ):
         contract = None
         if "AMAX" in quantity:
@@ -382,13 +382,36 @@ class Account():
             contract = amaxmtoken
         else:
             raise "coin type error"
-        contract.push_action(
-        "transfer",
-        {
-            "from": self, "to": to, 
-            "quantity": quantity, "memo": memo
-        },
-        permission=(self, Permission.ACTIVE))
+
+        
+        error = False
+        if expect_asset:
+            contract.push_action(
+                "transfer",
+                {
+                    "from": self, "to": to, 
+                    "quantity": quantity, "memo": memo
+                },
+                permission=(self, Permission.ACTIVE))
+        else:
+            try:
+                contract.push_action(
+                    "transfer",
+                    {
+                        "from": self, "to": to, 
+                        "quantity": quantity, "memo": memo
+                    },
+                    permission=(self, Permission.ACTIVE))
+                error = True
+            except Exception as e:
+                logger.INFO(''' Expected operation failed, actual operation failed : ''')
+                print('except:', e)
+
+        if error:
+            raise "Expected operation failed, actual operation passed"
+
+        
+        
 
     def show_action(
             self, action, data, permission=None,
@@ -966,10 +989,12 @@ def create_account(
         return None
 
     if is_in_globals(account_object_name, globals):
-        logger.INFO('''
-            ######## Account object ``{}`` restored from the blockchain.
-            '''.format(account_object_name))
-        return globals[account_object_name]
+        global_account =  globals[account_object_name]
+        if global_account.name == account_name:
+            logger.INFO('''
+                ######## Account object ``{}`` restored from the blockchain.
+                '''.format(account_object_name))
+            return globals[account_object_name]
 
     logger.INFO('''
         ######### Create an account object ``{}``.
@@ -1060,6 +1085,8 @@ def create_account(
     logger.TRACE('''
         * The account object is created.
         ''')
+    if is_in_globals(account_object_name, globals):
+        account_object_name = account_name.replace(".","_")
     Account.add_methods_and_finalize(account_object_name, account_object)
     return account_object
 
