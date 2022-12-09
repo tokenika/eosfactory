@@ -74,12 +74,12 @@ class ContractBuilder():
             f.seek(0)
             lines = f.readlines()
             add_str = "add_subdirectory({})".format(contract_name)
-            if add_str in lines:
+            if add_str in str(lines):
                 pass
             else:
                 f.write('\n{}'.format(add_str))
 
-        build_commond = "cd " + self.contract_dir + " && cp {} . && ./build_temp.sh && rm build_temp.sh".format(build_path)
+        build_commond = "cd " + self.contract_dir + " && cp {} . && sudo chmod -R 777 build_temp.sh && ./build_temp.sh && rm build_temp.sh".format(build_path)
         print(build_commond)
         res = os.popen(build_commond).read()
         print(res)

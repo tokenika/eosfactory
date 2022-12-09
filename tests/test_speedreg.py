@@ -4,7 +4,8 @@ from amaxfactory.eosf import *
 
 verbosity([Verbosity.INFO, Verbosity.OUT, Verbosity.TRACE, Verbosity.DEBUG])
 
-CONTRACT_WASM_PATH = "/root/contracts/charlie/amaxfactory/templates/wasm/"
+#CONTRACT_WASM_PATH = "/root/contracts/charlie/amaxfactory/templates/wasm/"
+CONTRACT_WASM_PATH = "/opt/amax/contracts/testdev/amaxfactory/templates/wasm/"
 
 class Test(unittest.TestCase):
 
