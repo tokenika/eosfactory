@@ -67,7 +67,8 @@ class Cleos():
             setup.add_to__command_line_file(" ".join(cl))
         if setup.is_print_command_lines:
             print("######## command line sent to cleos:")
-            print(" ".join(cl))
+            command_str = str(" ".join(cl)).replace("{","'{").replace("}","}'")
+            print(command_str)
             print("")
 
         while True:

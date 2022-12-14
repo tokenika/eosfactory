@@ -2,7 +2,7 @@
 
 import re
 
-is_print_command_lines = False
+is_print_command_lines = True
 is_save_command_lines = False
 command_line_file = "command_lines.txt"
 is_raise_error = False

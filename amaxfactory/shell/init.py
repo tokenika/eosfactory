@@ -1,4 +1,5 @@
 
+import json
 import os
 import amaxfactory.core.logger as logger
 import amaxfactory.core.errors as errors
@@ -10,7 +11,7 @@ import amaxfactory.core.interface as interface
 import amaxfactory.shell.wallet as wallet
 import amaxfactory.shell.account as account
 import amaxfactory.shell.contract as contract
-
+from amaxfactory.beans.amax import AMAX as AMAX_TOKEN
 
 verbosity =  logger.verbosity
 Verbosity =  logger.Verbosity
@@ -329,7 +330,7 @@ def deploy_farm():
 def create_action_demo(file_name,contract_name,abi_file_path,dir):
         obj = json.load(open(abi_file_path))
         
-        content = 'from amcli import runaction\nfrom base.baseClass import baseClass\n\n'
+        content = 'from base.amcli import runaction\nfrom base.baseClass import baseClass\n\n'
         demo = 'from amaxfactory.eosf import * \n\n'
         demo += f'def test_start():\n\treset()\n\tmaster = new_master_account()\n\t{file_name} = new_account("{contract_name}")\n'
         for action in obj['actions']:
