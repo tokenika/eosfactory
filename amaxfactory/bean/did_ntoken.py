@@ -16,8 +16,8 @@ class DID_NTOKEN(CreateAccount):
 		master = new_master_account()
 		did_ntoken = new_account(master,contract_name)
 		smart = Contract(did_ntoken, 
-			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "did/did.ntoken/did.ntoken.wasm",
-			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "did/did.ntoken/did.ntoken.abi")
+			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "did.ntoken/did.ntoken.wasm",
+			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "did.ntoken/did.ntoken.abi")
 		smart.deploy()
 		self = did_ntoken
 		self.set_account_permission(add_code=True)

@@ -16,8 +16,8 @@ class AMAX_MTOKEN(CreateAccount):
 		master = new_master_account()
 		amax_mtoken = new_account(master,contract_name)
 		smart = Contract(amax_mtoken, 
-			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "xchain/amax.mtoken/amax.mtoken.wasm",
-			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "xchain/amax.mtoken/amax.mtoken.abi")
+			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "amax.mtoken/amax.mtoken.wasm",
+			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "amax.mtoken/amax.mtoken.abi")
 		smart.deploy()
 		self = amax_mtoken
 		self.set_account_permission(add_code=True)

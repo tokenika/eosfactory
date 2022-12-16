@@ -16,8 +16,8 @@ class AMAX_BIOS(CreateAccount):
 		master = new_master_account()
 		amax_bios = new_account(master,contract_name)
 		smart = Contract(amax_bios, 
-			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "amax/amax.bios/amax.bios.wasm",
-			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "amax/amax.bios/amax.bios.abi")
+			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "amax.bios/amax.bios.wasm",
+			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "amax.bios/amax.bios.abi")
 		smart.deploy()
 		self = amax_bios
 		self.set_account_permission(add_code=True)

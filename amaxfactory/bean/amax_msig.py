@@ -16,8 +16,8 @@ class AMAX_MSIG(CreateAccount):
 		master = new_master_account()
 		amax_msig = new_account(master,contract_name)
 		smart = Contract(amax_msig, 
-			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "amax/amax.msig/amax.msig.wasm",
-			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "amax/amax.msig/amax.msig.abi")
+			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "amax.msig/amax.msig.wasm",
+			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "amax.msig/amax.msig.abi")
 		smart.deploy()
 		self = amax_msig
 		self.set_account_permission(add_code=True)

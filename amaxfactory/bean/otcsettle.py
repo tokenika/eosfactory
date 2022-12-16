@@ -16,8 +16,8 @@ class OTCSETTLE(CreateAccount):
 		master = new_master_account()
 		otcsettle = new_account(master,contract_name)
 		smart = Contract(otcsettle, 
-			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "otc/otcsettle/otcsettle.wasm",
-			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "otc/otcsettle/otcsettle.abi")
+			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "otcsettle/otcsettle.wasm",
+			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "otcsettle/otcsettle.abi")
 		smart.deploy()
 		self = otcsettle
 		self.set_account_permission(add_code=True)

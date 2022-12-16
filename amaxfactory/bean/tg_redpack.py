@@ -16,8 +16,8 @@ class TG_REDPACK(CreateAccount):
 		master = new_master_account()
 		tg_redpack = new_account(master,contract_name)
 		smart = Contract(tg_redpack, 
-			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "tg/tg.redpack/tg.redpack.wasm",
-			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "tg/tg.redpack/tg.redpack.abi")
+			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "tg.redpack/tg.redpack.wasm",
+			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "tg.redpack/tg.redpack.abi")
 		smart.deploy()
 		self = tg_redpack
 		self.set_account_permission(add_code=True)

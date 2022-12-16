@@ -16,8 +16,8 @@ class APLINK_NEWBIE(CreateAccount):
 		master = new_master_account()
 		aplink_newbie = new_account(master,contract_name)
 		smart = Contract(aplink_newbie, 
-			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "aplink/aplink.newbie/aplink.newbie.wasm",
-			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "aplink/aplink.newbie/aplink.newbie.abi")
+			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "aplink.newbie/aplink.newbie.wasm",
+			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "aplink.newbie/aplink.newbie.abi")
 		smart.deploy()
 		self = aplink_newbie
 		self.set_account_permission(add_code=True)

@@ -16,8 +16,8 @@ class APLINK_TOKEN(CreateAccount):
 		master = new_master_account()
 		aplink_token = new_account(master,contract_name)
 		smart = Contract(aplink_token, 
-			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "aplink/aplink.token/aplink.token.wasm",
-			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "aplink/aplink.token/aplink.token.abi")
+			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "aplink.token/aplink.token.wasm",
+			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "aplink.token/aplink.token.abi")
 		smart.deploy()
 		self = aplink_token
 		self.set_account_permission(add_code=True)

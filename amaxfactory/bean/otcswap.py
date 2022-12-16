@@ -16,8 +16,8 @@ class OTCSWAP(CreateAccount):
 		master = new_master_account()
 		otcswap = new_account(master,contract_name)
 		smart = Contract(otcswap, 
-			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "otc/otcswap/otcswap.wasm",
-			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "otc/otcswap/otcswap.abi")
+			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "otcswap/otcswap.wasm",
+			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "otcswap/otcswap.abi")
 		smart.deploy()
 		self = otcswap
 		self.set_account_permission(add_code=True)

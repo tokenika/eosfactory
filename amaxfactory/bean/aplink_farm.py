@@ -16,8 +16,8 @@ class APLINK_FARM(CreateAccount):
 		master = new_master_account()
 		aplink_farm = new_account(master,contract_name)
 		smart = Contract(aplink_farm, 
-			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "aplink/aplink.farm/aplink.farm.wasm",
-			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "aplink/aplink.farm/aplink.farm.abi")
+			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "aplink.farm/aplink.farm.wasm",
+			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "aplink.farm/aplink.farm.abi")
 		smart.deploy()
 		self = aplink_farm
 		self.set_account_permission(add_code=True)

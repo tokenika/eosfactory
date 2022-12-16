@@ -16,8 +16,8 @@ class MDAO_PROPOSE(CreateAccount):
 		master = new_master_account()
 		mdao_propose = new_account(master,contract_name)
 		smart = Contract(mdao_propose, 
-			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "mdao/mdao.propose/mdao.propose.wasm",
-			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "mdao/mdao.propose/mdao.propose.abi")
+			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "mdao.propose/mdao.propose.wasm",
+			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "mdao.propose/mdao.propose.abi")
 		smart.deploy()
 		self = mdao_propose
 		self.set_account_permission(add_code=True)

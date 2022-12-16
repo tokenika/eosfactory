@@ -16,8 +16,8 @@ class RNDNFT_MART(CreateAccount):
 		master = new_master_account()
 		rndnft_mart = new_account(master,contract_name)
 		smart = Contract(rndnft_mart, 
-			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "nftone/rndnft.mart/rndnft.mart.wasm",
-			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "nftone/rndnft.mart/rndnft.mart.abi")
+			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "rndnft.mart/rndnft.mart.wasm",
+			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "rndnft.mart/rndnft.mart.abi")
 		smart.deploy()
 		self = rndnft_mart
 		self.set_account_permission(add_code=True)

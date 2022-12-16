@@ -16,8 +16,8 @@ class AMAX_NTOKEN(CreateAccount):
 		master = new_master_account()
 		amax_ntoken = new_account(master,contract_name)
 		smart = Contract(amax_ntoken, 
-			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "nftone/amax.ntoken/amax.ntoken.wasm",
-			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "nftone/amax.ntoken/amax.ntoken.abi")
+			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "amax.ntoken/amax.ntoken.wasm",
+			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "amax.ntoken/amax.ntoken.abi")
 		smart.deploy()
 		self = amax_ntoken
 		self.set_account_permission(add_code=True)

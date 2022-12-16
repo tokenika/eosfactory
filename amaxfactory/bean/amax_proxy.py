@@ -16,8 +16,8 @@ class AMAX_PROXY(CreateAccount):
 		master = new_master_account()
 		amax_proxy = new_account(master,contract_name)
 		smart = Contract(amax_proxy, 
-			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "amax/amax.proxy/amax.proxy.wasm",
-			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "amax/amax.proxy/amax.proxy.abi")
+			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "amax.proxy/amax.proxy.wasm",
+			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "amax.proxy/amax.proxy.abi")
 		smart.deploy()
 		self = amax_proxy
 		self.set_account_permission(add_code=True)

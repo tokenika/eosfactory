@@ -9,9 +9,9 @@ from amaxfactory.shell import init
 class Testx(unittest.TestCase):
     
     
-    def test_4(self):
-        dir = os.path.dirname(os.path.abspath(__file__))
-        init.create_bean("amax.recover","/root/contracts/joss/amax.contracts/src_tools/build/contracts/amax.recover/amax.token.abi",dir)
+    # def test_4(self):
+    #     dir = os.path.dirname(os.path.abspath(__file__))
+    #     init.create_bean("amax.recover","/root/contracts/joss/amax.contracts/src_tools/build/contracts/amax.recover/amax.token.abi",dir)
 
     def test_5(self):
  
@@ -24,16 +24,18 @@ class Testx(unittest.TestCase):
             break
         print(dir_list, len(dir_list))
 
-        for dir in dir_list:
-            dir_list = []
-            for root, dirs, files in os.walk(wasm_path+"/"+dir):
-                dir_list = dirs
-                break
-            print(dir_list, len(dir_list))
+        # for dir in dir_list:
+        #     dir_list = []
+        #     for root, dirs, files in os.walk(wasm_path+"/"+dir):
+        #         dir_list = dirs
+        #         break
+        #     print(dir_list, len(dir_list))
 
-            for contract_name in dir_list:
+        for contract_name in dir_list:
+            abi_file_path = f"{contract_name}/{contract_name}.abi"
+            if os.path.exists(abi_file_path):
                 if str(contract_name)[0] != "_":
-                    init.create_bean(contract_name,f"{dir}/{contract_name}/{contract_name}.abi",file_dir,abi_in_factory=True)
+                    init.create_bean(contract_name,abi_file_path,file_dir,abi_in_factory=True)
                     class_name = str(contract_name).replace(".","_")
                     bean_list += f"from amaxfactory.bean.{class_name} import {class_name.upper()}\n"
         

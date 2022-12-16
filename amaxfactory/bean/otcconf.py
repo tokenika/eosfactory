@@ -16,8 +16,8 @@ class OTCCONF(CreateAccount):
 		master = new_master_account()
 		otcconf = new_account(master,contract_name)
 		smart = Contract(otcconf, 
-			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "otc/otcconf/otcconf.wasm",
-			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "otc/otcconf/otcconf.abi")
+			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "otcconf/otcconf.wasm",
+			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "otcconf/otcconf.abi")
 		smart.deploy()
 		self = otcconf
 		self.set_account_permission(add_code=True)

@@ -16,8 +16,8 @@ class TG_BIND(CreateAccount):
 		master = new_master_account()
 		tg_bind = new_account(master,contract_name)
 		smart = Contract(tg_bind, 
-			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "tg/tg.bind/tg.bind.wasm",
-			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "tg/tg.bind/tg.bind.abi")
+			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "tg.bind/tg.bind.wasm",
+			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "tg.bind/tg.bind.abi")
 		smart.deploy()
 		self = tg_bind
 		self.set_account_permission(add_code=True)

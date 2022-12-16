@@ -16,8 +16,8 @@ class AMAX_DID(CreateAccount):
 		master = new_master_account()
 		amax_did = new_account(master,contract_name)
 		smart = Contract(amax_did, 
-			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "did/amax.did/amax.did.wasm",
-			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "did/amax.did/amax.did.abi")
+			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "amax.did/amax.did.wasm",
+			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "amax.did/amax.did.abi")
 		smart.deploy()
 		self = amax_did
 		self.set_account_permission(add_code=True)

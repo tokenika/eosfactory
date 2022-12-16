@@ -16,8 +16,8 @@ class AMAX_SPLIT(CreateAccount):
 		master = new_master_account()
 		amax_split = new_account(master,contract_name)
 		smart = Contract(amax_split, 
-			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "amax/amax.split/amax.split.wasm",
-			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "amax/amax.split/amax.split.abi")
+			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "amax.split/amax.split.wasm",
+			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "amax.split/amax.split.abi")
 		smart.deploy()
 		self = amax_split
 		self.set_account_permission(add_code=True)

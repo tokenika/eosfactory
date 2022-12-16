@@ -16,8 +16,8 @@ class NFTONE_MART(CreateAccount):
 		master = new_master_account()
 		nftone_mart = new_account(master,contract_name)
 		smart = Contract(nftone_mart, 
-			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "nftone/nftone.mart/nftone.mart.wasm",
-			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "nftone/nftone.mart/nftone.mart.abi")
+			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "nftone.mart/nftone.mart.wasm",
+			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "nftone.mart/nftone.mart.abi")
 		smart.deploy()
 		self = nftone_mart
 		self.set_account_permission(add_code=True)

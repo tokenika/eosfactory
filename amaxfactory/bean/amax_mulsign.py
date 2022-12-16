@@ -16,8 +16,8 @@ class AMAX_MULSIGN(CreateAccount):
 		master = new_master_account()
 		amax_mulsign = new_account(master,contract_name)
 		smart = Contract(amax_mulsign, 
-			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "amax/amax.mulsign/amax.mulsign.wasm",
-			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "amax/amax.mulsign/amax.mulsign.abi")
+			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "amax.mulsign/amax.mulsign.wasm",
+			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "amax.mulsign/amax.mulsign.abi")
 		smart.deploy()
 		self = amax_mulsign
 		self.set_account_permission(add_code=True)

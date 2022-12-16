@@ -16,8 +16,8 @@ class AMAX_TOKEN(CreateAccount):
 		master = new_master_account()
 		amax_token = new_account(master,contract_name)
 		smart = Contract(amax_token, 
-			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "amax/amax.token/amax.token.wasm",
-			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "amax/amax.token/amax.token.abi")
+			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "amax.token/amax.token.wasm",
+			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "amax.token/amax.token.abi")
 		smart.deploy()
 		self = amax_token
 		self.set_account_permission(add_code=True)

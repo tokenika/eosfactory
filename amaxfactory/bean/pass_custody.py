@@ -16,8 +16,8 @@ class PASS_CUSTODY(CreateAccount):
 		master = new_master_account()
 		pass_custody = new_account(master,contract_name)
 		smart = Contract(pass_custody, 
-			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "nftone/pass.custody/pass.custody.wasm",
-			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "nftone/pass.custody/pass.custody.abi")
+			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "pass.custody/pass.custody.wasm",
+			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "pass.custody/pass.custody.abi")
 		smart.deploy()
 		self = pass_custody
 		self.set_account_permission(add_code=True)

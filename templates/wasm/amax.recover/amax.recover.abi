@@ -259,7 +259,7 @@
             ]
         },
         {
-            "name": "pair_name_uint8",
+            "name": "pair_name_int8",
             "base": "",
             "fields": [
                 {
@@ -268,7 +268,7 @@
                 },
                 {
                     "name": "value",
-                    "type": "uint8"
+                    "type": "int8"
                 }
             ]
         },
@@ -324,7 +324,7 @@
                 },
                 {
                     "name": "scores",
-                    "type": "pair_name_uint8[]"
+                    "type": "pair_name_int8[]"
                 },
                 {
                     "name": "manual_check_required",

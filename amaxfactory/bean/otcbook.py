@@ -16,8 +16,8 @@ class OTCBOOK(CreateAccount):
 		master = new_master_account()
 		otcbook = new_account(master,contract_name)
 		smart = Contract(otcbook, 
-			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "otc/otcbook/otcbook.wasm",
-			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "otc/otcbook/otcbook.abi")
+			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "otcbook/otcbook.wasm",
+			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "otcbook/otcbook.abi")
 		smart.deploy()
 		self = otcbook
 		self.set_account_permission(add_code=True)

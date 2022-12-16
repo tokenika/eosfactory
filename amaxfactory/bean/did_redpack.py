@@ -16,8 +16,8 @@ class DID_REDPACK(CreateAccount):
 		master = new_master_account()
 		did_redpack = new_account(master,contract_name)
 		smart = Contract(did_redpack, 
-			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "did/did.redpack/did.redpack.wasm",
-			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "did/did.redpack/did.redpack.abi")
+			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "did.redpack/did.redpack.wasm",
+			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "did.redpack/did.redpack.abi")
 		smart.deploy()
 		self = did_redpack
 		self.set_account_permission(add_code=True)

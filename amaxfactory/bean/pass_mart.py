@@ -16,8 +16,8 @@ class PASS_MART(CreateAccount):
 		master = new_master_account()
 		pass_mart = new_account(master,contract_name)
 		smart = Contract(pass_mart, 
-			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "nftone/pass.mart/pass.mart.wasm",
-			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "nftone/pass.mart/pass.mart.abi")
+			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "pass.mart/pass.mart.wasm",
+			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "pass.mart/pass.mart.abi")
 		smart.deploy()
 		self = pass_mart
 		self.set_account_permission(add_code=True)

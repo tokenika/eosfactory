@@ -16,8 +16,8 @@ class VERSO_NTOKEN(CreateAccount):
 		master = new_master_account()
 		verso_ntoken = new_account(master,contract_name)
 		smart = Contract(verso_ntoken, 
-			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "verso/verso.ntoken/verso.ntoken.wasm",
-			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "verso/verso.ntoken/verso.ntoken.abi")
+			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "verso.ntoken/verso.ntoken.wasm",
+			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "verso.ntoken/verso.ntoken.abi")
 		smart.deploy()
 		self = verso_ntoken
 		self.set_account_permission(add_code=True)

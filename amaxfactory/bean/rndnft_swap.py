@@ -16,8 +16,8 @@ class RNDNFT_SWAP(CreateAccount):
 		master = new_master_account()
 		rndnft_swap = new_account(master,contract_name)
 		smart = Contract(rndnft_swap, 
-			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "nftone/rndnft.swap/rndnft.swap.wasm",
-			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "nftone/rndnft.swap/rndnft.swap.abi")
+			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "rndnft.swap/rndnft.swap.wasm",
+			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "rndnft.swap/rndnft.swap.abi")
 		smart.deploy()
 		self = rndnft_swap
 		self.set_account_permission(add_code=True)
