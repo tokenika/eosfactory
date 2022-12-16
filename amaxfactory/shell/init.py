@@ -99,37 +99,7 @@ def build(contracts_dir,git_pull=False):
 
 
 def deploy_amax():
-
-    amax = new_master_account()
-    admin = new_account(amax,"admin")
-    # amax_token = new_account(amax,'amax.token')
-    
-    # smart = Contract(amax_token, 
-    #     wasm_file=CONTRACT_WASM_PATH + 'amax/amax.token/amax.token.wasm',
-    #     abi_file=CONTRACT_WASM_PATH + "amax/amax.token/amax.token.abi")
-    # smart.deploy()
-
-    amax_token = AMAX_TOKEN()
-    amax_token.push_action(
-        "create",
-        {
-            "issuer": admin,
-            "maximum_supply": "1000000000.00000000 AMAX"
-        },
-        permission=[(admin, Permission.ACTIVE), (amax_token, Permission.ACTIVE)])
-
-    amax_token.push_action(
-        "issue",
-        {
-            "to": admin, "quantity": "1000000000.00000000 AMAX", "memo": ""
-        },
-        permission=(admin, Permission.ACTIVE))
-
-
-    table_admin = amax_token.table("accounts", admin)
-    assert table_admin.json["rows"][0]["balance"] == '1000000000.00000000 AMAX'
-    
-    return amax_token
+    return AMAX_TOKEN().setup()
 
 
 def deploy_apl_newbie():
