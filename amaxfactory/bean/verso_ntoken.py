@@ -33,29 +33,29 @@ class VERSO_NTOKEN(CreateAccount):
 		return self.name
             
 
-	def approve(self,spender='user1',sender='user1',token_type='user1',amount=1,suber="admin",expect_asset=True):
-		self.pushaction("approve",{"spender":spender,"sender":sender,"token_type":token_type,"amount":amount,},suber,expect_asset=expect_asset) 
+	def approve(self,spender='user1',sender='user1',token_type='user1',amount=1,submitter_="admin",expect_asset=True):
+		self.pushaction("approve",{"spender":spender,"sender":sender,"token_type":token_type,"amount":amount,},submitter_,expect_asset=expect_asset) 
 
-	def create(self,issuer='user1',maximum_supply=[],symbol=[],token_uri='x',ipowner='user1',token_type='user1',suber="admin",expect_asset=True):
-		self.pushaction("create",{"issuer":issuer,"maximum_supply":maximum_supply,"symbol":symbol,"token_uri":token_uri,"ipowner":ipowner,"token_type":token_type,},suber,expect_asset=expect_asset) 
+	def create(self,issuer='user1',maximum_supply=[],symbol=[],token_uri='x',ipowner='user1',token_type='user1',submitter_="admin",expect_asset=True):
+		self.pushaction("create",{"issuer":issuer,"maximum_supply":maximum_supply,"symbol":symbol,"token_uri":token_uri,"ipowner":ipowner,"token_type":token_type,},submitter_,expect_asset=expect_asset) 
 
-	def issue(self,to='user1',quantity=[],memo='x',suber="admin",expect_asset=True):
-		self.pushaction("issue",{"to":to,"quantity":quantity,"memo":memo,},suber,expect_asset=expect_asset) 
+	def issue(self,to='user1',quantity=[],memo='x',submitter_="admin",expect_asset=True):
+		self.pushaction("issue",{"to":to,"quantity":quantity,"memo":memo,},submitter_,expect_asset=expect_asset) 
 
-	def notarize(self,notary='user1',token_id=1,suber="admin",expect_asset=True):
-		self.pushaction("notarize",{"notary":notary,"token_id":token_id,},suber,expect_asset=expect_asset) 
+	def notarize(self,notary='user1',token_id=1,submitter_="admin",expect_asset=True):
+		self.pushaction("notarize",{"notary":notary,"token_id":token_id,},submitter_,expect_asset=expect_asset) 
 
-	def retire(self,quantity=[],memo='x',suber="admin",expect_asset=True):
-		self.pushaction("retire",{"quantity":quantity,"memo":memo,},suber,expect_asset=expect_asset) 
+	def retire(self,quantity=[],memo='x',submitter_="admin",expect_asset=True):
+		self.pushaction("retire",{"quantity":quantity,"memo":memo,},submitter_,expect_asset=expect_asset) 
 
-	def setnotary(self,notary='user1',to_add='true',suber="admin",expect_asset=True):
-		self.pushaction("setnotary",{"notary":notary,"to_add":to_add,},suber,expect_asset=expect_asset) 
+	def setnotary(self,notary='user1',to_add='true',submitter_="admin",expect_asset=True):
+		self.pushaction("setnotary",{"notary":notary,"to_add":to_add,},submitter_,expect_asset=expect_asset) 
 
-	def transfer(self,from_='user1',to='user1',assets=[],memo='x',suber="admin",expect_asset=True):
-		self.pushaction("transfer",{"from":from_,"to":to,"assets":assets,"memo":memo,},suber,expect_asset=expect_asset) 
+	def transfer(self,from_='user1',to='user1',assets=[],memo='x',submitter_="admin",expect_asset=True):
+		self.pushaction("transfer",{"from":from_,"to":to,"assets":assets,"memo":memo,},submitter_,expect_asset=expect_asset) 
 
-	def transferfrom(self,sender='user1',from_='user1',to='user1',assets=[],memo='x',suber="admin",expect_asset=True):
-		self.pushaction("transferfrom",{"sender":sender,"from":from_,"to":to,"assets":assets,"memo":memo,},suber,expect_asset=expect_asset) 
+	def transferfrom(self,sender='user1',from_='user1',to='user1',assets=[],memo='x',submitter_="admin",expect_asset=True):
+		self.pushaction("transferfrom",{"sender":sender,"from":from_,"to":to,"assets":assets,"memo":memo,},submitter_,expect_asset=expect_asset) 
 
 	def get_accounts(self,scope):
 		return self.table("accounts",scope).json

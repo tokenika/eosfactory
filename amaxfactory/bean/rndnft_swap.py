@@ -33,23 +33,23 @@ class RNDNFT_SWAP(CreateAccount):
 		return self.name
             
 
-	def closebooth(self,owner='user1',quote_nft_contract='user1',symbol_id=1,suber="admin",expect_asset=True):
-		self.pushaction("closebooth",{"owner":owner,"quote_nft_contract":quote_nft_contract,"symbol_id":symbol_id,},suber,expect_asset=expect_asset) 
+	def closebooth(self,owner='user1',quote_nft_contract='user1',symbol_id=1,submitter_="admin",expect_asset=True):
+		self.pushaction("closebooth",{"owner":owner,"quote_nft_contract":quote_nft_contract,"symbol_id":symbol_id,},submitter_,expect_asset=expect_asset) 
 
-	def createbooth(self,conf=[],suber="admin",expect_asset=True):
-		self.pushaction("createbooth",{"conf":conf,},suber,expect_asset=expect_asset) 
+	def createbooth(self,conf=[],submitter_="admin",expect_asset=True):
+		self.pushaction("createbooth",{"conf":conf,},submitter_,expect_asset=expect_asset) 
 
-	def dealtrace(self,trace=[],suber="admin",expect_asset=True):
-		self.pushaction("dealtrace",{"trace":trace,},suber,expect_asset=expect_asset) 
+	def dealtrace(self,trace=[],submitter_="admin",expect_asset=True):
+		self.pushaction("dealtrace",{"trace":trace,},submitter_,expect_asset=expect_asset) 
 
-	def enablebooth(self,owner='user1',quote_nft_contract='user1',symbol_id=1,enabled='true',suber="admin",expect_asset=True):
-		self.pushaction("enablebooth",{"owner":owner,"quote_nft_contract":quote_nft_contract,"symbol_id":symbol_id,"enabled":enabled,},suber,expect_asset=expect_asset) 
+	def enablebooth(self,owner='user1',quote_nft_contract='user1',symbol_id=1,enabled='true',submitter_="admin",expect_asset=True):
+		self.pushaction("enablebooth",{"owner":owner,"quote_nft_contract":quote_nft_contract,"symbol_id":symbol_id,"enabled":enabled,},submitter_,expect_asset=expect_asset) 
 
-	def init(self,admin='user1',suber="admin",expect_asset=True):
-		self.pushaction("init",{"admin":admin,},suber,expect_asset=expect_asset) 
+	def init(self,admin='user1',submitter_="admin",expect_asset=True):
+		self.pushaction("init",{"admin":admin,},submitter_,expect_asset=expect_asset) 
 
-	def setboothtime(self,owner='user1',quote_nft_contract='user1',symbol_id=1,opened_at=[],closed_at=[],suber="admin",expect_asset=True):
-		self.pushaction("setboothtime",{"owner":owner,"quote_nft_contract":quote_nft_contract,"symbol_id":symbol_id,"opened_at":opened_at,"closed_at":closed_at,},suber,expect_asset=expect_asset) 
+	def setboothtime(self,owner='user1',quote_nft_contract='user1',symbol_id=1,opened_at=[],closed_at=[],submitter_="admin",expect_asset=True):
+		self.pushaction("setboothtime",{"owner":owner,"quote_nft_contract":quote_nft_contract,"symbol_id":symbol_id,"opened_at":opened_at,"closed_at":closed_at,},submitter_,expect_asset=expect_asset) 
 
 	def get_boothboxes(self,scope):
 		return self.table("boothboxes",scope).json

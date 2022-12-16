@@ -33,17 +33,17 @@ class OTCSETTLE(CreateAccount):
 		return self.name
             
 
-	def claim(self,reciptian='user1',rewards=1,suber="admin",expect_asset=True):
-		self.pushaction("claim",{"reciptian":reciptian,"rewards":rewards,},suber,expect_asset=expect_asset) 
+	def claim(self,reciptian='user1',rewards=1,submitter_="admin",expect_asset=True):
+		self.pushaction("claim",{"reciptian":reciptian,"rewards":rewards,},submitter_,expect_asset=expect_asset) 
 
-	def deal(self,deal_id=1,merchant='user1',user='user1',quantity="0.10000000 AMAX",fee="0.10000000 AMAX",arbit_status=1,start_at=[],end_at=[],suber="admin",expect_asset=True):
-		self.pushaction("deal",{"deal_id":deal_id,"merchant":merchant,"user":user,"quantity":quantity,"fee":fee,"arbit_status":arbit_status,"start_at":start_at,"end_at":end_at,},suber,expect_asset=expect_asset) 
+	def deal(self,deal_id=1,merchant='user1',user='user1',quantity="0.10000000 AMAX",fee="0.10000000 AMAX",arbit_status=1,start_at=[],end_at=[],submitter_="admin",expect_asset=True):
+		self.pushaction("deal",{"deal_id":deal_id,"merchant":merchant,"user":user,"quantity":quantity,"fee":fee,"arbit_status":arbit_status,"start_at":start_at,"end_at":end_at,},submitter_,expect_asset=expect_asset) 
 
-	def setconf(self,conf_contract='user1',suber="admin",expect_asset=True):
-		self.pushaction("setconf",{"conf_contract":conf_contract,},suber,expect_asset=expect_asset) 
+	def setconf(self,conf_contract='user1',submitter_="admin",expect_asset=True):
+		self.pushaction("setconf",{"conf_contract":conf_contract,},submitter_,expect_asset=expect_asset) 
 
-	def setlevel(self,user='user1',level=1,suber="admin",expect_asset=True):
-		self.pushaction("setlevel",{"user":user,"level":level,},suber,expect_asset=expect_asset) 
+	def setlevel(self,user='user1',level=1,submitter_="admin",expect_asset=True):
+		self.pushaction("setlevel",{"user":user,"level":level,},submitter_,expect_asset=expect_asset) 
 
 	def get_global(self,scope):
 		return self.table("global",scope).json

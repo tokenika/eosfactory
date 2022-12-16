@@ -33,23 +33,23 @@ class MDAO_GOV(CreateAccount):
 		return self.name
             
 
-	def create(self,dao_code='user1',propose_strategy_id=1,vote_strategy_id=1,require_participation=1,require_pass=1,update_interval=1,voting_period=1,suber="admin",expect_asset=True):
-		self.pushaction("create",{"dao_code":dao_code,"propose_strategy_id":propose_strategy_id,"vote_strategy_id":vote_strategy_id,"require_participation":require_participation,"require_pass":require_pass,"update_interval":update_interval,"voting_period":voting_period,},suber,expect_asset=expect_asset) 
+	def create(self,dao_code='user1',propose_strategy_id=1,vote_strategy_id=1,require_participation=1,require_pass=1,update_interval=1,voting_period=1,submitter_="admin",expect_asset=True):
+		self.pushaction("create",{"dao_code":dao_code,"propose_strategy_id":propose_strategy_id,"vote_strategy_id":vote_strategy_id,"require_participation":require_participation,"require_pass":require_pass,"update_interval":update_interval,"voting_period":voting_period,},submitter_,expect_asset=expect_asset) 
 
-	def setlocktime(self,dao_code='user1',update_interval=1,suber="admin",expect_asset=True):
-		self.pushaction("setlocktime",{"dao_code":dao_code,"update_interval":update_interval,},suber,expect_asset=expect_asset) 
+	def setlocktime(self,dao_code='user1',update_interval=1,submitter_="admin",expect_asset=True):
+		self.pushaction("setlocktime",{"dao_code":dao_code,"update_interval":update_interval,},submitter_,expect_asset=expect_asset) 
 
-	def setpropmodel(self,dao_code='user1',propose_model='user1',suber="admin",expect_asset=True):
-		self.pushaction("setpropmodel",{"dao_code":dao_code,"propose_model":propose_model,},suber,expect_asset=expect_asset) 
+	def setpropmodel(self,dao_code='user1',propose_model='user1',submitter_="admin",expect_asset=True):
+		self.pushaction("setpropmodel",{"dao_code":dao_code,"propose_model":propose_model,},submitter_,expect_asset=expect_asset) 
 
-	def setproposestg(self,dao_code='user1',propose_strategy_id=1,suber="admin",expect_asset=True):
-		self.pushaction("setproposestg",{"dao_code":dao_code,"propose_strategy_id":propose_strategy_id,},suber,expect_asset=expect_asset) 
+	def setproposestg(self,dao_code='user1',propose_strategy_id=1,submitter_="admin",expect_asset=True):
+		self.pushaction("setproposestg",{"dao_code":dao_code,"propose_strategy_id":propose_strategy_id,},submitter_,expect_asset=expect_asset) 
 
-	def setvotestg(self,dao_code='user1',vote_strategy_id=1,require_participation=1,require_pass=1,suber="admin",expect_asset=True):
-		self.pushaction("setvotestg",{"dao_code":dao_code,"vote_strategy_id":vote_strategy_id,"require_participation":require_participation,"require_pass":require_pass,},suber,expect_asset=expect_asset) 
+	def setvotestg(self,dao_code='user1',vote_strategy_id=1,require_participation=1,require_pass=1,submitter_="admin",expect_asset=True):
+		self.pushaction("setvotestg",{"dao_code":dao_code,"vote_strategy_id":vote_strategy_id,"require_participation":require_participation,"require_pass":require_pass,},submitter_,expect_asset=expect_asset) 
 
-	def setvotetime(self,dao_code='user1',voting_period=1,suber="admin",expect_asset=True):
-		self.pushaction("setvotetime",{"dao_code":dao_code,"voting_period":voting_period,},suber,expect_asset=expect_asset) 
+	def setvotetime(self,dao_code='user1',voting_period=1,submitter_="admin",expect_asset=True):
+		self.pushaction("setvotetime",{"dao_code":dao_code,"voting_period":voting_period,},submitter_,expect_asset=expect_asset) 
 
 	def get_governances(self,scope):
 		return self.table("governances",scope).json

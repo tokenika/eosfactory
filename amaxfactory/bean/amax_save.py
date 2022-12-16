@@ -33,26 +33,26 @@ class AMAX_SAVE(CreateAccount):
 		return self.name
             
 
-	def collectint(self,issuer='user1',owner='user1',save_id=1,suber="admin",expect_asset=True):
-		self.pushaction("collectint",{"issuer":issuer,"owner":owner,"save_id":save_id,},suber,expect_asset=expect_asset) 
+	def collectint(self,issuer='user1',owner='user1',save_id=1,submitter_="admin",expect_asset=True):
+		self.pushaction("collectint",{"issuer":issuer,"owner":owner,"save_id":save_id,},submitter_,expect_asset=expect_asset) 
 
-	def delplan(self,plan_id=1,suber="admin",expect_asset=True):
-		self.pushaction("delplan",{"plan_id":plan_id,},suber,expect_asset=expect_asset) 
+	def delplan(self,plan_id=1,submitter_="admin",expect_asset=True):
+		self.pushaction("delplan",{"plan_id":plan_id,},submitter_,expect_asset=expect_asset) 
 
-	def init(self,admin='user1',ptoken=[],itoken=[],pc=[],mini_deposit_amount="0.10000000 AMAX",share_pool_id=1,suber="admin",expect_asset=True):
-		self.pushaction("init",{"admin":admin,"ptoken":ptoken,"itoken":itoken,"pc":pc,"mini_deposit_amount":mini_deposit_amount,"share_pool_id":share_pool_id,},suber,expect_asset=expect_asset) 
+	def init(self,admin='user1',ptoken=[],itoken=[],pc=[],mini_deposit_amount="0.10000000 AMAX",share_pool_id=1,submitter_="admin",expect_asset=True):
+		self.pushaction("init",{"admin":admin,"ptoken":ptoken,"itoken":itoken,"pc":pc,"mini_deposit_amount":mini_deposit_amount,"share_pool_id":share_pool_id,},submitter_,expect_asset=expect_asset) 
 
-	def intcolllog(self,account='user1',account_id=1,plan_id=1,quantity="0.10000000 AMAX",created_at=[],suber="admin",expect_asset=True):
-		self.pushaction("intcolllog",{"account":account,"account_id":account_id,"plan_id":plan_id,"quantity":quantity,"created_at":created_at,},suber,expect_asset=expect_asset) 
+	def intcolllog(self,account='user1',account_id=1,plan_id=1,quantity="0.10000000 AMAX",created_at=[],submitter_="admin",expect_asset=True):
+		self.pushaction("intcolllog",{"account":account,"account_id":account_id,"plan_id":plan_id,"quantity":quantity,"created_at":created_at,},submitter_,expect_asset=expect_asset) 
 
-	def intrefuellog(self,refueller='user1',plan_id=1,quantity="0.10000000 AMAX",created_at=[],suber="admin",expect_asset=True):
-		self.pushaction("intrefuellog",{"refueller":refueller,"plan_id":plan_id,"quantity":quantity,"created_at":created_at,},suber,expect_asset=expect_asset) 
+	def intrefuellog(self,refueller='user1',plan_id=1,quantity="0.10000000 AMAX",created_at=[],submitter_="admin",expect_asset=True):
+		self.pushaction("intrefuellog",{"refueller":refueller,"plan_id":plan_id,"quantity":quantity,"created_at":created_at,},submitter_,expect_asset=expect_asset) 
 
-	def setplan(self,plan_id=1,pc=[],suber="admin",expect_asset=True):
-		self.pushaction("setplan",{"plan_id":plan_id,"pc":pc,},suber,expect_asset=expect_asset) 
+	def setplan(self,plan_id=1,pc=[],submitter_="admin",expect_asset=True):
+		self.pushaction("setplan",{"plan_id":plan_id,"pc":pc,},submitter_,expect_asset=expect_asset) 
 
-	def withdraw(self,issuer='user1',owner='user1',save_id=1,suber="admin",expect_asset=True):
-		self.pushaction("withdraw",{"issuer":issuer,"owner":owner,"save_id":save_id,},suber,expect_asset=expect_asset) 
+	def withdraw(self,issuer='user1',owner='user1',save_id=1,submitter_="admin",expect_asset=True):
+		self.pushaction("withdraw",{"issuer":issuer,"owner":owner,"save_id":save_id,},submitter_,expect_asset=expect_asset) 
 
 	def get_global(self,scope):
 		return self.table("global",scope).json

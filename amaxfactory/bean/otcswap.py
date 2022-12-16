@@ -33,11 +33,11 @@ class OTCSWAP(CreateAccount):
 		return self.name
             
 
-	def setconf(self,conf_contract='user1',suber="admin",expect_asset=True):
-		self.pushaction("setconf",{"conf_contract":conf_contract,},suber,expect_asset=expect_asset) 
+	def setconf(self,conf_contract='user1',submitter_="admin",expect_asset=True):
+		self.pushaction("setconf",{"conf_contract":conf_contract,},submitter_,expect_asset=expect_asset) 
 
-	def settleto(self,user='user1',fee="0.10000000 AMAX",quantity="0.10000000 AMAX",suber="admin",expect_asset=True):
-		self.pushaction("settleto",{"user":user,"fee":fee,"quantity":quantity,},suber,expect_asset=expect_asset) 
+	def settleto(self,user='user1',fee="0.10000000 AMAX",quantity="0.10000000 AMAX",submitter_="admin",expect_asset=True):
+		self.pushaction("settleto",{"user":user,"fee":fee,"quantity":quantity,},submitter_,expect_asset=expect_asset) 
 
 	def get_accounts(self,scope):
 		return self.table("accounts",scope).json

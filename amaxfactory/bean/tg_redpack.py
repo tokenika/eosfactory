@@ -33,20 +33,20 @@ class TG_REDPACK(CreateAccount):
 		return self.name
             
 
-	def addfee(self,fee="0.10000000 AMAX",contract='user1',min_unit=1,suber="admin",expect_asset=True):
-		self.pushaction("addfee",{"fee":fee,"contract":contract,"min_unit":min_unit,},suber,expect_asset=expect_asset) 
+	def addfee(self,fee="0.10000000 AMAX",contract='user1',min_unit=1,submitter_="admin",expect_asset=True):
+		self.pushaction("addfee",{"fee":fee,"contract":contract,"min_unit":min_unit,},submitter_,expect_asset=expect_asset) 
 
-	def cancel(self,pack_id=1,suber="admin",expect_asset=True):
-		self.pushaction("cancel",{"pack_id":pack_id,},suber,expect_asset=expect_asset) 
+	def cancel(self,pack_id=1,submitter_="admin",expect_asset=True):
+		self.pushaction("cancel",{"pack_id":pack_id,},submitter_,expect_asset=expect_asset) 
 
-	def claim(self,claimer='user1',pack_id=1,pwhash='x',tg_nickname='x',suber="admin",expect_asset=True):
-		self.pushaction("claim",{"claimer":claimer,"pack_id":pack_id,"pwhash":pwhash,"tg_nickname":tg_nickname,},suber,expect_asset=expect_asset) 
+	def claim(self,claimer='user1',pack_id=1,pwhash='x',tg_nickname='x',submitter_="admin",expect_asset=True):
+		self.pushaction("claim",{"claimer":claimer,"pack_id":pack_id,"pwhash":pwhash,"tg_nickname":tg_nickname,},submitter_,expect_asset=expect_asset) 
 
-	def delfee(self,coin='8,AMAX',suber="admin",expect_asset=True):
-		self.pushaction("delfee",{"coin":coin,},suber,expect_asset=expect_asset) 
+	def delfee(self,coin='8,AMAX',submitter_="admin",expect_asset=True):
+		self.pushaction("delfee",{"coin":coin,},submitter_,expect_asset=expect_asset) 
 
-	def setconf(self,admin='user1',hours=1,suber="admin",expect_asset=True):
-		self.pushaction("setconf",{"admin":admin,"hours":hours,},suber,expect_asset=expect_asset) 
+	def setconf(self,admin='user1',hours=1,submitter_="admin",expect_asset=True):
+		self.pushaction("setconf",{"admin":admin,"hours":hours,},submitter_,expect_asset=expect_asset) 
 
 	def get_claims(self,scope):
 		return self.table("claims",scope).json

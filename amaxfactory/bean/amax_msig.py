@@ -33,23 +33,23 @@ class AMAX_MSIG(CreateAccount):
 		return self.name
             
 
-	def approve(self,proposer='user1',proposal_name='user1',level=[],proposal_hash=[],suber="admin",expect_asset=True):
-		self.pushaction("approve",{"proposer":proposer,"proposal_name":proposal_name,"level":level,"proposal_hash":proposal_hash,},suber,expect_asset=expect_asset) 
+	def approve(self,proposer='user1',proposal_name='user1',level=[],proposal_hash=[],submitter_="admin",expect_asset=True):
+		self.pushaction("approve",{"proposer":proposer,"proposal_name":proposal_name,"level":level,"proposal_hash":proposal_hash,},submitter_,expect_asset=expect_asset) 
 
-	def cancel(self,proposer='user1',proposal_name='user1',canceler='user1',suber="admin",expect_asset=True):
-		self.pushaction("cancel",{"proposer":proposer,"proposal_name":proposal_name,"canceler":canceler,},suber,expect_asset=expect_asset) 
+	def cancel(self,proposer='user1',proposal_name='user1',canceler='user1',submitter_="admin",expect_asset=True):
+		self.pushaction("cancel",{"proposer":proposer,"proposal_name":proposal_name,"canceler":canceler,},submitter_,expect_asset=expect_asset) 
 
-	def exec(self,proposer='user1',proposal_name='user1',executer='user1',suber="admin",expect_asset=True):
-		self.pushaction("exec",{"proposer":proposer,"proposal_name":proposal_name,"executer":executer,},suber,expect_asset=expect_asset) 
+	def exec(self,proposer='user1',proposal_name='user1',executer='user1',submitter_="admin",expect_asset=True):
+		self.pushaction("exec",{"proposer":proposer,"proposal_name":proposal_name,"executer":executer,},submitter_,expect_asset=expect_asset) 
 
-	def invalidate(self,account='user1',suber="admin",expect_asset=True):
-		self.pushaction("invalidate",{"account":account,},suber,expect_asset=expect_asset) 
+	def invalidate(self,account='user1',submitter_="admin",expect_asset=True):
+		self.pushaction("invalidate",{"account":account,},submitter_,expect_asset=expect_asset) 
 
-	def propose(self,proposer='user1',proposal_name='user1',requested=[],trx=[],suber="admin",expect_asset=True):
-		self.pushaction("propose",{"proposer":proposer,"proposal_name":proposal_name,"requested":requested,"trx":trx,},suber,expect_asset=expect_asset) 
+	def propose(self,proposer='user1',proposal_name='user1',requested=[],trx=[],submitter_="admin",expect_asset=True):
+		self.pushaction("propose",{"proposer":proposer,"proposal_name":proposal_name,"requested":requested,"trx":trx,},submitter_,expect_asset=expect_asset) 
 
-	def unapprove(self,proposer='user1',proposal_name='user1',level=[],suber="admin",expect_asset=True):
-		self.pushaction("unapprove",{"proposer":proposer,"proposal_name":proposal_name,"level":level,},suber,expect_asset=expect_asset) 
+	def unapprove(self,proposer='user1',proposal_name='user1',level=[],submitter_="admin",expect_asset=True):
+		self.pushaction("unapprove",{"proposer":proposer,"proposal_name":proposal_name,"level":level,},submitter_,expect_asset=expect_asset) 
 
 	def get_approvals2(self,scope):
 		return self.table("approvals2",scope).json

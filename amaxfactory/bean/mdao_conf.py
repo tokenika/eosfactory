@@ -33,26 +33,26 @@ class MDAO_CONF(CreateAccount):
 		return self.name
             
 
-	def init(self,fee_taker='user1',app_info=[],dao_upg_fee="0.10000000 AMAX",admin='user1',status='user1',suber="admin",expect_asset=True):
-		self.pushaction("init",{"fee_taker":fee_taker,"app_info":app_info,"dao_upg_fee":dao_upg_fee,"admin":admin,"status":status,},suber,expect_asset=expect_asset) 
+	def init(self,fee_taker='user1',app_info=[],dao_upg_fee="0.10000000 AMAX",admin='user1',status='user1',submitter_="admin",expect_asset=True):
+		self.pushaction("init",{"fee_taker":fee_taker,"app_info":app_info,"dao_upg_fee":dao_upg_fee,"admin":admin,"status":status,},submitter_,expect_asset=expect_asset) 
 
-	def migrate(self,suber="admin",expect_asset=True):
-		self.pushaction("migrate",{},suber,expect_asset=expect_asset) 
+	def migrate(self,submitter_="admin",expect_asset=True):
+		self.pushaction("migrate",{},submitter_,expect_asset=expect_asset) 
 
-	def setmanager(self,manage_type='user1',manager='user1',suber="admin",expect_asset=True):
-		self.pushaction("setmanager",{"manage_type":manage_type,"manager":manager,},suber,expect_asset=expect_asset) 
+	def setmanager(self,manage_type='user1',manager='user1',submitter_="admin",expect_asset=True):
+		self.pushaction("setmanager",{"manage_type":manage_type,"manager":manager,},submitter_,expect_asset=expect_asset) 
 
-	def setmetaverse(self,enable_metaverse='true',suber="admin",expect_asset=True):
-		self.pushaction("setmetaverse",{"enable_metaverse":enable_metaverse,},suber,expect_asset=expect_asset) 
+	def setmetaverse(self,enable_metaverse='true',submitter_="admin",expect_asset=True):
+		self.pushaction("setmetaverse",{"enable_metaverse":enable_metaverse,},submitter_,expect_asset=expect_asset) 
 
-	def setseat(self,dappmax=1,suber="admin",expect_asset=True):
-		self.pushaction("setseat",{"dappmax":dappmax,},suber,expect_asset=expect_asset) 
+	def setseat(self,dappmax=1,submitter_="admin",expect_asset=True):
+		self.pushaction("setseat",{"dappmax":dappmax,},submitter_,expect_asset=expect_asset) 
 
-	def setsystem(self,token_contract='user1',ntoken_contract='user1',stake_delay_days=1,suber="admin",expect_asset=True):
-		self.pushaction("setsystem",{"token_contract":token_contract,"ntoken_contract":ntoken_contract,"stake_delay_days":stake_delay_days,},suber,expect_asset=expect_asset) 
+	def setsystem(self,token_contract='user1',ntoken_contract='user1',stake_delay_days=1,submitter_="admin",expect_asset=True):
+		self.pushaction("setsystem",{"token_contract":token_contract,"ntoken_contract":ntoken_contract,"stake_delay_days":stake_delay_days,},submitter_,expect_asset=expect_asset) 
 
-	def settokenfee(self,quantity="0.10000000 AMAX",suber="admin",expect_asset=True):
-		self.pushaction("settokenfee",{"quantity":quantity,},suber,expect_asset=expect_asset) 
+	def settokenfee(self,quantity="0.10000000 AMAX",submitter_="admin",expect_asset=True):
+		self.pushaction("settokenfee",{"quantity":quantity,},submitter_,expect_asset=expect_asset) 
 
 	def get_global(self,scope):
 		return self.table("global",scope).json

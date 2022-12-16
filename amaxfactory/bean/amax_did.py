@@ -33,23 +33,23 @@ class AMAX_DID(CreateAccount):
 		return self.name
             
 
-	def addvendor(self,vendor_name='x',vendor_account='user1',kyc_level=1,user_reward_quant="0.10000000 AMAX",user_charge_quant="0.10000000 AMAX",nft_id=[],suber="admin",expect_asset=True):
-		self.pushaction("addvendor",{"vendor_name":vendor_name,"vendor_account":vendor_account,"kyc_level":kyc_level,"user_reward_quant":user_reward_quant,"user_charge_quant":user_charge_quant,"nft_id":nft_id,},suber,expect_asset=expect_asset) 
+	def addvendor(self,vendor_name='x',vendor_account='user1',kyc_level=1,user_reward_quant="0.10000000 AMAX",user_charge_quant="0.10000000 AMAX",nft_id=[],submitter_="admin",expect_asset=True):
+		self.pushaction("addvendor",{"vendor_name":vendor_name,"vendor_account":vendor_account,"kyc_level":kyc_level,"user_reward_quant":user_reward_quant,"user_charge_quant":user_charge_quant,"nft_id":nft_id,},submitter_,expect_asset=expect_asset) 
 
-	def auditlog(self,order_id=1,taker='user1',vendor_name='x',vendor_account='user1',kyc_level=1,vendor_charge_quant="0.10000000 AMAX",status='user1',msg='x',created_at=[],suber="admin",expect_asset=True):
-		self.pushaction("auditlog",{"order_id":order_id,"taker":taker,"vendor_name":vendor_name,"vendor_account":vendor_account,"kyc_level":kyc_level,"vendor_charge_quant":vendor_charge_quant,"status":status,"msg":msg,"created_at":created_at,},suber,expect_asset=expect_asset) 
+	def auditlog(self,order_id=1,taker='user1',vendor_name='x',vendor_account='user1',kyc_level=1,vendor_charge_quant="0.10000000 AMAX",status='user1',msg='x',created_at=[],submitter_="admin",expect_asset=True):
+		self.pushaction("auditlog",{"order_id":order_id,"taker":taker,"vendor_name":vendor_name,"vendor_account":vendor_account,"kyc_level":kyc_level,"vendor_charge_quant":vendor_charge_quant,"status":status,"msg":msg,"created_at":created_at,},submitter_,expect_asset=expect_asset) 
 
-	def chgvendor(self,vendor_id=1,status='user1',user_reward_quant="0.10000000 AMAX",user_charge_quant="0.10000000 AMAX",nft_id=[],suber="admin",expect_asset=True):
-		self.pushaction("chgvendor",{"vendor_id":vendor_id,"status":status,"user_reward_quant":user_reward_quant,"user_charge_quant":user_charge_quant,"nft_id":nft_id,},suber,expect_asset=expect_asset) 
+	def chgvendor(self,vendor_id=1,status='user1',user_reward_quant="0.10000000 AMAX",user_charge_quant="0.10000000 AMAX",nft_id=[],submitter_="admin",expect_asset=True):
+		self.pushaction("chgvendor",{"vendor_id":vendor_id,"status":status,"user_reward_quant":user_reward_quant,"user_charge_quant":user_charge_quant,"nft_id":nft_id,},submitter_,expect_asset=expect_asset) 
 
-	def init(self,admin='user1',nft_contract='user1',fee_colletor='user1',lease_id=1,suber="admin",expect_asset=True):
-		self.pushaction("init",{"admin":admin,"nft_contract":nft_contract,"fee_colletor":fee_colletor,"lease_id":lease_id,},suber,expect_asset=expect_asset) 
+	def init(self,admin='user1',nft_contract='user1',fee_colletor='user1',lease_id=1,submitter_="admin",expect_asset=True):
+		self.pushaction("init",{"admin":admin,"nft_contract":nft_contract,"fee_colletor":fee_colletor,"lease_id":lease_id,},submitter_,expect_asset=expect_asset) 
 
-	def setadmin(self,admin='user1',suber="admin",expect_asset=True):
-		self.pushaction("setadmin",{"admin":admin,},suber,expect_asset=expect_asset) 
+	def setadmin(self,admin='user1',submitter_="admin",expect_asset=True):
+		self.pushaction("setadmin",{"admin":admin,},submitter_,expect_asset=expect_asset) 
 
-	def setdidstatus(self,order_id=1,status='user1',msg='x',suber="admin",expect_asset=True):
-		self.pushaction("setdidstatus",{"order_id":order_id,"status":status,"msg":msg,},suber,expect_asset=expect_asset) 
+	def setdidstatus(self,order_id=1,status='user1',msg='x',submitter_="admin",expect_asset=True):
+		self.pushaction("setdidstatus",{"order_id":order_id,"status":status,"msg":msg,},submitter_,expect_asset=expect_asset) 
 
 	def get_global(self,scope):
 		return self.table("global",scope).json

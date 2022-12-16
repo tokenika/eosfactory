@@ -33,26 +33,26 @@ class AMAX_AUTH(CreateAccount):
 		return self.name
             
 
-	def bindinfo(self,admin='user1',account='user1',info='x',suber="admin",expect_asset=True):
-		self.pushaction("bindinfo",{"admin":admin,"account":account,"info":info,},suber,expect_asset=expect_asset) 
+	def bindinfo(self,admin='user1',account='user1',info='x',submitter_="admin",expect_asset=True):
+		self.pushaction("bindinfo",{"admin":admin,"account":account,"info":info,},submitter_,expect_asset=expect_asset) 
 
-	def createorder(self,sn=1,admin='user1',account='user1',manual_check_required='true',score=1,recover_target=[],suber="admin",expect_asset=True):
-		self.pushaction("createorder",{"sn":sn,"admin":admin,"account":account,"manual_check_required":manual_check_required,"score":score,"recover_target":recover_target,},suber,expect_asset=expect_asset) 
+	def createorder(self,sn=1,admin='user1',account='user1',manual_check_required='true',score=1,recover_target=[],submitter_="admin",expect_asset=True):
+		self.pushaction("createorder",{"sn":sn,"admin":admin,"account":account,"manual_check_required":manual_check_required,"score":score,"recover_target":recover_target,},submitter_,expect_asset=expect_asset) 
 
-	def delauth(self,account='user1',suber="admin",expect_asset=True):
-		self.pushaction("delauth",{"account":account,},suber,expect_asset=expect_asset) 
+	def delauth(self,account='user1',submitter_="admin",expect_asset=True):
+		self.pushaction("delauth",{"account":account,},submitter_,expect_asset=expect_asset) 
 
-	def init(self,amax_recover='user1',amax_proxy_contract='user1',suber="admin",expect_asset=True):
-		self.pushaction("init",{"amax_recover":amax_recover,"amax_proxy_contract":amax_proxy_contract,},suber,expect_asset=expect_asset) 
+	def init(self,amax_recover='user1',amax_proxy_contract='user1',submitter_="admin",expect_asset=True):
+		self.pushaction("init",{"amax_recover":amax_recover,"amax_proxy_contract":amax_proxy_contract,},submitter_,expect_asset=expect_asset) 
 
-	def newaccount(self,admin='user1',creator='user1',account='user1',info='x',active=[],suber="admin",expect_asset=True):
-		self.pushaction("newaccount",{"admin":admin,"creator":creator,"account":account,"info":info,"active":active,},suber,expect_asset=expect_asset) 
+	def newaccount(self,admin='user1',creator='user1',account='user1',info='x',active=[],submitter_="admin",expect_asset=True):
+		self.pushaction("newaccount",{"admin":admin,"creator":creator,"account":account,"info":info,"active":active,},submitter_,expect_asset=expect_asset) 
 
-	def setauth(self,account='user1',actions=[],suber="admin",expect_asset=True):
-		self.pushaction("setauth",{"account":account,"actions":actions,},suber,expect_asset=expect_asset) 
+	def setauth(self,account='user1',actions=[],submitter_="admin",expect_asset=True):
+		self.pushaction("setauth",{"account":account,"actions":actions,},submitter_,expect_asset=expect_asset) 
 
-	def setscore(self,admin='user1',account='user1',order_id=1,score=1,suber="admin",expect_asset=True):
-		self.pushaction("setscore",{"admin":admin,"account":account,"order_id":order_id,"score":score,},suber,expect_asset=expect_asset) 
+	def setscore(self,admin='user1',account='user1',order_id=1,score=1,submitter_="admin",expect_asset=True):
+		self.pushaction("setscore",{"admin":admin,"account":account,"order_id":order_id,"score":score,},submitter_,expect_asset=expect_asset) 
 
 	def get_acctrealme(self,scope):
 		return self.table("acctrealme",scope).json

@@ -33,29 +33,29 @@ class MDAO_STG(CreateAccount):
 		return self.name
             
 
-	def balancestg(self,creator='user1',stg_name='x',weight_value=1,type='user1',ref_contract='user1',ref_sym=[],suber="admin",expect_asset=True):
-		self.pushaction("balancestg",{"creator":creator,"stg_name":stg_name,"weight_value":weight_value,"type":type,"ref_contract":ref_contract,"ref_sym":ref_sym,},suber,expect_asset=expect_asset) 
+	def balancestg(self,creator='user1',stg_name='x',weight_value=1,type='user1',ref_contract='user1',ref_sym=[],submitter_="admin",expect_asset=True):
+		self.pushaction("balancestg",{"creator":creator,"stg_name":stg_name,"weight_value":weight_value,"type":type,"ref_contract":ref_contract,"ref_sym":ref_sym,},submitter_,expect_asset=expect_asset) 
 
-	def create(self,creator='user1',stg_name='x',stg_algo='x',type='user1',ref_contract='user1',ref_sym=[],suber="admin",expect_asset=True):
-		self.pushaction("create",{"creator":creator,"stg_name":stg_name,"stg_algo":stg_algo,"type":type,"ref_contract":ref_contract,"ref_sym":ref_sym,},suber,expect_asset=expect_asset) 
+	def create(self,creator='user1',stg_name='x',stg_algo='x',type='user1',ref_contract='user1',ref_sym=[],submitter_="admin",expect_asset=True):
+		self.pushaction("create",{"creator":creator,"stg_name":stg_name,"stg_algo":stg_algo,"type":type,"ref_contract":ref_contract,"ref_sym":ref_sym,},submitter_,expect_asset=expect_asset) 
 
-	def publish(self,creator='user1',stg_id=1,suber="admin",expect_asset=True):
-		self.pushaction("publish",{"creator":creator,"stg_id":stg_id,},suber,expect_asset=expect_asset) 
+	def publish(self,creator='user1',stg_id=1,submitter_="admin",expect_asset=True):
+		self.pushaction("publish",{"creator":creator,"stg_id":stg_id,},submitter_,expect_asset=expect_asset) 
 
-	def remove(self,creator='user1',stg_id=1,suber="admin",expect_asset=True):
-		self.pushaction("remove",{"creator":creator,"stg_id":stg_id,},suber,expect_asset=expect_asset) 
+	def remove(self,creator='user1',stg_id=1,submitter_="admin",expect_asset=True):
+		self.pushaction("remove",{"creator":creator,"stg_id":stg_id,},submitter_,expect_asset=expect_asset) 
 
-	def setalgo(self,creator='user1',stg_id=1,stg_algo='x',suber="admin",expect_asset=True):
-		self.pushaction("setalgo",{"creator":creator,"stg_id":stg_id,"stg_algo":stg_algo,},suber,expect_asset=expect_asset) 
+	def setalgo(self,creator='user1',stg_id=1,stg_algo='x',submitter_="admin",expect_asset=True):
+		self.pushaction("setalgo",{"creator":creator,"stg_id":stg_id,"stg_algo":stg_algo,},submitter_,expect_asset=expect_asset) 
 
-	def testalgo(self,account='user1',stg_id=1,suber="admin",expect_asset=True):
-		self.pushaction("testalgo",{"account":account,"stg_id":stg_id,},suber,expect_asset=expect_asset) 
+	def testalgo(self,account='user1',stg_id=1,submitter_="admin",expect_asset=True):
+		self.pushaction("testalgo",{"account":account,"stg_id":stg_id,},submitter_,expect_asset=expect_asset) 
 
-	def thresholdstg(self,creator='user1',stg_name='x',threshold_value=1,type='user1',ref_contract='user1',ref_sym=[],suber="admin",expect_asset=True):
-		self.pushaction("thresholdstg",{"creator":creator,"stg_name":stg_name,"threshold_value":threshold_value,"type":type,"ref_contract":ref_contract,"ref_sym":ref_sym,},suber,expect_asset=expect_asset) 
+	def thresholdstg(self,creator='user1',stg_name='x',threshold_value=1,type='user1',ref_contract='user1',ref_sym=[],submitter_="admin",expect_asset=True):
+		self.pushaction("thresholdstg",{"creator":creator,"stg_name":stg_name,"threshold_value":threshold_value,"type":type,"ref_contract":ref_contract,"ref_sym":ref_sym,},submitter_,expect_asset=expect_asset) 
 
-	def verify(self,creator='user1',stg_id=1,value=1,expect_weight=1,suber="admin",expect_asset=True):
-		self.pushaction("verify",{"creator":creator,"stg_id":stg_id,"value":value,"expect_weight":expect_weight,},suber,expect_asset=expect_asset) 
+	def verify(self,creator='user1',stg_id=1,value=1,expect_weight=1,submitter_="admin",expect_asset=True):
+		self.pushaction("verify",{"creator":creator,"stg_id":stg_id,"value":value,"expect_weight":expect_weight,},submitter_,expect_asset=expect_asset) 
 
 	def get_global(self,scope):
 		return self.table("global",scope).json

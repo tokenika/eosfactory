@@ -33,14 +33,14 @@ class AMAX_PROXY(CreateAccount):
 		return self.name
             
 
-	def init(self,amax_recover='user1',suber="admin",expect_asset=True):
-		self.pushaction("init",{"amax_recover":amax_recover,},suber,expect_asset=expect_asset) 
+	def init(self,amax_recover='user1',submitter_="admin",expect_asset=True):
+		self.pushaction("init",{"amax_recover":amax_recover,},submitter_,expect_asset=expect_asset) 
 
-	def newaccount(self,auth_contract='user1',creator='user1',account='user1',active=[],suber="admin",expect_asset=True):
-		self.pushaction("newaccount",{"auth_contract":auth_contract,"creator":creator,"account":account,"active":active,},suber,expect_asset=expect_asset) 
+	def newaccount(self,auth_contract='user1',creator='user1',account='user1',active=[],submitter_="admin",expect_asset=True):
+		self.pushaction("newaccount",{"auth_contract":auth_contract,"creator":creator,"account":account,"active":active,},submitter_,expect_asset=expect_asset) 
 
-	def updateauth(self,account='user1',pubkey=[],suber="admin",expect_asset=True):
-		self.pushaction("updateauth",{"account":account,"pubkey":pubkey,},suber,expect_asset=expect_asset) 
+	def updateauth(self,account='user1',pubkey=[],submitter_="admin",expect_asset=True):
+		self.pushaction("updateauth",{"account":account,"pubkey":pubkey,},submitter_,expect_asset=expect_asset) 
 
 	def get_global(self,scope):
 		return self.table("global",scope).json

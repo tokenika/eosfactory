@@ -33,17 +33,17 @@ class AMAX_SPLIT(CreateAccount):
 		return self.name
             
 
-	def addplan(self,plan_sender_contract='user1',token_symbol='8,AMAX',split_by_rate='true',suber="admin",expect_asset=True):
-		self.pushaction("addplan",{"plan_sender_contract":plan_sender_contract,"token_symbol":token_symbol,"split_by_rate":split_by_rate,},suber,expect_asset=expect_asset) 
+	def addplan(self,plan_sender_contract='user1',token_symbol='8,AMAX',split_by_rate='true',submitter_="admin",expect_asset=True):
+		self.pushaction("addplan",{"plan_sender_contract":plan_sender_contract,"token_symbol":token_symbol,"split_by_rate":split_by_rate,},submitter_,expect_asset=expect_asset) 
 
-	def delplan(self,plan_sender_contract='user1',plan_id=1,suber="admin",expect_asset=True):
-		self.pushaction("delplan",{"plan_sender_contract":plan_sender_contract,"plan_id":plan_id,},suber,expect_asset=expect_asset) 
+	def delplan(self,plan_sender_contract='user1',plan_id=1,submitter_="admin",expect_asset=True):
+		self.pushaction("delplan",{"plan_sender_contract":plan_sender_contract,"plan_id":plan_id,},submitter_,expect_asset=expect_asset) 
 
-	def init(self,suber="admin",expect_asset=True):
-		self.pushaction("init",{},suber,expect_asset=expect_asset) 
+	def init(self,submitter_="admin",expect_asset=True):
+		self.pushaction("init",{},submitter_,expect_asset=expect_asset) 
 
-	def setplan(self,plan_sender_contract='user1',plan_id=1,conf=[],suber="admin",expect_asset=True):
-		self.pushaction("setplan",{"plan_sender_contract":plan_sender_contract,"plan_id":plan_id,"conf":conf,},suber,expect_asset=expect_asset) 
+	def setplan(self,plan_sender_contract='user1',plan_id=1,conf=[],submitter_="admin",expect_asset=True):
+		self.pushaction("setplan",{"plan_sender_contract":plan_sender_contract,"plan_id":plan_id,"conf":conf,},submitter_,expect_asset=expect_asset) 
 
 	def get_global(self,scope):
 		return self.table("global",scope).json

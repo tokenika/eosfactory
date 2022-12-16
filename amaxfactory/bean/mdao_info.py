@@ -33,29 +33,29 @@ class MDAO_INFO(CreateAccount):
 		return self.name
             
 
-	def binddapps(self,owner='user1',code='user1',dapps=[],suber="admin",expect_asset=True):
-		self.pushaction("binddapps",{"owner":owner,"code":code,"dapps":dapps,},suber,expect_asset=expect_asset) 
+	def binddapps(self,owner='user1',code='user1',dapps=[],submitter_="admin",expect_asset=True):
+		self.pushaction("binddapps",{"owner":owner,"code":code,"dapps":dapps,},submitter_,expect_asset=expect_asset) 
 
-	def bindntoken(self,owner='user1',code='user1',ntoken=[],suber="admin",expect_asset=True):
-		self.pushaction("bindntoken",{"owner":owner,"code":code,"ntoken":ntoken,},suber,expect_asset=expect_asset) 
+	def bindntoken(self,owner='user1',code='user1',ntoken=[],submitter_="admin",expect_asset=True):
+		self.pushaction("bindntoken",{"owner":owner,"code":code,"ntoken":ntoken,},submitter_,expect_asset=expect_asset) 
 
-	def bindtoken(self,owner='user1',code='user1',token=[],suber="admin",expect_asset=True):
-		self.pushaction("bindtoken",{"owner":owner,"code":code,"token":token,},suber,expect_asset=expect_asset) 
+	def bindtoken(self,owner='user1',code='user1',token=[],submitter_="admin",expect_asset=True):
+		self.pushaction("bindtoken",{"owner":owner,"code":code,"token":token,},submitter_,expect_asset=expect_asset) 
 
-	def deldao(self,admin='user1',code='user1',suber="admin",expect_asset=True):
-		self.pushaction("deldao",{"admin":admin,"code":code,},suber,expect_asset=expect_asset) 
+	def deldao(self,admin='user1',code='user1',submitter_="admin",expect_asset=True):
+		self.pushaction("deldao",{"admin":admin,"code":code,},submitter_,expect_asset=expect_asset) 
 
-	def transferdao(self,owner='user1',code='user1',receiver='user1',suber="admin",expect_asset=True):
-		self.pushaction("transferdao",{"owner":owner,"code":code,"receiver":receiver,},suber,expect_asset=expect_asset) 
+	def transferdao(self,owner='user1',code='user1',receiver='user1',submitter_="admin",expect_asset=True):
+		self.pushaction("transferdao",{"owner":owner,"code":code,"receiver":receiver,},submitter_,expect_asset=expect_asset) 
 
-	def updatecode(self,admin='user1',code='user1',new_code='user1',suber="admin",expect_asset=True):
-		self.pushaction("updatecode",{"admin":admin,"code":code,"new_code":new_code,},suber,expect_asset=expect_asset) 
+	def updatecode(self,admin='user1',code='user1',new_code='user1',submitter_="admin",expect_asset=True):
+		self.pushaction("updatecode",{"admin":admin,"code":code,"new_code":new_code,},submitter_,expect_asset=expect_asset) 
 
-	def updatedao(self,owner='user1',code='user1',logo='x',desc='x',links=[],symcode='x',symcontract='x',groupid='x',suber="admin",expect_asset=True):
-		self.pushaction("updatedao",{"owner":owner,"code":code,"logo":logo,"desc":desc,"links":links,"symcode":symcode,"symcontract":symcontract,"groupid":groupid,},suber,expect_asset=expect_asset) 
+	def updatedao(self,owner='user1',code='user1',logo='x',desc='x',links=[],symcode='x',symcontract='x',groupid='x',submitter_="admin",expect_asset=True):
+		self.pushaction("updatedao",{"owner":owner,"code":code,"logo":logo,"desc":desc,"links":links,"symcode":symcode,"symcontract":symcontract,"groupid":groupid,},submitter_,expect_asset=expect_asset) 
 
-	def updatestatus(self,code='user1',isenable='true',suber="admin",expect_asset=True):
-		self.pushaction("updatestatus",{"code":code,"isenable":isenable,},suber,expect_asset=expect_asset) 
+	def updatestatus(self,code='user1',isenable='true',submitter_="admin",expect_asset=True):
+		self.pushaction("updatestatus",{"code":code,"isenable":isenable,},submitter_,expect_asset=expect_asset) 
 
 	def get_infos(self,scope):
 		return self.table("infos",scope).json

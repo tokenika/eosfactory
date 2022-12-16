@@ -33,44 +33,44 @@ class ORDERBOOKDEX(CreateAccount):
 		return self.name
             
 
-	def adddexdeal(self,deal_items=[],curr_ts=[],suber="admin",expect_asset=True):
-		self.pushaction("adddexdeal",{"deal_items":deal_items,"curr_ts":curr_ts,},suber,expect_asset=expect_asset) 
+	def adddexdeal(self,deal_items=[],curr_ts=[],submitter_="admin",expect_asset=True):
+		self.pushaction("adddexdeal",{"deal_items":deal_items,"curr_ts":curr_ts,},submitter_,expect_asset=expect_asset) 
 
-	def buy(self,user='user1',sympair_id=1,quantity="0.10000000 AMAX",price="0.10000000 AMAX",external_id=1,order_config_ex=[],suber="admin",expect_asset=True):
-		self.pushaction("buy",{"user":user,"sympair_id":sympair_id,"quantity":quantity,"price":price,"external_id":external_id,"order_config_ex":order_config_ex,},suber,expect_asset=expect_asset) 
+	def buy(self,user='user1',sympair_id=1,quantity="0.10000000 AMAX",price="0.10000000 AMAX",external_id=1,order_config_ex=[],submitter_="admin",expect_asset=True):
+		self.pushaction("buy",{"user":user,"sympair_id":sympair_id,"quantity":quantity,"price":price,"external_id":external_id,"order_config_ex":order_config_ex,},submitter_,expect_asset=expect_asset) 
 
-	def cancel(self,pair_id=1,side='user1',order_id=1,suber="admin",expect_asset=True):
-		self.pushaction("cancel",{"pair_id":pair_id,"side":side,"order_id":order_id,},suber,expect_asset=expect_asset) 
+	def cancel(self,pair_id=1,side='user1',order_id=1,submitter_="admin",expect_asset=True):
+		self.pushaction("cancel",{"pair_id":pair_id,"side":side,"order_id":order_id,},submitter_,expect_asset=expect_asset) 
 
-	def cleandata(self,max_count=1,suber="admin",expect_asset=True):
-		self.pushaction("cleandata",{"max_count":max_count,},suber,expect_asset=expect_asset) 
+	def cleandata(self,max_count=1,submitter_="admin",expect_asset=True):
+		self.pushaction("cleandata",{"max_count":max_count,},submitter_,expect_asset=expect_asset) 
 
-	def delsympair(self,sympair_id=1,suber="admin",expect_asset=True):
-		self.pushaction("delsympair",{"sympair_id":sympair_id,},suber,expect_asset=expect_asset) 
+	def delsympair(self,sympair_id=1,submitter_="admin",expect_asset=True):
+		self.pushaction("delsympair",{"sympair_id":sympair_id,},submitter_,expect_asset=expect_asset) 
 
-	def init(self,suber="admin",expect_asset=True):
-		self.pushaction("init",{},suber,expect_asset=expect_asset) 
+	def init(self,submitter_="admin",expect_asset=True):
+		self.pushaction("init",{},submitter_,expect_asset=expect_asset) 
 
-	def match(self,matcher='user1',pair_id=1,max_count=1,memo='x',suber="admin",expect_asset=True):
-		self.pushaction("match",{"matcher":matcher,"pair_id":pair_id,"max_count":max_count,"memo":memo,},suber,expect_asset=expect_asset) 
+	def match(self,matcher='user1',pair_id=1,max_count=1,memo='x',submitter_="admin",expect_asset=True):
+		self.pushaction("match",{"matcher":matcher,"pair_id":pair_id,"max_count":max_count,"memo":memo,},submitter_,expect_asset=expect_asset) 
 
-	def neworder(self,user='user1',sympair_id=1,order_side='user1',limit_quant="0.10000000 AMAX",frozen_quant="0.10000000 AMAX",price="0.10000000 AMAX",external_id=1,order_config_ex=[],suber="admin",expect_asset=True):
-		self.pushaction("neworder",{"user":user,"sympair_id":sympair_id,"order_side":order_side,"limit_quant":limit_quant,"frozen_quant":frozen_quant,"price":price,"external_id":external_id,"order_config_ex":order_config_ex,},suber,expect_asset=expect_asset) 
+	def neworder(self,user='user1',sympair_id=1,order_side='user1',limit_quant="0.10000000 AMAX",frozen_quant="0.10000000 AMAX",price="0.10000000 AMAX",external_id=1,order_config_ex=[],submitter_="admin",expect_asset=True):
+		self.pushaction("neworder",{"user":user,"sympair_id":sympair_id,"order_side":order_side,"limit_quant":limit_quant,"frozen_quant":frozen_quant,"price":price,"external_id":external_id,"order_config_ex":order_config_ex,},submitter_,expect_asset=expect_asset) 
 
-	def onoffsympair(self,sympair_id=1,on_off='true',suber="admin",expect_asset=True):
-		self.pushaction("onoffsympair",{"sympair_id":sympair_id,"on_off":on_off,},suber,expect_asset=expect_asset) 
+	def onoffsympair(self,sympair_id=1,on_off='true',submitter_="admin",expect_asset=True):
+		self.pushaction("onoffsympair",{"sympair_id":sympair_id,"on_off":on_off,},submitter_,expect_asset=expect_asset) 
 
-	def sell(self,user='user1',sympair_id=1,quantity="0.10000000 AMAX",price="0.10000000 AMAX",external_id=1,order_config_ex=[],suber="admin",expect_asset=True):
-		self.pushaction("sell",{"user":user,"sympair_id":sympair_id,"quantity":quantity,"price":price,"external_id":external_id,"order_config_ex":order_config_ex,},suber,expect_asset=expect_asset) 
+	def sell(self,user='user1',sympair_id=1,quantity="0.10000000 AMAX",price="0.10000000 AMAX",external_id=1,order_config_ex=[],submitter_="admin",expect_asset=True):
+		self.pushaction("sell",{"user":user,"sympair_id":sympair_id,"quantity":quantity,"price":price,"external_id":external_id,"order_config_ex":order_config_ex,},submitter_,expect_asset=expect_asset) 
 
-	def setconfig(self,conf=[],suber="admin",expect_asset=True):
-		self.pushaction("setconfig",{"conf":conf,},suber,expect_asset=expect_asset) 
+	def setconfig(self,conf=[],submitter_="admin",expect_asset=True):
+		self.pushaction("setconfig",{"conf":conf,},submitter_,expect_asset=expect_asset) 
 
-	def setsympair(self,asset_symbol=[],coin_symbol=[],min_asset_quant="0.10000000 AMAX",min_coin_quant="0.10000000 AMAX",only_accept_coin_fee='true',enabled='true',suber="admin",expect_asset=True):
-		self.pushaction("setsympair",{"asset_symbol":asset_symbol,"coin_symbol":coin_symbol,"min_asset_quant":min_asset_quant,"min_coin_quant":min_coin_quant,"only_accept_coin_fee":only_accept_coin_fee,"enabled":enabled,},suber,expect_asset=expect_asset) 
+	def setsympair(self,asset_symbol=[],coin_symbol=[],min_asset_quant="0.10000000 AMAX",min_coin_quant="0.10000000 AMAX",only_accept_coin_fee='true',enabled='true',submitter_="admin",expect_asset=True):
+		self.pushaction("setsympair",{"asset_symbol":asset_symbol,"coin_symbol":coin_symbol,"min_asset_quant":min_asset_quant,"min_coin_quant":min_coin_quant,"only_accept_coin_fee":only_accept_coin_fee,"enabled":enabled,},submitter_,expect_asset=expect_asset) 
 
-	def withdraw(self,user='user1',bank='user1',quant="0.10000000 AMAX",memo='x',suber="admin",expect_asset=True):
-		self.pushaction("withdraw",{"user":user,"bank":bank,"quant":quant,"memo":memo,},suber,expect_asset=expect_asset) 
+	def withdraw(self,user='user1',bank='user1',quant="0.10000000 AMAX",memo='x',submitter_="admin",expect_asset=True):
+		self.pushaction("withdraw",{"user":user,"bank":bank,"quant":quant,"memo":memo,},submitter_,expect_asset=expect_asset) 
 
 	def get_config(self,scope):
 		return self.table("config",scope).json

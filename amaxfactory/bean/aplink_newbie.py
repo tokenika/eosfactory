@@ -33,23 +33,23 @@ class APLINK_NEWBIE(CreateAccount):
 		return self.name
             
 
-	def claimreward(self,newbies=[],suber="admin",expect_asset=True):
-		self.pushaction("claimreward",{"newbies":newbies,},suber,expect_asset=expect_asset) 
+	def claimreward(self,newbies=[],submitter_="admin",expect_asset=True):
+		self.pushaction("claimreward",{"newbies":newbies,},submitter_,expect_asset=expect_asset) 
 
-	def init(self,lease_id=1,farm_contract='user1',suber="admin",expect_asset=True):
-		self.pushaction("init",{"lease_id":lease_id,"farm_contract":farm_contract,},suber,expect_asset=expect_asset) 
+	def init(self,lease_id=1,farm_contract='user1',submitter_="admin",expect_asset=True):
+		self.pushaction("init",{"lease_id":lease_id,"farm_contract":farm_contract,},submitter_,expect_asset=expect_asset) 
 
-	def rewardinvite(self,to='user1',suber="admin",expect_asset=True):
-		self.pushaction("rewardinvite",{"to":to,},suber,expect_asset=expect_asset) 
+	def rewardinvite(self,to='user1',submitter_="admin",expect_asset=True):
+		self.pushaction("rewardinvite",{"to":to,},submitter_,expect_asset=expect_asset) 
 
-	def setbatchsize(self,batch_issue_size=1,suber="admin",expect_asset=True):
-		self.pushaction("setbatchsize",{"batch_issue_size":batch_issue_size,},suber,expect_asset=expect_asset) 
+	def setbatchsize(self,batch_issue_size=1,submitter_="admin",expect_asset=True):
+		self.pushaction("setbatchsize",{"batch_issue_size":batch_issue_size,},submitter_,expect_asset=expect_asset) 
 
-	def setleaseid(self,suber="admin",expect_asset=True):
-		self.pushaction("setleaseid",{},suber,expect_asset=expect_asset) 
+	def setleaseid(self,submitter_="admin",expect_asset=True):
+		self.pushaction("setleaseid",{},submitter_,expect_asset=expect_asset) 
 
-	def setstate(self,newbie_reward="0.10000000 AMAX",aplink_token_contract='user1',aplink_admin='user1',suber="admin",expect_asset=True):
-		self.pushaction("setstate",{"newbie_reward":newbie_reward,"aplink_token_contract":aplink_token_contract,"aplink_admin":aplink_admin,},suber,expect_asset=expect_asset) 
+	def setstate(self,newbie_reward="0.10000000 AMAX",aplink_token_contract='user1',aplink_admin='user1',submitter_="admin",expect_asset=True):
+		self.pushaction("setstate",{"newbie_reward":newbie_reward,"aplink_token_contract":aplink_token_contract,"aplink_admin":aplink_admin,},submitter_,expect_asset=expect_asset) 
 
 	def get_global(self,scope):
 		return self.table("global",scope).json

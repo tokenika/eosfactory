@@ -33,5 +33,5 @@ class AMAX_WRAP(CreateAccount):
 		return self.name
             
 
-	def exec(self,executer='user1',trx=[],suber="admin",expect_asset=True):
-		self.pushaction("exec",{"executer":executer,"trx":trx,},suber,expect_asset=expect_asset) 
+	def exec(self,executer='user1',trx=[],submitter_="admin",expect_asset=True):
+		self.pushaction("exec",{"executer":executer,"trx":trx,},submitter_,expect_asset=expect_asset) 

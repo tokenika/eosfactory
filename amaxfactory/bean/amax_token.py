@@ -33,26 +33,26 @@ class AMAX_TOKEN(CreateAccount):
 		return self.name
             
 
-	def blacklist(self,targets=[],to_add='true',suber="admin",expect_asset=True):
-		self.pushaction("blacklist",{"targets":targets,"to_add":to_add,},suber,expect_asset=expect_asset) 
+	def blacklist(self,targets=[],to_add='true',submitter_="admin",expect_asset=True):
+		self.pushaction("blacklist",{"targets":targets,"to_add":to_add,},submitter_,expect_asset=expect_asset) 
 
-	def close(self,owner='user1',symbol='8,AMAX',suber="admin",expect_asset=True):
-		self.pushaction("close",{"owner":owner,"symbol":symbol,},suber,expect_asset=expect_asset) 
+	def close(self,owner='user1',symbol='8,AMAX',submitter_="admin",expect_asset=True):
+		self.pushaction("close",{"owner":owner,"symbol":symbol,},submitter_,expect_asset=expect_asset) 
 
-	def create(self,issuer='user1',maximum_supply="0.10000000 AMAX",suber="admin",expect_asset=True):
-		self.pushaction("create",{"issuer":issuer,"maximum_supply":maximum_supply,},suber,expect_asset=expect_asset) 
+	def create(self,issuer='user1',maximum_supply="0.10000000 AMAX",submitter_="admin",expect_asset=True):
+		self.pushaction("create",{"issuer":issuer,"maximum_supply":maximum_supply,},submitter_,expect_asset=expect_asset) 
 
-	def issue(self,to='user1',quantity="0.10000000 AMAX",memo='x',suber="admin",expect_asset=True):
-		self.pushaction("issue",{"to":to,"quantity":quantity,"memo":memo,},suber,expect_asset=expect_asset) 
+	def issue(self,to='user1',quantity="0.10000000 AMAX",memo='x',submitter_="admin",expect_asset=True):
+		self.pushaction("issue",{"to":to,"quantity":quantity,"memo":memo,},submitter_,expect_asset=expect_asset) 
 
-	def open(self,owner='user1',symbol='8,AMAX',ram_payer='user1',suber="admin",expect_asset=True):
-		self.pushaction("open",{"owner":owner,"symbol":symbol,"ram_payer":ram_payer,},suber,expect_asset=expect_asset) 
+	def open(self,owner='user1',symbol='8,AMAX',ram_payer='user1',submitter_="admin",expect_asset=True):
+		self.pushaction("open",{"owner":owner,"symbol":symbol,"ram_payer":ram_payer,},submitter_,expect_asset=expect_asset) 
 
-	def retire(self,quantity="0.10000000 AMAX",memo='x',suber="admin",expect_asset=True):
-		self.pushaction("retire",{"quantity":quantity,"memo":memo,},suber,expect_asset=expect_asset) 
+	def retire(self,quantity="0.10000000 AMAX",memo='x',submitter_="admin",expect_asset=True):
+		self.pushaction("retire",{"quantity":quantity,"memo":memo,},submitter_,expect_asset=expect_asset) 
 
-	def transfer(self,from_='user1',to='user1',quantity="0.10000000 AMAX",memo='x',suber="admin",expect_asset=True):
-		self.pushaction("transfer",{"from":from_,"to":to,"quantity":quantity,"memo":memo,},suber,expect_asset=expect_asset) 
+	def transfer(self,from_='user1',to='user1',quantity="0.10000000 AMAX",memo='x',submitter_="admin",expect_asset=True):
+		self.pushaction("transfer",{"from":from_,"to":to,"quantity":quantity,"memo":memo,},submitter_,expect_asset=expect_asset) 
 
 	def get_accounts(self,scope):
 		return self.table("accounts",scope).json

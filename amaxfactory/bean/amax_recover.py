@@ -33,38 +33,38 @@ class AMAX_RECOVER(CreateAccount):
 		return self.name
             
 
-	def addauditconf(self,check_contract='user1',audit_type='user1',conf=[],suber="admin",expect_asset=True):
-		self.pushaction("addauditconf",{"check_contract":check_contract,"audit_type":audit_type,"conf":conf,},suber,expect_asset=expect_asset) 
+	def addauditconf(self,check_contract='user1',audit_type='user1',conf=[],submitter_="admin",expect_asset=True):
+		self.pushaction("addauditconf",{"check_contract":check_contract,"audit_type":audit_type,"conf":conf,},submitter_,expect_asset=expect_asset) 
 
-	def addauth(self,account='user1',contract='user1',suber="admin",expect_asset=True):
-		self.pushaction("addauth",{"account":account,"contract":contract,},suber,expect_asset=expect_asset) 
+	def addauth(self,account='user1',contract='user1',submitter_="admin",expect_asset=True):
+		self.pushaction("addauth",{"account":account,"contract":contract,},submitter_,expect_asset=expect_asset) 
 
-	def bindaccount(self,account='user1',default_auth='user1',suber="admin",expect_asset=True):
-		self.pushaction("bindaccount",{"account":account,"default_auth":default_auth,},suber,expect_asset=expect_asset) 
+	def bindaccount(self,account='user1',default_auth='user1',submitter_="admin",expect_asset=True):
+		self.pushaction("bindaccount",{"account":account,"default_auth":default_auth,},submitter_,expect_asset=expect_asset) 
 
-	def checkauth(self,auth_contract='user1',account='user1',suber="admin",expect_asset=True):
-		self.pushaction("checkauth",{"auth_contract":auth_contract,"account":account,},suber,expect_asset=expect_asset) 
+	def checkauth(self,auth_contract='user1',account='user1',submitter_="admin",expect_asset=True):
+		self.pushaction("checkauth",{"auth_contract":auth_contract,"account":account,},submitter_,expect_asset=expect_asset) 
 
-	def closeorder(self,submitter='user1',order_id=1,suber="admin",expect_asset=True):
-		self.pushaction("closeorder",{"submitter":submitter,"order_id":order_id,},suber,expect_asset=expect_asset) 
+	def closeorder(self,submitter='user1',order_id=1,submitter_="admin",expect_asset=True):
+		self.pushaction("closeorder",{"submitter":submitter,"order_id":order_id,},submitter_,expect_asset=expect_asset) 
 
-	def createorder(self,sn=1,auth_contract='user1',account='user1',manual_check_required='true',score=1,recover_target=[],suber="admin",expect_asset=True):
-		self.pushaction("createorder",{"sn":sn,"auth_contract":auth_contract,"account":account,"manual_check_required":manual_check_required,"score":score,"recover_target":recover_target,},suber,expect_asset=expect_asset) 
+	def createorder(self,sn=1,auth_contract='user1',account='user1',manual_check_required='true',score=1,recover_target=[],submitter_="admin",expect_asset=True):
+		self.pushaction("createorder",{"sn":sn,"auth_contract":auth_contract,"account":account,"manual_check_required":manual_check_required,"score":score,"recover_target":recover_target,},submitter_,expect_asset=expect_asset) 
 
-	def delauditconf(self,contract_name='user1',suber="admin",expect_asset=True):
-		self.pushaction("delauditconf",{"contract_name":contract_name,},suber,expect_asset=expect_asset) 
+	def delauditconf(self,contract_name='user1',submitter_="admin",expect_asset=True):
+		self.pushaction("delauditconf",{"contract_name":contract_name,},submitter_,expect_asset=expect_asset) 
 
-	def delorder(self,submitter='user1',order_id=1,suber="admin",expect_asset=True):
-		self.pushaction("delorder",{"submitter":submitter,"order_id":order_id,},suber,expect_asset=expect_asset) 
+	def delorder(self,submitter='user1',order_id=1,submitter_="admin",expect_asset=True):
+		self.pushaction("delorder",{"submitter":submitter,"order_id":order_id,},submitter_,expect_asset=expect_asset) 
 
-	def init(self,recover_threshold=1,amax_proxy_contract='user1',suber="admin",expect_asset=True):
-		self.pushaction("init",{"recover_threshold":recover_threshold,"amax_proxy_contract":amax_proxy_contract,},suber,expect_asset=expect_asset) 
+	def init(self,recover_threshold=1,amax_proxy_contract='user1',submitter_="admin",expect_asset=True):
+		self.pushaction("init",{"recover_threshold":recover_threshold,"amax_proxy_contract":amax_proxy_contract,},submitter_,expect_asset=expect_asset) 
 
-	def setscore(self,auth_contract='user1',account='user1',order_id=1,score=1,suber="admin",expect_asset=True):
-		self.pushaction("setscore",{"auth_contract":auth_contract,"account":account,"order_id":order_id,"score":score,},suber,expect_asset=expect_asset) 
+	def setscore(self,auth_contract='user1',account='user1',order_id=1,score=1,submitter_="admin",expect_asset=True):
+		self.pushaction("setscore",{"auth_contract":auth_contract,"account":account,"order_id":order_id,"score":score,},submitter_,expect_asset=expect_asset) 
 
-	def test(self,count=1,suber="admin",expect_asset=True):
-		self.pushaction("test",{"count":count,},suber,expect_asset=expect_asset) 
+	def test(self,count=1,submitter_="admin",expect_asset=True):
+		self.pushaction("test",{"count":count,},submitter_,expect_asset=expect_asset) 
 
 	def get_auditconf(self,scope):
 		return self.table("auditconf",scope).json

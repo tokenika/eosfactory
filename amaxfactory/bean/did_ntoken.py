@@ -33,26 +33,26 @@ class DID_NTOKEN(CreateAccount):
 		return self.name
             
 
-	def create(self,issuer='user1',maximum_supply=[],symbol=[],token_uri='x',ipowner='user1',suber="admin",expect_asset=True):
-		self.pushaction("create",{"issuer":issuer,"maximum_supply":maximum_supply,"symbol":symbol,"token_uri":token_uri,"ipowner":ipowner,},suber,expect_asset=expect_asset) 
+	def create(self,issuer='user1',maximum_supply=[],symbol=[],token_uri='x',ipowner='user1',submitter_="admin",expect_asset=True):
+		self.pushaction("create",{"issuer":issuer,"maximum_supply":maximum_supply,"symbol":symbol,"token_uri":token_uri,"ipowner":ipowner,},submitter_,expect_asset=expect_asset) 
 
-	def issue(self,to='user1',quantity=[],memo='x',suber="admin",expect_asset=True):
-		self.pushaction("issue",{"to":to,"quantity":quantity,"memo":memo,},suber,expect_asset=expect_asset) 
+	def issue(self,to='user1',quantity=[],memo='x',submitter_="admin",expect_asset=True):
+		self.pushaction("issue",{"to":to,"quantity":quantity,"memo":memo,},submitter_,expect_asset=expect_asset) 
 
-	def notarize(self,notary='user1',token_id=1,suber="admin",expect_asset=True):
-		self.pushaction("notarize",{"notary":notary,"token_id":token_id,},suber,expect_asset=expect_asset) 
+	def notarize(self,notary='user1',token_id=1,submitter_="admin",expect_asset=True):
+		self.pushaction("notarize",{"notary":notary,"token_id":token_id,},submitter_,expect_asset=expect_asset) 
 
-	def retire(self,quantity=[],memo='x',suber="admin",expect_asset=True):
-		self.pushaction("retire",{"quantity":quantity,"memo":memo,},suber,expect_asset=expect_asset) 
+	def retire(self,quantity=[],memo='x',submitter_="admin",expect_asset=True):
+		self.pushaction("retire",{"quantity":quantity,"memo":memo,},submitter_,expect_asset=expect_asset) 
 
-	def setacctperms(self,issuer='user1',to='user1',symbol=[],allowsend='true',allowrecv='true',suber="admin",expect_asset=True):
-		self.pushaction("setacctperms",{"issuer":issuer,"to":to,"symbol":symbol,"allowsend":allowsend,"allowrecv":allowrecv,},suber,expect_asset=expect_asset) 
+	def setacctperms(self,issuer='user1',to='user1',symbol=[],allowsend='true',allowrecv='true',submitter_="admin",expect_asset=True):
+		self.pushaction("setacctperms",{"issuer":issuer,"to":to,"symbol":symbol,"allowsend":allowsend,"allowrecv":allowrecv,},submitter_,expect_asset=expect_asset) 
 
-	def setnotary(self,notary='user1',to_add='true',suber="admin",expect_asset=True):
-		self.pushaction("setnotary",{"notary":notary,"to_add":to_add,},suber,expect_asset=expect_asset) 
+	def setnotary(self,notary='user1',to_add='true',submitter_="admin",expect_asset=True):
+		self.pushaction("setnotary",{"notary":notary,"to_add":to_add,},submitter_,expect_asset=expect_asset) 
 
-	def transfer(self,from_='user1',to='user1',assets=[],memo='x',suber="admin",expect_asset=True):
-		self.pushaction("transfer",{"from":from_,"to":to,"assets":assets,"memo":memo,},suber,expect_asset=expect_asset) 
+	def transfer(self,from_='user1',to='user1',assets=[],memo='x',submitter_="admin",expect_asset=True):
+		self.pushaction("transfer",{"from":from_,"to":to,"assets":assets,"memo":memo,},submitter_,expect_asset=expect_asset) 
 
 	def get_accounts(self,scope):
 		return self.table("accounts",scope).json

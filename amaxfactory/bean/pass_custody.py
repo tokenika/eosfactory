@@ -33,29 +33,29 @@ class PASS_CUSTODY(CreateAccount):
 		return self.name
             
 
-	def addplan(self,owner='user1',title='x',asset_contract='user1',asset_symbol=[],unlock_interval_days=1,unlock_times=[],suber="admin",expect_asset=True):
-		self.pushaction("addplan",{"owner":owner,"title":title,"asset_contract":asset_contract,"asset_symbol":asset_symbol,"unlock_interval_days":unlock_interval_days,"unlock_times":unlock_times,},suber,expect_asset=expect_asset) 
+	def addplan(self,owner='user1',title='x',asset_contract='user1',asset_symbol=[],unlock_interval_days=1,unlock_times=[],submitter_="admin",expect_asset=True):
+		self.pushaction("addplan",{"owner":owner,"title":title,"asset_contract":asset_contract,"asset_symbol":asset_symbol,"unlock_interval_days":unlock_interval_days,"unlock_times":unlock_times,},submitter_,expect_asset=expect_asset) 
 
-	def endlock(self,locker='user1',plan_id=1,lock_id=1,suber="admin",expect_asset=True):
-		self.pushaction("endlock",{"locker":locker,"plan_id":plan_id,"lock_id":lock_id,},suber,expect_asset=expect_asset) 
+	def endlock(self,locker='user1',plan_id=1,lock_id=1,submitter_="admin",expect_asset=True):
+		self.pushaction("endlock",{"locker":locker,"plan_id":plan_id,"lock_id":lock_id,},submitter_,expect_asset=expect_asset) 
 
-	def init(self,suber="admin",expect_asset=True):
-		self.pushaction("init",{},suber,expect_asset=expect_asset) 
+	def init(self,submitter_="admin",expect_asset=True):
+		self.pushaction("init",{},submitter_,expect_asset=expect_asset) 
 
-	def movetrace(self,trace=[],suber="admin",expect_asset=True):
-		self.pushaction("movetrace",{"trace":trace,},suber,expect_asset=expect_asset) 
+	def movetrace(self,trace=[],submitter_="admin",expect_asset=True):
+		self.pushaction("movetrace",{"trace":trace,},submitter_,expect_asset=expect_asset) 
 
-	def setconfig(self,plan_fee="0.10000000 AMAX",fee_receiver='user1',suber="admin",expect_asset=True):
-		self.pushaction("setconfig",{"plan_fee":plan_fee,"fee_receiver":fee_receiver,},suber,expect_asset=expect_asset) 
+	def setconfig(self,plan_fee="0.10000000 AMAX",fee_receiver='user1',submitter_="admin",expect_asset=True):
+		self.pushaction("setconfig",{"plan_fee":plan_fee,"fee_receiver":fee_receiver,},submitter_,expect_asset=expect_asset) 
 
-	def setmovwindow(self,plan_id=1,symbol=[],started_at=[],finished_at=[],suber="admin",expect_asset=True):
-		self.pushaction("setmovwindow",{"plan_id":plan_id,"symbol":symbol,"started_at":started_at,"finished_at":finished_at,},suber,expect_asset=expect_asset) 
+	def setmovwindow(self,plan_id=1,symbol=[],started_at=[],finished_at=[],submitter_="admin",expect_asset=True):
+		self.pushaction("setmovwindow",{"plan_id":plan_id,"symbol":symbol,"started_at":started_at,"finished_at":finished_at,},submitter_,expect_asset=expect_asset) 
 
-	def setplanowner(self,owner='user1',plan_id=1,new_owner='user1',suber="admin",expect_asset=True):
-		self.pushaction("setplanowner",{"owner":owner,"plan_id":plan_id,"new_owner":new_owner,},suber,expect_asset=expect_asset) 
+	def setplanowner(self,owner='user1',plan_id=1,new_owner='user1',submitter_="admin",expect_asset=True):
+		self.pushaction("setplanowner",{"owner":owner,"plan_id":plan_id,"new_owner":new_owner,},submitter_,expect_asset=expect_asset) 
 
-	def unlock(self,locker='user1',plan_id=1,lock_id=1,suber="admin",expect_asset=True):
-		self.pushaction("unlock",{"locker":locker,"plan_id":plan_id,"lock_id":lock_id,},suber,expect_asset=expect_asset) 
+	def unlock(self,locker='user1',plan_id=1,lock_id=1,submitter_="admin",expect_asset=True):
+		self.pushaction("unlock",{"locker":locker,"plan_id":plan_id,"lock_id":lock_id,},submitter_,expect_asset=expect_asset) 
 
 	def get_global(self,scope):
 		return self.table("global",scope).json

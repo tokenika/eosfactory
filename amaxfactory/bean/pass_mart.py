@@ -33,23 +33,23 @@ class PASS_MART(CreateAccount):
 		return self.name
             
 
-	def addpass(self,owner='user1',title='x',nft_symbol=[],gift_symbol=[],price="0.10000000 AMAX",started_at=[],ended_at=[],custody_plan_id=1,token_split_plan_id=1,suber="admin",expect_asset=True):
-		self.pushaction("addpass",{"owner":owner,"title":title,"nft_symbol":nft_symbol,"gift_symbol":gift_symbol,"price":price,"started_at":started_at,"ended_at":ended_at,"custody_plan_id":custody_plan_id,"token_split_plan_id":token_split_plan_id,},suber,expect_asset=expect_asset) 
+	def addpass(self,owner='user1',title='x',nft_symbol=[],gift_symbol=[],price="0.10000000 AMAX",started_at=[],ended_at=[],custody_plan_id=1,token_split_plan_id=1,submitter_="admin",expect_asset=True):
+		self.pushaction("addpass",{"owner":owner,"title":title,"nft_symbol":nft_symbol,"gift_symbol":gift_symbol,"price":price,"started_at":started_at,"ended_at":ended_at,"custody_plan_id":custody_plan_id,"token_split_plan_id":token_split_plan_id,},submitter_,expect_asset=expect_asset) 
 
-	def closepass(self,pass_id=1,suber="admin",expect_asset=True):
-		self.pushaction("closepass",{"pass_id":pass_id,},suber,expect_asset=expect_asset) 
+	def closepass(self,pass_id=1,submitter_="admin",expect_asset=True):
+		self.pushaction("closepass",{"pass_id":pass_id,},submitter_,expect_asset=expect_asset) 
 
-	def init(self,admin='user1',nft_contract='user1',gift_nft_contract='user1',custody_contract='user1',token_split_contract='user1',suber="admin",expect_asset=True):
-		self.pushaction("init",{"admin":admin,"nft_contract":nft_contract,"gift_nft_contract":gift_nft_contract,"custody_contract":custody_contract,"token_split_contract":token_split_contract,},suber,expect_asset=expect_asset) 
+	def init(self,admin='user1',nft_contract='user1',gift_nft_contract='user1',custody_contract='user1',token_split_contract='user1',submitter_="admin",expect_asset=True):
+		self.pushaction("init",{"admin":admin,"nft_contract":nft_contract,"gift_nft_contract":gift_nft_contract,"custody_contract":custody_contract,"token_split_contract":token_split_contract,},submitter_,expect_asset=expect_asset) 
 
-	def ordertrace(self,order=[],suber="admin",expect_asset=True):
-		self.pushaction("ordertrace",{"order":order,},suber,expect_asset=expect_asset) 
+	def ordertrace(self,order=[],submitter_="admin",expect_asset=True):
+		self.pushaction("ordertrace",{"order":order,},submitter_,expect_asset=expect_asset) 
 
-	def setendtime(self,pass_id=1,sell_ended_at=[],suber="admin",expect_asset=True):
-		self.pushaction("setendtime",{"pass_id":pass_id,"sell_ended_at":sell_ended_at,},suber,expect_asset=expect_asset) 
+	def setendtime(self,pass_id=1,sell_ended_at=[],submitter_="admin",expect_asset=True):
+		self.pushaction("setendtime",{"pass_id":pass_id,"sell_ended_at":sell_ended_at,},submitter_,expect_asset=expect_asset) 
 
-	def setowner(self,pass_id=1,owner='user1',suber="admin",expect_asset=True):
-		self.pushaction("setowner",{"pass_id":pass_id,"owner":owner,},suber,expect_asset=expect_asset) 
+	def setowner(self,pass_id=1,owner='user1',submitter_="admin",expect_asset=True):
+		self.pushaction("setowner",{"pass_id":pass_id,"owner":owner,},submitter_,expect_asset=expect_asset) 
 
 	def get_global(self,scope):
 		return self.table("global",scope).json

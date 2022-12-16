@@ -33,23 +33,23 @@ class NFTONE_MART(CreateAccount):
 		return self.name
             
 
-	def cancelbid(self,buyer='user1',buyer_bid_id=1,suber="admin",expect_asset=True):
-		self.pushaction("cancelbid",{"buyer":buyer,"buyer_bid_id":buyer_bid_id,},suber,expect_asset=expect_asset) 
+	def cancelbid(self,buyer='user1',buyer_bid_id=1,submitter_="admin",expect_asset=True):
+		self.pushaction("cancelbid",{"buyer":buyer,"buyer_bid_id":buyer_bid_id,},submitter_,expect_asset=expect_asset) 
 
-	def cancelorder(self,maker='user1',token_id=1,order_id=1,suber="admin",expect_asset=True):
-		self.pushaction("cancelorder",{"maker":maker,"token_id":token_id,"order_id":order_id,},suber,expect_asset=expect_asset) 
+	def cancelorder(self,maker='user1',token_id=1,order_id=1,submitter_="admin",expect_asset=True):
+		self.pushaction("cancelorder",{"maker":maker,"token_id":token_id,"order_id":order_id,},submitter_,expect_asset=expect_asset) 
 
-	def dealtrace(self,trace=[],suber="admin",expect_asset=True):
-		self.pushaction("dealtrace",{"trace":trace,},suber,expect_asset=expect_asset) 
+	def dealtrace(self,trace=[],submitter_="admin",expect_asset=True):
+		self.pushaction("dealtrace",{"trace":trace,},submitter_,expect_asset=expect_asset) 
 
-	def init(self,pay_symbol='8,AMAX',pay_contract='user1',admin='user1',devfeerate=[],feecollector='user1',ipfeerate=[],suber="admin",expect_asset=True):
-		self.pushaction("init",{"pay_symbol":pay_symbol,"pay_contract":pay_contract,"admin":admin,"devfeerate":devfeerate,"feecollector":feecollector,"ipfeerate":ipfeerate,},suber,expect_asset=expect_asset) 
+	def init(self,pay_symbol='8,AMAX',pay_contract='user1',admin='user1',devfeerate=[],feecollector='user1',ipfeerate=[],submitter_="admin",expect_asset=True):
+		self.pushaction("init",{"pay_symbol":pay_symbol,"pay_contract":pay_contract,"admin":admin,"devfeerate":devfeerate,"feecollector":feecollector,"ipfeerate":ipfeerate,},submitter_,expect_asset=expect_asset) 
 
-	def setfeecollec(self,dev_fee_collector='user1',suber="admin",expect_asset=True):
-		self.pushaction("setfeecollec",{"dev_fee_collector":dev_fee_collector,},suber,expect_asset=expect_asset) 
+	def setfeecollec(self,dev_fee_collector='user1',submitter_="admin",expect_asset=True):
+		self.pushaction("setfeecollec",{"dev_fee_collector":dev_fee_collector,},submitter_,expect_asset=expect_asset) 
 
-	def takebuybid(self,issuer='user1',token_id=1,buyer_bid_id=1,suber="admin",expect_asset=True):
-		self.pushaction("takebuybid",{"issuer":issuer,"token_id":token_id,"buyer_bid_id":buyer_bid_id,},suber,expect_asset=expect_asset) 
+	def takebuybid(self,issuer='user1',token_id=1,buyer_bid_id=1,submitter_="admin",expect_asset=True):
+		self.pushaction("takebuybid",{"issuer":issuer,"token_id":token_id,"buyer_bid_id":buyer_bid_id,},submitter_,expect_asset=expect_asset) 
 
 	def get_buyerbids(self,scope):
 		return self.table("buyerbids",scope).json

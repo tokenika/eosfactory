@@ -375,7 +375,7 @@ def create_action_demo(file_name,contract_name,abi_file_path,dir):
                     func += kv
                     body = body[0:-1]
                     content += func + '):\n\t\t'
-                    content += body + ''']' -p {suber}""") \n'''
+                    content += body + ''']' -p {submitter_}""") \n'''
                     content += '\t\treturn self\n\n'
         for table in obj['tables']:
             name = table['name']
@@ -482,17 +482,17 @@ class {str(obj_name).upper()}(CreateAccount):
                             kv += f'{key_name}={value},'
                             kk += f'"{key_name}":{key_name},'
                     kk = "{"+kk+"}"
-                    kv += 'suber="admin",expect_asset=True'
+                    kv += 'submitter_="admin",expect_asset=True'
                     
                     demo += f'\n\tdef {struct_name}(self,{kv}):\n'
                     # demo += f'\t\tassert self.body\n'
-                    demo += f'\t\tself.pushaction("{struct_name}",{kk},suber,expect_asset=expect_asset) \n'
+                    demo += f'\t\tself.pushaction("{struct_name}",{kk},submitter_,expect_asset=expect_asset) \n'
 
                     kv += "admin"
                     func += kv
                     body = body[0:-1]
                     content += func + '):\n\t\t'
-                    content += body + ''']' -p {suber}""") \n'''
+                    content += body + ''']' -p {submitter_}""") \n'''
                     content += '\t\treturn self\n\n'
         for table in obj['tables']:
             demo += f'''

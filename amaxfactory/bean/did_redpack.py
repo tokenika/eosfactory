@@ -33,26 +33,26 @@ class DID_REDPACK(CreateAccount):
 		return self.name
             
 
-	def addfee(self,fee="0.10000000 AMAX",contract='user1',min_unit=1,did_contract='user1',did_id=1,suber="admin",expect_asset=True):
-		self.pushaction("addfee",{"fee":fee,"contract":contract,"min_unit":min_unit,"did_contract":did_contract,"did_id":did_id,},suber,expect_asset=expect_asset) 
+	def addfee(self,fee="0.10000000 AMAX",contract='user1',min_unit=1,did_contract='user1',did_id=1,submitter_="admin",expect_asset=True):
+		self.pushaction("addfee",{"fee":fee,"contract":contract,"min_unit":min_unit,"did_contract":did_contract,"did_id":did_id,},submitter_,expect_asset=expect_asset) 
 
-	def cancel(self,code='user1',suber="admin",expect_asset=True):
-		self.pushaction("cancel",{"code":code,},suber,expect_asset=expect_asset) 
+	def cancel(self,code='user1',submitter_="admin",expect_asset=True):
+		self.pushaction("cancel",{"code":code,},submitter_,expect_asset=expect_asset) 
 
-	def claimredpack(self,claimer='user1',code='user1',pwhash='x',suber="admin",expect_asset=True):
-		self.pushaction("claimredpack",{"claimer":claimer,"code":code,"pwhash":pwhash,},suber,expect_asset=expect_asset) 
+	def claimredpack(self,claimer='user1',code='user1',pwhash='x',submitter_="admin",expect_asset=True):
+		self.pushaction("claimredpack",{"claimer":claimer,"code":code,"pwhash":pwhash,},submitter_,expect_asset=expect_asset) 
 
-	def delclaims(self,max_rows=1,suber="admin",expect_asset=True):
-		self.pushaction("delclaims",{"max_rows":max_rows,},suber,expect_asset=expect_asset) 
+	def delclaims(self,max_rows=1,submitter_="admin",expect_asset=True):
+		self.pushaction("delclaims",{"max_rows":max_rows,},submitter_,expect_asset=expect_asset) 
 
-	def delfee(self,coin='8,AMAX',suber="admin",expect_asset=True):
-		self.pushaction("delfee",{"coin":coin,},suber,expect_asset=expect_asset) 
+	def delfee(self,coin='8,AMAX',submitter_="admin",expect_asset=True):
+		self.pushaction("delfee",{"coin":coin,},submitter_,expect_asset=expect_asset) 
 
-	def delredpacks(self,code='user1',suber="admin",expect_asset=True):
-		self.pushaction("delredpacks",{"code":code,},suber,expect_asset=expect_asset) 
+	def delredpacks(self,code='user1',submitter_="admin",expect_asset=True):
+		self.pushaction("delredpacks",{"code":code,},submitter_,expect_asset=expect_asset) 
 
-	def init(self,admin='user1',hours=1,did_supported='true',suber="admin",expect_asset=True):
-		self.pushaction("init",{"admin":admin,"hours":hours,"did_supported":did_supported,},suber,expect_asset=expect_asset) 
+	def init(self,admin='user1',hours=1,did_supported='true',submitter_="admin",expect_asset=True):
+		self.pushaction("init",{"admin":admin,"hours":hours,"did_supported":did_supported,},submitter_,expect_asset=expect_asset) 
 
 	def get_claims(self,scope):
 		return self.table("claims",scope).json

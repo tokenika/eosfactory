@@ -33,44 +33,44 @@ class AMAX_XTOKEN(CreateAccount):
 		return self.name
             
 
-	def close(self,owner='user1',symbol='8,AMAX',suber="admin",expect_asset=True):
-		self.pushaction("close",{"owner":owner,"symbol":symbol,},suber,expect_asset=expect_asset) 
+	def close(self,owner='user1',symbol='8,AMAX',submitter_="admin",expect_asset=True):
+		self.pushaction("close",{"owner":owner,"symbol":symbol,},submitter_,expect_asset=expect_asset) 
 
-	def create(self,issuer='user1',maximum_supply="0.10000000 AMAX",suber="admin",expect_asset=True):
-		self.pushaction("create",{"issuer":issuer,"maximum_supply":maximum_supply,},suber,expect_asset=expect_asset) 
+	def create(self,issuer='user1',maximum_supply="0.10000000 AMAX",submitter_="admin",expect_asset=True):
+		self.pushaction("create",{"issuer":issuer,"maximum_supply":maximum_supply,},submitter_,expect_asset=expect_asset) 
 
-	def feeexempt(self,symbol='8,AMAX',account='user1',is_fee_exempt='true',suber="admin",expect_asset=True):
-		self.pushaction("feeexempt",{"symbol":symbol,"account":account,"is_fee_exempt":is_fee_exempt,},suber,expect_asset=expect_asset) 
+	def feeexempt(self,symbol='8,AMAX',account='user1',is_fee_exempt='true',submitter_="admin",expect_asset=True):
+		self.pushaction("feeexempt",{"symbol":symbol,"account":account,"is_fee_exempt":is_fee_exempt,},submitter_,expect_asset=expect_asset) 
 
-	def feeratio(self,symbol='8,AMAX',fee_ratio=1,suber="admin",expect_asset=True):
-		self.pushaction("feeratio",{"symbol":symbol,"fee_ratio":fee_ratio,},suber,expect_asset=expect_asset) 
+	def feeratio(self,symbol='8,AMAX',fee_ratio=1,submitter_="admin",expect_asset=True):
+		self.pushaction("feeratio",{"symbol":symbol,"fee_ratio":fee_ratio,},submitter_,expect_asset=expect_asset) 
 
-	def feereceiver(self,symbol='8,AMAX',fee_receiver='user1',suber="admin",expect_asset=True):
-		self.pushaction("feereceiver",{"symbol":symbol,"fee_receiver":fee_receiver,},suber,expect_asset=expect_asset) 
+	def feereceiver(self,symbol='8,AMAX',fee_receiver='user1',submitter_="admin",expect_asset=True):
+		self.pushaction("feereceiver",{"symbol":symbol,"fee_receiver":fee_receiver,},submitter_,expect_asset=expect_asset) 
 
-	def freezeacct(self,symbol='8,AMAX',account='user1',is_frozen='true',suber="admin",expect_asset=True):
-		self.pushaction("freezeacct",{"symbol":symbol,"account":account,"is_frozen":is_frozen,},suber,expect_asset=expect_asset) 
+	def freezeacct(self,symbol='8,AMAX',account='user1',is_frozen='true',submitter_="admin",expect_asset=True):
+		self.pushaction("freezeacct",{"symbol":symbol,"account":account,"is_frozen":is_frozen,},submitter_,expect_asset=expect_asset) 
 
-	def issue(self,to='user1',quantity="0.10000000 AMAX",memo='x',suber="admin",expect_asset=True):
-		self.pushaction("issue",{"to":to,"quantity":quantity,"memo":memo,},suber,expect_asset=expect_asset) 
+	def issue(self,to='user1',quantity="0.10000000 AMAX",memo='x',submitter_="admin",expect_asset=True):
+		self.pushaction("issue",{"to":to,"quantity":quantity,"memo":memo,},submitter_,expect_asset=expect_asset) 
 
-	def minfee(self,symbol='8,AMAX',min_fee_quantity="0.10000000 AMAX",suber="admin",expect_asset=True):
-		self.pushaction("minfee",{"symbol":symbol,"min_fee_quantity":min_fee_quantity,},suber,expect_asset=expect_asset) 
+	def minfee(self,symbol='8,AMAX',min_fee_quantity="0.10000000 AMAX",submitter_="admin",expect_asset=True):
+		self.pushaction("minfee",{"symbol":symbol,"min_fee_quantity":min_fee_quantity,},submitter_,expect_asset=expect_asset) 
 
-	def notifypayfee(self,from_='user1',to='user1',fee_receiver='user1',fee="0.10000000 AMAX",memo='x',suber="admin",expect_asset=True):
-		self.pushaction("notifypayfee",{"from":from_,"to":to,"fee_receiver":fee_receiver,"fee":fee,"memo":memo,},suber,expect_asset=expect_asset) 
+	def notifypayfee(self,from_='user1',to='user1',fee_receiver='user1',fee="0.10000000 AMAX",memo='x',submitter_="admin",expect_asset=True):
+		self.pushaction("notifypayfee",{"from":from_,"to":to,"fee_receiver":fee_receiver,"fee":fee,"memo":memo,},submitter_,expect_asset=expect_asset) 
 
-	def open(self,owner='user1',symbol='8,AMAX',ram_payer='user1',suber="admin",expect_asset=True):
-		self.pushaction("open",{"owner":owner,"symbol":symbol,"ram_payer":ram_payer,},suber,expect_asset=expect_asset) 
+	def open(self,owner='user1',symbol='8,AMAX',ram_payer='user1',submitter_="admin",expect_asset=True):
+		self.pushaction("open",{"owner":owner,"symbol":symbol,"ram_payer":ram_payer,},submitter_,expect_asset=expect_asset) 
 
-	def pause(self,symbol='8,AMAX',is_paused='true',suber="admin",expect_asset=True):
-		self.pushaction("pause",{"symbol":symbol,"is_paused":is_paused,},suber,expect_asset=expect_asset) 
+	def pause(self,symbol='8,AMAX',is_paused='true',submitter_="admin",expect_asset=True):
+		self.pushaction("pause",{"symbol":symbol,"is_paused":is_paused,},submitter_,expect_asset=expect_asset) 
 
-	def retire(self,quantity="0.10000000 AMAX",memo='x',suber="admin",expect_asset=True):
-		self.pushaction("retire",{"quantity":quantity,"memo":memo,},suber,expect_asset=expect_asset) 
+	def retire(self,quantity="0.10000000 AMAX",memo='x',submitter_="admin",expect_asset=True):
+		self.pushaction("retire",{"quantity":quantity,"memo":memo,},submitter_,expect_asset=expect_asset) 
 
-	def transfer(self,from_='user1',to='user1',quantity="0.10000000 AMAX",memo='x',suber="admin",expect_asset=True):
-		self.pushaction("transfer",{"from":from_,"to":to,"quantity":quantity,"memo":memo,},suber,expect_asset=expect_asset) 
+	def transfer(self,from_='user1',to='user1',quantity="0.10000000 AMAX",memo='x',submitter_="admin",expect_asset=True):
+		self.pushaction("transfer",{"from":from_,"to":to,"quantity":quantity,"memo":memo,},submitter_,expect_asset=expect_asset) 
 
 	def get_accounts(self,scope):
 		return self.table("accounts",scope).json
