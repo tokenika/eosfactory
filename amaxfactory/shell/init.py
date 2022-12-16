@@ -109,7 +109,7 @@ def deploy_amax():
     #     abi_file=CONTRACT_WASM_PATH + "amax/amax.token/amax.token.abi")
     # smart.deploy()
 
-    amax_token = AMAX_TOKEN().body
+    amax_token = AMAX_TOKEN()
     amax_token.push_action(
         "create",
         {

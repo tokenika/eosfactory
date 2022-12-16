@@ -42,6 +42,9 @@ class DID_REDPACK(CreateAccount):
 	def claimredpack(self,claimer='user1',code='user1',pwhash='x',suber="admin",expect_asset=True):
 		self.pushaction("claimredpack",{"claimer":claimer,"code":code,"pwhash":pwhash,},suber,expect_asset=expect_asset) 
 
+	def delclaims(self,max_rows=1,suber="admin",expect_asset=True):
+		self.pushaction("delclaims",{"max_rows":max_rows,},suber,expect_asset=expect_asset) 
+
 	def delfee(self,coin='8,AMAX',suber="admin",expect_asset=True):
 		self.pushaction("delfee",{"coin":coin,},suber,expect_asset=expect_asset) 
 

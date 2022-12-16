@@ -116,34 +116,6 @@
             ]
         },
         {
-            "name": "faildid",
-            "base": "",
-            "fields": [
-                {
-                    "name": "order_id",
-                    "type": "uint64"
-                },
-                {
-                    "name": "reason",
-                    "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "finishdid",
-            "base": "",
-            "fields": [
-                {
-                    "name": "order_id",
-                    "type": "uint64"
-                },
-                {
-                    "name": "msg",
-                    "type": "string"
-                }
-            ]
-        },
-        {
             "name": "global_t",
             "base": "",
             "fields": [
@@ -218,7 +190,7 @@
                     "type": "uint64"
                 },
                 {
-                    "name": "maker",
+                    "name": "applicant",
                     "type": "name"
                 },
                 {
@@ -240,12 +212,40 @@
             ]
         },
         {
+            "name": "pending_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "order_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
             "name": "setadmin",
             "base": "",
             "fields": [
                 {
                     "name": "admin",
                     "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "setdidstatus",
+            "base": "",
+            "fields": [
+                {
+                    "name": "order_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "status",
+                    "type": "name"
+                },
+                {
+                    "name": "msg",
+                    "type": "string"
                 }
             ]
         },
@@ -313,16 +313,6 @@
             "ricardian_contract": ""
         },
         {
-            "name": "faildid",
-            "type": "faildid",
-            "ricardian_contract": ""
-        },
-        {
-            "name": "finishdid",
-            "type": "finishdid",
-            "ricardian_contract": ""
-        },
-        {
             "name": "init",
             "type": "init",
             "ricardian_contract": ""
@@ -330,6 +320,11 @@
         {
             "name": "setadmin",
             "type": "setadmin",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setdidstatus",
+            "type": "setdidstatus",
             "ricardian_contract": ""
         }
     ],
@@ -344,6 +339,13 @@
         {
             "name": "orders",
             "type": "order_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "pendings",
+            "type": "pending_t",
             "index_type": "i64",
             "key_names": [],
             "key_types": []

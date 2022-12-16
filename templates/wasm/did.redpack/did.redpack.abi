@@ -88,6 +88,16 @@
             ]
         },
         {
+            "name": "delclaims",
+            "base": "",
+            "fields": [
+                {
+                    "name": "max_rows",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
             "name": "delfee",
             "base": "",
             "fields": [
@@ -246,6 +256,11 @@
         {
             "name": "claimredpack",
             "type": "claimredpack",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "delclaims",
+            "type": "delclaims",
             "ricardian_contract": ""
         },
         {
