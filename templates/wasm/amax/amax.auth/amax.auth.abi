@@ -1,0 +1,341 @@
+{
+    "____comment": "This file was generated with amax-abigen. DO NOT EDIT ",
+    "version": "amax::abi/1.1",
+    "types": [
+        {
+            "new_type_name": "recover_target_type",
+            "type": "variant_public_key_string"
+        }
+    ],
+    "structs": [
+        {
+            "name": "account_realme_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "account",
+                    "type": "name"
+                },
+                {
+                    "name": "realme_info",
+                    "type": "string"
+                },
+                {
+                    "name": "created_at",
+                    "type": "time_point_sec"
+                }
+            ]
+        },
+        {
+            "name": "auth_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "auth",
+                    "type": "name"
+                },
+                {
+                    "name": "actions",
+                    "type": "name[]"
+                }
+            ]
+        },
+        {
+            "name": "authority",
+            "base": "",
+            "fields": [
+                {
+                    "name": "threshold",
+                    "type": "uint32"
+                },
+                {
+                    "name": "keys",
+                    "type": "key_weight[]"
+                },
+                {
+                    "name": "accounts",
+                    "type": "permission_level_weight[]"
+                },
+                {
+                    "name": "waits",
+                    "type": "wait_weight[]"
+                }
+            ]
+        },
+        {
+            "name": "bindinfo",
+            "base": "",
+            "fields": [
+                {
+                    "name": "admin",
+                    "type": "name"
+                },
+                {
+                    "name": "account",
+                    "type": "name"
+                },
+                {
+                    "name": "info",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "createorder",
+            "base": "",
+            "fields": [
+                {
+                    "name": "sn",
+                    "type": "uint64"
+                },
+                {
+                    "name": "admin",
+                    "type": "name"
+                },
+                {
+                    "name": "account",
+                    "type": "name"
+                },
+                {
+                    "name": "manual_check_required",
+                    "type": "bool"
+                },
+                {
+                    "name": "score",
+                    "type": "uint8"
+                },
+                {
+                    "name": "recover_target",
+                    "type": "recover_target_type"
+                }
+            ]
+        },
+        {
+            "name": "delauth",
+            "base": "",
+            "fields": [
+                {
+                    "name": "account",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "global_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "amax_recover_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "amax_proxy_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "auth_type",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "init",
+            "base": "",
+            "fields": [
+                {
+                    "name": "amax_recover",
+                    "type": "name"
+                },
+                {
+                    "name": "amax_proxy_contract",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "key_weight",
+            "base": "",
+            "fields": [
+                {
+                    "name": "key",
+                    "type": "public_key"
+                },
+                {
+                    "name": "weight",
+                    "type": "uint16"
+                }
+            ]
+        },
+        {
+            "name": "newaccount",
+            "base": "",
+            "fields": [
+                {
+                    "name": "admin",
+                    "type": "name"
+                },
+                {
+                    "name": "creator",
+                    "type": "name"
+                },
+                {
+                    "name": "account",
+                    "type": "name"
+                },
+                {
+                    "name": "info",
+                    "type": "string"
+                },
+                {
+                    "name": "active",
+                    "type": "authority"
+                }
+            ]
+        },
+        {
+            "name": "permission_level",
+            "base": "",
+            "fields": [
+                {
+                    "name": "actor",
+                    "type": "name"
+                },
+                {
+                    "name": "permission",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "permission_level_weight",
+            "base": "",
+            "fields": [
+                {
+                    "name": "permission",
+                    "type": "permission_level"
+                },
+                {
+                    "name": "weight",
+                    "type": "uint16"
+                }
+            ]
+        },
+        {
+            "name": "setauth",
+            "base": "",
+            "fields": [
+                {
+                    "name": "account",
+                    "type": "name"
+                },
+                {
+                    "name": "actions",
+                    "type": "name[]"
+                }
+            ]
+        },
+        {
+            "name": "setscore",
+            "base": "",
+            "fields": [
+                {
+                    "name": "admin",
+                    "type": "name"
+                },
+                {
+                    "name": "account",
+                    "type": "name"
+                },
+                {
+                    "name": "order_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "score",
+                    "type": "uint8"
+                }
+            ]
+        },
+        {
+            "name": "wait_weight",
+            "base": "",
+            "fields": [
+                {
+                    "name": "wait_sec",
+                    "type": "uint32"
+                },
+                {
+                    "name": "weight",
+                    "type": "uint16"
+                }
+            ]
+        }
+    ],
+    "actions": [
+        {
+            "name": "bindinfo",
+            "type": "bindinfo",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "createorder",
+            "type": "createorder",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "delauth",
+            "type": "delauth",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "init",
+            "type": "init",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "newaccount",
+            "type": "newaccount",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setauth",
+            "type": "setauth",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setscore",
+            "type": "setscore",
+            "ricardian_contract": ""
+        }
+    ],
+    "tables": [
+        {
+            "name": "acctrealme",
+            "type": "account_realme_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "auths",
+            "type": "auth_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "global",
+            "type": "global_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        }
+    ],
+    "ricardian_clauses": [],
+    "variants": [
+        {
+            "name": "variant_public_key_string",
+            "types": ["public_key","string"]
+        }
+    ]
+}

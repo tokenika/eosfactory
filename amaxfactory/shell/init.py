@@ -11,7 +11,7 @@ import amaxfactory.core.interface as interface
 import amaxfactory.shell.wallet as wallet
 import amaxfactory.shell.account as account
 import amaxfactory.shell.contract as contract
-from amaxfactory.beans.amax import AMAX as AMAX_TOKEN
+from amaxfactory.bean.bean_list import *
 
 verbosity =  logger.verbosity
 Verbosity =  logger.Verbosity
@@ -73,13 +73,14 @@ def deploy_amax():
 
     amax = new_master_account()
     admin = new_account(amax,"admin")
-    amax_token = new_account(amax,'amax.token')
+    # amax_token = new_account(amax,'amax.token')
     
-    smart = Contract(amax_token, 
-        wasm_file=CONTRACT_WASM_PATH + 'amax/amax.token/amax.token.wasm',
-        abi_file=CONTRACT_WASM_PATH + "amax/amax.token/amax.token.abi")
-    smart.deploy()
+    # smart = Contract(amax_token, 
+    #     wasm_file=CONTRACT_WASM_PATH + 'amax/amax.token/amax.token.wasm',
+    #     abi_file=CONTRACT_WASM_PATH + "amax/amax.token/amax.token.abi")
+    # smart.deploy()
 
+    amax_token = AMAX_TOKEN().body
     amax_token.push_action(
         "create",
         {
@@ -330,7 +331,7 @@ def deploy_farm():
 def create_action_demo(file_name,contract_name,abi_file_path,dir):
         obj = json.load(open(abi_file_path))
         
-        content = 'from base.amcli import runaction\nfrom base.baseClass import baseClass\n\n'
+        content = 'from amaxfactory.beans.base.amcli import runaction\nfrom base.baseClass import baseClass\n\n'
         demo = 'from amaxfactory.eosf import * \n\n'
         demo += f'def test_start():\n\treset()\n\tmaster = new_master_account()\n\t{file_name} = new_account("{contract_name}")\n'
         for action in obj['actions']:
@@ -386,4 +387,122 @@ def create_action_demo(file_name,contract_name,abi_file_path,dir):
         
         print(dir)
         with open(f'{dir}/test_{file_name}demo.py', 'w', encoding='UTF-8') as file:
+            file.write(demo)
+
+
+
+def create_bean(contract_name,abi_file_path,dir,abi_in_factory=False):
+        
+        obj_name = str(contract_name).replace(".","_")
+        content = 'from amaxfactory.beans.base.amcli import runaction\nfrom base.baseClass import baseClass\n\n'
+        
+        demo = f'''import os
+from amaxfactory.core.account import CreateAccount
+import amaxfactory.shell.account as account
+import amaxfactory.shell.contract as contract
+from amaxfactory.bean.bean_init import *
+
+Contract = contract.Contract
+
+new_account = account.new_account
+create_master_account = account.create_master_account
+new_master_account = account.new_master_account
+
+class {str(obj_name).upper()}(CreateAccount):
+	def __init__(self,contract_name="{contract_name}"):
+		self.name = contract_name
+		master = new_master_account()
+		{obj_name} = new_account(master,contract_name)
+		smart = Contract({obj_name}, 
+			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "{str(abi_file_path).replace("abi","wasm")}",
+			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "{abi_file_path}")
+		smart.deploy()
+		self = {obj_name}
+		self.set_account_permission(add_code=True)
+    
+	def setup(self):
+		try:
+			{obj_name}_init(self)
+		except:
+			print("{obj_name} setup function not implemented!!")
+		return self
+
+	def __str__(self):
+		return self.name
+            \n'''
+        # demo = 'import os\nfrom amaxfactory.eosf import * \n\n'
+        # demo += f'class {str(contract_name).upper()}:\n'
+        # demo += f'\tdef __init__(self):\n'
+        # demo += f'\t\tself.abi_path = os.getenv("FACTORY_DIR") + "/templates/wasm/" + "{abi_file_path}"\n'
+        # demo += f'\t\tself.abi_path = os.getenv("FACTORY_DIR") + "/templates/wasm/" + "{str(abi_file_path).replace("abi","wasm")}"\n'
+
+        if abi_in_factory:
+            abi_file_path = os.getenv("FACTORY_DIR") + "/templates/wasm/" + abi_file_path
+
+        obj = json.load(open(abi_file_path))
+        for action in obj['actions']:
+            for struct in obj['structs']:
+                struct_name = struct['name']
+                if action['name'] == struct_name:
+                    print(struct_name)
+                    print(struct['fields'])
+                    func = '\tdef ' + struct_name + '(self,'
+                    body = f'''self.response = runaction(self.contract + f""" {struct_name} '['''
+                    kv = ''
+                    kk = ''
+                    for key in struct['fields']:
+                        key_type = key['type']
+                        key_name = key['name']
+                        value = ""
+                        if key_type == 'name':
+                            value = "'user1'"
+                            body += '"{' + key_name + '}"' + ','
+                        elif key_type == 'string':
+                            value = "'x'"
+                            body += '"{' + key_name + '}"' + ','
+                        elif str(key_type).find('uint') >= 0:
+                            value = 1
+                            body += "{" + key_name + "}" + ','
+                        elif key_type == 'symbol':
+                            value = "'8,AMAX'"
+                            body += '"{' + key_name + '}"' + ','
+                        elif key_type == 'asset':
+                            value = '"0.10000000 AMAX"'
+                            body += '"{' + key_name + '}"' + ','
+                        elif key_type == 'bool':
+                            value = "'true'"
+                            body += '"{' + key_name + '}"' + ','
+                        else :
+                            value = []
+                            body += '"{' + key_name + '}"' + ','
+
+                        if key_name=="from":
+                            kv += f'from_={value},'
+                            kk += f'"{key_name}":from_,'
+                        else:
+                            kv += f'{key_name}={value},'
+                            kk += f'"{key_name}":{key_name},'
+                    kk = "{"+kk+"}"
+                    kv += 'suber="admin",expect_asset=True'
+                    
+                    demo += f'\n\tdef {struct_name}(self,{kv}):\n'
+                    # demo += f'\t\tassert self.body\n'
+                    demo += f'\t\tself.pushaction("{struct_name}",{kk},suber,expect_asset=expect_asset) \n'
+
+                    kv += "admin"
+                    func += kv
+                    body = body[0:-1]
+                    content += func + '):\n\t\t'
+                    content += body + ''']' -p {suber}""") \n'''
+                    content += '\t\treturn self\n\n'
+        for table in obj['tables']:
+            demo += f'''
+	def get_{str(table["name"]).replace(".","_")}(self,scope):
+		return self.table("{table["name"]}",scope).json\n'''
+        # os.popen(f"mkdir {contract}case")
+        # with open(f'/root/contracts/pythonProject1/{contract}case/{contract}.py', 'w', encoding='UTF-8') as file:
+        #     file.write(content)
+        
+        print(dir)
+        with open(f'{dir}/{obj_name}.py', 'w', encoding='UTF-8') as file:
             file.write(demo)

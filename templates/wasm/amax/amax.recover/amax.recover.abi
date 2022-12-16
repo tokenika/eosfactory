@@ -1,0 +1,507 @@
+{
+    "____comment": "This file was generated with amax-abigen. DO NOT EDIT ",
+    "version": "amax::abi/1.1",
+    "types": [
+        {
+            "new_type_name": "recover_target_type",
+            "type": "variant_public_key_string"
+        }
+    ],
+    "structs": [
+        {
+            "name": "addauditconf",
+            "base": "",
+            "fields": [
+                {
+                    "name": "check_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "audit_type",
+                    "type": "name"
+                },
+                {
+                    "name": "conf",
+                    "type": "audit_conf_s"
+                }
+            ]
+        },
+        {
+            "name": "addauth",
+            "base": "",
+            "fields": [
+                {
+                    "name": "account",
+                    "type": "name"
+                },
+                {
+                    "name": "contract",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "audit_conf_s",
+            "base": "",
+            "fields": [
+                {
+                    "name": "charge",
+                    "type": "asset"
+                },
+                {
+                    "name": "title",
+                    "type": "string"
+                },
+                {
+                    "name": "desc",
+                    "type": "string"
+                },
+                {
+                    "name": "url",
+                    "type": "string"
+                },
+                {
+                    "name": "max_score",
+                    "type": "uint8"
+                },
+                {
+                    "name": "check_required",
+                    "type": "bool"
+                },
+                {
+                    "name": "status",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "audit_conf_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "contract",
+                    "type": "name"
+                },
+                {
+                    "name": "audit_type",
+                    "type": "name"
+                },
+                {
+                    "name": "charge",
+                    "type": "asset"
+                },
+                {
+                    "name": "title",
+                    "type": "string"
+                },
+                {
+                    "name": "desc",
+                    "type": "string"
+                },
+                {
+                    "name": "url",
+                    "type": "string"
+                },
+                {
+                    "name": "max_score",
+                    "type": "uint8"
+                },
+                {
+                    "name": "check_required",
+                    "type": "bool"
+                },
+                {
+                    "name": "status",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "bindaccount",
+            "base": "",
+            "fields": [
+                {
+                    "name": "account",
+                    "type": "name"
+                },
+                {
+                    "name": "default_auth",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "checkauth",
+            "base": "",
+            "fields": [
+                {
+                    "name": "auth_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "account",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "closeorder",
+            "base": "",
+            "fields": [
+                {
+                    "name": "submitter",
+                    "type": "name"
+                },
+                {
+                    "name": "order_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "createorder",
+            "base": "",
+            "fields": [
+                {
+                    "name": "sn",
+                    "type": "uint64"
+                },
+                {
+                    "name": "auth_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "account",
+                    "type": "name"
+                },
+                {
+                    "name": "manual_check_required",
+                    "type": "bool"
+                },
+                {
+                    "name": "score",
+                    "type": "uint8"
+                },
+                {
+                    "name": "recover_target",
+                    "type": "recover_target_type"
+                }
+            ]
+        },
+        {
+            "name": "delauditconf",
+            "base": "",
+            "fields": [
+                {
+                    "name": "contract_name",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "delorder",
+            "base": "",
+            "fields": [
+                {
+                    "name": "submitter",
+                    "type": "name"
+                },
+                {
+                    "name": "order_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "global_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "recover_threshold_pct",
+                    "type": "uint8"
+                },
+                {
+                    "name": "last_order_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "amax_proxy_contract",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "init",
+            "base": "",
+            "fields": [
+                {
+                    "name": "recover_threshold",
+                    "type": "uint8"
+                },
+                {
+                    "name": "amax_proxy_contract",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "pair_name_bool",
+            "base": "",
+            "fields": [
+                {
+                    "name": "key",
+                    "type": "name"
+                },
+                {
+                    "name": "value",
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "pair_name_uint8",
+            "base": "",
+            "fields": [
+                {
+                    "name": "key",
+                    "type": "name"
+                },
+                {
+                    "name": "value",
+                    "type": "uint8"
+                }
+            ]
+        },
+        {
+            "name": "recover_auth_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "account",
+                    "type": "name"
+                },
+                {
+                    "name": "auth_requirements",
+                    "type": "pair_name_bool[]"
+                },
+                {
+                    "name": "recover_threshold",
+                    "type": "uint32"
+                },
+                {
+                    "name": "created_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "updated_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "last_recovered_at",
+                    "type": "time_point_sec"
+                }
+            ]
+        },
+        {
+            "name": "recover_order_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "sn",
+                    "type": "uint64"
+                },
+                {
+                    "name": "account",
+                    "type": "name"
+                },
+                {
+                    "name": "recover_type",
+                    "type": "name"
+                },
+                {
+                    "name": "scores",
+                    "type": "pair_name_uint8[]"
+                },
+                {
+                    "name": "manual_check_required",
+                    "type": "bool"
+                },
+                {
+                    "name": "pay_status",
+                    "type": "name"
+                },
+                {
+                    "name": "status",
+                    "type": "name"
+                },
+                {
+                    "name": "created_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "expired_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "updated_at",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "recover_target",
+                    "type": "recover_target_type"
+                }
+            ]
+        },
+        {
+            "name": "register_auth_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "auth_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "created_at",
+                    "type": "time_point_sec"
+                }
+            ]
+        },
+        {
+            "name": "setscore",
+            "base": "",
+            "fields": [
+                {
+                    "name": "auth_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "account",
+                    "type": "name"
+                },
+                {
+                    "name": "order_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "score",
+                    "type": "uint8"
+                }
+            ]
+        },
+        {
+            "name": "test",
+            "base": "",
+            "fields": [
+                {
+                    "name": "count",
+                    "type": "uint32"
+                }
+            ]
+        }
+    ],
+    "actions": [
+        {
+            "name": "addauditconf",
+            "type": "addauditconf",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "addauth",
+            "type": "addauth",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "bindaccount",
+            "type": "bindaccount",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "checkauth",
+            "type": "checkauth",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "closeorder",
+            "type": "closeorder",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "createorder",
+            "type": "createorder",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "delauditconf",
+            "type": "delauditconf",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "delorder",
+            "type": "delorder",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "init",
+            "type": "init",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setscore",
+            "type": "setscore",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "test",
+            "type": "test",
+            "ricardian_contract": ""
+        }
+    ],
+    "tables": [
+        {
+            "name": "auditconf",
+            "type": "audit_conf_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "global",
+            "type": "global_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "recauths",
+            "type": "recover_auth_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "recorders",
+            "type": "recover_order_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "regauths",
+            "type": "register_auth_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        }
+    ],
+    "ricardian_clauses": [],
+    "variants": [
+        {
+            "name": "variant_public_key_string",
+            "types": ["public_key","string"]
+        }
+    ]
+}
