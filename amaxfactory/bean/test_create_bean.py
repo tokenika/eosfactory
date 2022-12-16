@@ -33,7 +33,7 @@ class Testx(unittest.TestCase):
 
         for contract_name in dir_list:
             abi_file_path = f"{contract_name}/{contract_name}.abi"
-            if os.path.exists(abi_file_path):
+            if os.path.exists(wasm_path+abi_file_path):
                 if str(contract_name)[0] != "_":
                     init.create_bean(contract_name,abi_file_path,file_dir,abi_in_factory=True)
                     class_name = str(contract_name).replace(".","_")
