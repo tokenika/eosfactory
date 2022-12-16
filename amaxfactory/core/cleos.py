@@ -66,10 +66,9 @@ class Cleos():
         if setup.is_save_command_lines:
             setup.add_to__command_line_file(" ".join(cl))
         if setup.is_print_command_lines:
-            print("######## command line sent to cleos:")
+            print("\n######## command line sent to cleos:")
             command_str = str(" ".join(cl)).replace("{","'{").replace("}","}'")
             print(command_str)
-            print("")
 
         while True:
             process = subprocess.run(
@@ -91,6 +90,8 @@ class Cleos():
             if not self.err_msg or self.err_msg and \
                     not "Transaction took too long" in self.err_msg:
                 break
+        
+        print("——————— Command execution completed ———————\n")
 
         errors.validate(self)
 
