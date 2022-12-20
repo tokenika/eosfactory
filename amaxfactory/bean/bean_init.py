@@ -88,7 +88,7 @@ def amax_token_init(bean):
     bean.push_action(
         "transfer",
         {
-            "from":admin, "to": amax, "quantity": "100000000.00000000 AMAX", "memo": ""
+            "from":admin, "to": amax, "quantity": "1000000000.00000000 AMAX", "memo": ""
         },
         permission=(admin, Permission.ACTIVE))
    

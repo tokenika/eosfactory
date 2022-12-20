@@ -1003,6 +1003,20 @@ def create_account(
     '''
     Create an account object.
     '''
+    try:
+        if account.RestoreAccount(account_name):
+            logger.INFO('''
+                    ... for an existing blockchain account ``{}``
+                        mapped as ``{}``.
+                    '''.format(account_name, account_object_name),
+                    translate=False)
+            account_object = account.RestoreAccount(account_name)
+            account_object.account_object_name = account_object_name
+            return account_object
+
+    except:
+        pass
+
     account_object = None
 
     if restore:
