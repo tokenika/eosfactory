@@ -14,7 +14,7 @@ class APLINK_FARM(CreateAccount):
 	def __init__(self,contract_name="aplink.farm"):
 		self.name = contract_name
 		master = new_master_account()
-		aplink_farm = new_account(master,contract_name)
+		aplink_farm = new_account(master,contract_name,factory=True)
 		smart = Contract(aplink_farm, 
 			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "aplink.farm/aplink.farm.wasm",
 			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "aplink.farm/aplink.farm.abi")

@@ -14,7 +14,7 @@ class AMAX_WRAP(CreateAccount):
 	def __init__(self,contract_name="amax.wrap"):
 		self.name = contract_name
 		master = new_master_account()
-		amax_wrap = new_account(master,contract_name)
+		amax_wrap = new_account(master,contract_name,factory=True)
 		smart = Contract(amax_wrap, 
 			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "amax.wrap/amax.wrap.wasm",
 			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "amax.wrap/amax.wrap.abi")

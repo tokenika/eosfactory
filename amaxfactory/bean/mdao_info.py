@@ -14,7 +14,7 @@ class MDAO_INFO(CreateAccount):
 	def __init__(self,contract_name="mdao.info"):
 		self.name = contract_name
 		master = new_master_account()
-		mdao_info = new_account(master,contract_name)
+		mdao_info = new_account(master,contract_name,factory=True)
 		smart = Contract(mdao_info, 
 			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "mdao.info/mdao.info.wasm",
 			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "mdao.info/mdao.info.abi")

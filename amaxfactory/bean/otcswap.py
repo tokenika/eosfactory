@@ -14,7 +14,7 @@ class OTCSWAP(CreateAccount):
 	def __init__(self,contract_name="otcswap"):
 		self.name = contract_name
 		master = new_master_account()
-		otcswap = new_account(master,contract_name)
+		otcswap = new_account(master,contract_name,factory=True)
 		smart = Contract(otcswap, 
 			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "otcswap/otcswap.wasm",
 			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "otcswap/otcswap.abi")

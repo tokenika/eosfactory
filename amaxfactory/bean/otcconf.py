@@ -14,7 +14,7 @@ class OTCCONF(CreateAccount):
 	def __init__(self,contract_name="otcconf"):
 		self.name = contract_name
 		master = new_master_account()
-		otcconf = new_account(master,contract_name)
+		otcconf = new_account(master,contract_name,factory=True)
 		smart = Contract(otcconf, 
 			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "otcconf/otcconf.wasm",
 			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "otcconf/otcconf.abi")

@@ -14,7 +14,7 @@ class AMAX_XTOKEN(CreateAccount):
 	def __init__(self,contract_name="amax.xtoken"):
 		self.name = contract_name
 		master = new_master_account()
-		amax_xtoken = new_account(master,contract_name)
+		amax_xtoken = new_account(master,contract_name,factory=True)
 		smart = Contract(amax_xtoken, 
 			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "amax.xtoken/amax.xtoken.wasm",
 			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "amax.xtoken/amax.xtoken.abi")

@@ -14,7 +14,7 @@ class VERSO_NTOKEN(CreateAccount):
 	def __init__(self,contract_name="verso.ntoken"):
 		self.name = contract_name
 		master = new_master_account()
-		verso_ntoken = new_account(master,contract_name)
+		verso_ntoken = new_account(master,contract_name,factory=True)
 		smart = Contract(verso_ntoken, 
 			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "verso.ntoken/verso.ntoken.wasm",
 			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "verso.ntoken/verso.ntoken.abi")

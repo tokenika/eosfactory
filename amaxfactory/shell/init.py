@@ -411,7 +411,7 @@ class {str(obj_name).upper()}(CreateAccount):
 	def __init__(self,contract_name="{contract_name}"):
 		self.name = contract_name
 		master = new_master_account()
-		{obj_name} = new_account(master,contract_name)
+		{obj_name} = new_account(master,contract_name,factory=True)
 		smart = Contract({obj_name}, 
 			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "{str(abi_file_path).replace("abi","wasm")}",
 			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "{abi_file_path}")

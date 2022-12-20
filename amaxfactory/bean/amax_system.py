@@ -14,7 +14,7 @@ class AMAX_SYSTEM(CreateAccount):
 	def __init__(self,contract_name="amax.system"):
 		self.name = contract_name
 		master = new_master_account()
-		amax_system = new_account(master,contract_name)
+		amax_system = new_account(master,contract_name,factory=True)
 		smart = Contract(amax_system, 
 			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "amax.system/amax.system.wasm",
 			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "amax.system/amax.system.abi")

@@ -14,7 +14,7 @@ class AMAX_PROXY(CreateAccount):
 	def __init__(self,contract_name="amax.proxy"):
 		self.name = contract_name
 		master = new_master_account()
-		amax_proxy = new_account(master,contract_name)
+		amax_proxy = new_account(master,contract_name,factory=True)
 		smart = Contract(amax_proxy, 
 			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "amax.proxy/amax.proxy.wasm",
 			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "amax.proxy/amax.proxy.abi")
@@ -33,8 +33,8 @@ class AMAX_PROXY(CreateAccount):
 		return self.name
             
 
-	def init(self,amax_recover='user1',submitter_="admin",expect_asset=True):
-		self.pushaction("init",{"amax_recover":amax_recover,},submitter_,expect_asset=expect_asset) 
+	def init(self,amax_recover='user1',stake_net_quantity="0.10000000 AMAX",stake_cpu_quantity="0.10000000 AMAX",submitter_="admin",expect_asset=True):
+		self.pushaction("init",{"amax_recover":amax_recover,"stake_net_quantity":stake_net_quantity,"stake_cpu_quantity":stake_cpu_quantity,},submitter_,expect_asset=expect_asset) 
 
 	def newaccount(self,auth_contract='user1',creator='user1',account='user1',active=[],submitter_="admin",expect_asset=True):
 		self.pushaction("newaccount",{"auth_contract":auth_contract,"creator":creator,"account":account,"active":active,},submitter_,expect_asset=expect_asset) 

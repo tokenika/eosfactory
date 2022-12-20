@@ -14,7 +14,7 @@ class PASS_CUSTODY(CreateAccount):
 	def __init__(self,contract_name="pass.custody"):
 		self.name = contract_name
 		master = new_master_account()
-		pass_custody = new_account(master,contract_name)
+		pass_custody = new_account(master,contract_name,factory=True)
 		smart = Contract(pass_custody, 
 			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "pass.custody/pass.custody.wasm",
 			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "pass.custody/pass.custody.abi")

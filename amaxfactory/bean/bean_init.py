@@ -85,7 +85,13 @@ def amax_token_init(bean):
 
     table_admin = bean.table("accounts", admin)
     assert table_admin.json["rows"][0]["balance"] == '1000000000.00000000 AMAX'
-    
+    bean.push_action(
+        "transfer",
+        {
+            "from":admin, "to": amax, "quantity": "100000000.00000000 AMAX", "memo": ""
+        },
+        permission=(admin, Permission.ACTIVE))
+   
     return bean
 
 

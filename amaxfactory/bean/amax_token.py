@@ -14,7 +14,7 @@ class AMAX_TOKEN(CreateAccount):
 	def __init__(self,contract_name="amax.token"):
 		self.name = contract_name
 		master = new_master_account()
-		amax_token = new_account(master,contract_name)
+		amax_token = new_account(master,contract_name,factory=True)
 		smart = Contract(amax_token, 
 			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "amax.token/amax.token.wasm",
 			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "amax.token/amax.token.abi")

@@ -14,7 +14,7 @@ class RNDNFT_MART(CreateAccount):
 	def __init__(self,contract_name="rndnft.mart"):
 		self.name = contract_name
 		master = new_master_account()
-		rndnft_mart = new_account(master,contract_name)
+		rndnft_mart = new_account(master,contract_name,factory=True)
 		smart = Contract(rndnft_mart, 
 			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "rndnft.mart/rndnft.mart.wasm",
 			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "rndnft.mart/rndnft.mart.abi")

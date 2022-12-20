@@ -14,7 +14,7 @@ class MDAO_STG(CreateAccount):
 	def __init__(self,contract_name="mdao.stg"):
 		self.name = contract_name
 		master = new_master_account()
-		mdao_stg = new_account(master,contract_name)
+		mdao_stg = new_account(master,contract_name,factory=True)
 		smart = Contract(mdao_stg, 
 			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "mdao.stg/mdao.stg.wasm",
 			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "mdao.stg/mdao.stg.abi")

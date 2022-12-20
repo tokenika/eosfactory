@@ -14,7 +14,7 @@ class TG_REDPACK(CreateAccount):
 	def __init__(self,contract_name="tg.redpack"):
 		self.name = contract_name
 		master = new_master_account()
-		tg_redpack = new_account(master,contract_name)
+		tg_redpack = new_account(master,contract_name,factory=True)
 		smart = Contract(tg_redpack, 
 			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "tg.redpack/tg.redpack.wasm",
 			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "tg.redpack/tg.redpack.abi")

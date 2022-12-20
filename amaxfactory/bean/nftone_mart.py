@@ -14,7 +14,7 @@ class NFTONE_MART(CreateAccount):
 	def __init__(self,contract_name="nftone.mart"):
 		self.name = contract_name
 		master = new_master_account()
-		nftone_mart = new_account(master,contract_name)
+		nftone_mart = new_account(master,contract_name,factory=True)
 		smart = Contract(nftone_mart, 
 			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "nftone.mart/nftone.mart.wasm",
 			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "nftone.mart/nftone.mart.abi")

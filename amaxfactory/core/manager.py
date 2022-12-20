@@ -296,7 +296,8 @@ editor. Return ``None`` if the the offer is rejected.
             Do you want to edit the file?
             '''.format(str(e)))
 
-                answer = input("y/n <<< ")
+                # answer = input("y/n <<< ")
+                answer = "y"
                 if answer == "y":
                     edit_account_map()
                     continue
@@ -358,7 +359,8 @@ editor. Return ``None`` if the the offer is rejected.
             Do you want to edit the file?
             '''.format(str(path), str(e)), translate=False)
 
-                answer = input("y/n <<< ")
+                # answer = input("y/n <<< ")
+                answer = "y"
                 if answer == "y":
                     utils.spawn([text_editor, path])
                     continue

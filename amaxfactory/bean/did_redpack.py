@@ -14,7 +14,7 @@ class DID_REDPACK(CreateAccount):
 	def __init__(self,contract_name="did.redpack"):
 		self.name = contract_name
 		master = new_master_account()
-		did_redpack = new_account(master,contract_name)
+		did_redpack = new_account(master,contract_name,factory=True)
 		smart = Contract(did_redpack, 
 			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "did.redpack/did.redpack.wasm",
 			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "did.redpack/did.redpack.abi")

@@ -14,7 +14,7 @@ class AMAX_SPLIT(CreateAccount):
 	def __init__(self,contract_name="amax.split"):
 		self.name = contract_name
 		master = new_master_account()
-		amax_split = new_account(master,contract_name)
+		amax_split = new_account(master,contract_name,factory=True)
 		smart = Contract(amax_split, 
 			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "amax.split/amax.split.wasm",
 			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "amax.split/amax.split.abi")

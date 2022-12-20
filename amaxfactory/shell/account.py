@@ -890,7 +890,7 @@ def new_account(
         delay_sec=0,
         buy_ram_kbytes=8, buy_ram="",
         transfer=False,
-        restore=False):
+        restore=False,factory=False):
     '''Create account object in caller's global namespace.
 
     Wraps the account factory function :func:`create_account` so that the
@@ -939,7 +939,7 @@ def new_account(
         delay_sec,
         buy_ram_kbytes, buy_ram,
         transfer,
-        restore)
+        restore,factory)
 
 
 def create_account(
@@ -956,7 +956,7 @@ def create_account(
         delay_sec=0,
         buy_ram_kbytes=8, buy_ram="",
         transfer=False,
-        restore=False):
+        restore=False,factory=False):
     '''Create account object in caller's global namespace.
 
     Args:
@@ -1085,7 +1085,7 @@ def create_account(
     logger.TRACE('''
         * The account object is created.
         ''')
-    if is_in_globals(account_object_name, globals):
+    if factory:
         account_object_name = account_name.replace(".","_")
     Account.add_methods_and_finalize(account_object_name, account_object)
     return account_object

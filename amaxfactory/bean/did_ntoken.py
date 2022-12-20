@@ -14,7 +14,7 @@ class DID_NTOKEN(CreateAccount):
 	def __init__(self,contract_name="did.ntoken"):
 		self.name = contract_name
 		master = new_master_account()
-		did_ntoken = new_account(master,contract_name)
+		did_ntoken = new_account(master,contract_name,factory=True)
 		smart = Contract(did_ntoken, 
 			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "did.ntoken/did.ntoken.wasm",
 			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "did.ntoken/did.ntoken.abi")

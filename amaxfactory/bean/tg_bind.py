@@ -14,7 +14,7 @@ class TG_BIND(CreateAccount):
 	def __init__(self,contract_name="tg.bind"):
 		self.name = contract_name
 		master = new_master_account()
-		tg_bind = new_account(master,contract_name)
+		tg_bind = new_account(master,contract_name,factory=True)
 		smart = Contract(tg_bind, 
 			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "tg.bind/tg.bind.wasm",
 			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "tg.bind/tg.bind.abi")

@@ -14,7 +14,7 @@ class APLINK_TOKEN(CreateAccount):
 	def __init__(self,contract_name="aplink.token"):
 		self.name = contract_name
 		master = new_master_account()
-		aplink_token = new_account(master,contract_name)
+		aplink_token = new_account(master,contract_name,factory=True)
 		smart = Contract(aplink_token, 
 			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "aplink.token/aplink.token.wasm",
 			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "aplink.token/aplink.token.abi")

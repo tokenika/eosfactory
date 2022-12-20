@@ -14,7 +14,7 @@ class AMAX_RECOVER(CreateAccount):
 	def __init__(self,contract_name="amax.recover"):
 		self.name = contract_name
 		master = new_master_account()
-		amax_recover = new_account(master,contract_name)
+		amax_recover = new_account(master,contract_name,factory=True)
 		smart = Contract(amax_recover, 
 			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "amax.recover/amax.recover.wasm",
 			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "amax.recover/amax.recover.abi")

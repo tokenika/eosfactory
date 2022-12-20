@@ -14,7 +14,7 @@ class ORDERBOOKDEX(CreateAccount):
 	def __init__(self,contract_name="orderbookdex"):
 		self.name = contract_name
 		master = new_master_account()
-		orderbookdex = new_account(master,contract_name)
+		orderbookdex = new_account(master,contract_name,factory=True)
 		smart = Contract(orderbookdex, 
 			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "orderbookdex/orderbookdex.wasm",
 			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "orderbookdex/orderbookdex.abi")

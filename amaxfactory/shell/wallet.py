@@ -390,7 +390,8 @@ class Wallet(cleos.WalletCreate):
                     temp = Wallet.globals[account_object_name]
                     del Wallet.globals[account_object_name]
                 
-                answer = input("y/n <<< ")
+                # answer = input("y/n <<< ")
+                answer = "y"
                 
                 if answer == "y":
                     manager.edit_account_map()

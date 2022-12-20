@@ -14,7 +14,7 @@ class AMAX_XCHAIN(CreateAccount):
 	def __init__(self,contract_name="amax.xchain"):
 		self.name = contract_name
 		master = new_master_account()
-		amax_xchain = new_account(master,contract_name)
+		amax_xchain = new_account(master,contract_name,factory=True)
 		smart = Contract(amax_xchain, 
 			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "amax.xchain/amax.xchain.wasm",
 			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "amax.xchain/amax.xchain.abi")

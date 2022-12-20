@@ -14,7 +14,7 @@ class OTCSETTLE(CreateAccount):
 	def __init__(self,contract_name="otcsettle"):
 		self.name = contract_name
 		master = new_master_account()
-		otcsettle = new_account(master,contract_name)
+		otcsettle = new_account(master,contract_name,factory=True)
 		smart = Contract(otcsettle, 
 			wasm_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "otcsettle/otcsettle.wasm",
 			abi_file=os.getenv("FACTORY_DIR") + "/templates/wasm/" + "otcsettle/otcsettle.abi")
