@@ -87,6 +87,12 @@ class OTCBOOK(CreateAccount):
 	def setadmin(self,admin='user1',to_add='true',submitter_="admin",expect_asset=True):
 		self.pushaction("setadmin",{"admin":admin,"to_add":to_add,},submitter_,expect_asset=expect_asset) 
 
+	def setarbitcnt(self,count=1,submitter_="admin",expect_asset=True):
+		self.pushaction("setarbitcnt",{"count":count,},submitter_,expect_asset=expect_asset) 
+
+	def setarbiter(self,deal_id=1,arbiter='user1',submitter_="admin",expect_asset=True):
+		self.pushaction("setarbiter",{"deal_id":deal_id,"arbiter":arbiter,},submitter_,expect_asset=expect_asset) 
+
 	def setblacklist(self,account='user1',duration_second=1,submitter_="admin",expect_asset=True):
 		self.pushaction("setblacklist",{"account":account,"duration_second":duration_second,},submitter_,expect_asset=expect_asset) 
 

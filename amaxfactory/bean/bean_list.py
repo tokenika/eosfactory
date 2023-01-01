@@ -13,8 +13,10 @@ from amaxfactory.bean.mdao_propose import MDAO_PROPOSE
 from amaxfactory.bean.amax_system import AMAX_SYSTEM
 from amaxfactory.bean.pass_custody import PASS_CUSTODY
 from amaxfactory.bean.aplink_farm import APLINK_FARM
+from amaxfactory.bean.otcfeesplit import OTCFEESPLIT
 from amaxfactory.bean.mdao_conf import MDAO_CONF
 from amaxfactory.bean.mdao_gov import MDAO_GOV
+from amaxfactory.bean.nft_redpack import NFT_REDPACK
 from amaxfactory.bean.orderbookdex import ORDERBOOKDEX
 from amaxfactory.bean.did_redpack import DID_REDPACK
 from amaxfactory.bean.tg_bind import TG_BIND

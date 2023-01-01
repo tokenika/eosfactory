@@ -42,8 +42,8 @@ class SystemNewaccount(interface.Account, cleos.Cleos):
             is_verbose = 1
             ):
 
-        stake_net = "{} EOS".format(stake_net)
-        stake_cpu = "{} EOS".format(stake_cpu)
+        stake_net = "{} AMAX".format(stake_net)
+        stake_cpu = "{} AMAX".format(stake_cpu)
         
         if name is None: 
             name = cleos.account_name()

@@ -78,17 +78,17 @@ def amax_token_init(bean):
     bean.push_action(
         "issue",
         {
-            "to": admin, "quantity": "1000000000.00000000 AMAX", "memo": ""
+            "to": admin, "quantity": "800000000.00000000 AMAX", "memo": ""
         },
         permission=(admin, Permission.ACTIVE))
 
 
     table_admin = bean.table("accounts", admin)
-    assert table_admin.json["rows"][0]["balance"] == '1000000000.00000000 AMAX'
+    assert table_admin.json["rows"][0]["balance"] == '800000000.00000000 AMAX'
     bean.push_action(
         "transfer",
         {
-            "from":admin, "to": amax, "quantity": "1000000000.00000000 AMAX", "memo": ""
+            "from":admin, "to": amax, "quantity": "100000000.00000000 AMAX", "memo": ""
         },
         permission=(admin, Permission.ACTIVE))
    
@@ -130,7 +130,7 @@ def amax_mtoken_init(bean):
     amax = new_master_account()
     admin = new_account(amax,"admin")
 
-    amax_mtoken = bean.body
+    amax_mtoken = bean
 
     amax_mtoken.push_action(
         "create",

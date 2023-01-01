@@ -93,6 +93,9 @@ class AMAX_SYSTEM(CreateAccount):
 	def init(self,version=1,core='8,AMAX',submitter_="admin",expect_asset=True):
 		self.pushaction("init",{"version":version,"core":core,},submitter_,expect_asset=expect_asset) 
 
+	def initelects(self,payer='user1',max_backup_producer_count=1,submitter_="admin",expect_asset=True):
+		self.pushaction("initelects",{"payer":payer,"max_backup_producer_count":max_backup_producer_count,},submitter_,expect_asset=expect_asset) 
+
 	def linkauth(self,account='user1',code='user1',type='user1',requirement='user1',submitter_="admin",expect_asset=True):
 		self.pushaction("linkauth",{"account":account,"code":code,"type":type,"requirement":requirement,},submitter_,expect_asset=expect_asset) 
 
@@ -221,6 +224,12 @@ class AMAX_SYSTEM(CreateAccount):
 
 	def get_delband(self,scope):
 		return self.table("delband",scope).json
+
+	def get_electchange(self,scope):
+		return self.table("electchange",scope).json
+
+	def get_electglobal(self,scope):
+		return self.table("electglobal",scope).json
 
 	def get_global(self,scope):
 		return self.table("global",scope).json
