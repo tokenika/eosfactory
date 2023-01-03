@@ -505,3 +505,5 @@ class {str(obj_name).upper()}(CreateAccount):
         print(dir)
         with open(f'{dir}/{obj_name}.py', 'w', encoding='UTF-8') as file:
             file.write(demo)
+
+

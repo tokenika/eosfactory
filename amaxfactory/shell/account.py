@@ -411,7 +411,26 @@ class Account():
             raise "Expected operation failed, actual operation passed"
 
         
-        
+    def getBalance(self,symbol,contract=None):
+        if contract == None:
+            if "AMAX" == symbol:
+                contract = "amax.token"
+            elif "APL" == symbol:
+                contract = "aplink.token"
+            elif "MBTC" == symbol:
+                contract = "amax.mtoken"
+            elif "MBNB" == symbol:
+                contract = "amax.mtoken"
+            elif "METH" == symbol:
+                contract = "amax.mtoken"
+            elif "MUSDT" == symbol:
+                contract = "amax.mtoken"
+            elif "MUSDC" == symbol:
+                contract = "amax.mtoken"
+            else:
+                raise "symbol type error"
+        return str(cleos.Cleos(["balance",contract,self.name,symbol],"get","currency").out_msg).replace("\n","")
+
 
     def show_action(
             self, action, data, permission=None,
