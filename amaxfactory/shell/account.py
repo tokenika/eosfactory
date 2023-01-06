@@ -1,3 +1,4 @@
+from random import randint
 import sys
 import json
 import inspect
@@ -431,7 +432,14 @@ class Account():
                 raise "symbol type error"
         return str(cleos.Cleos(["balance",contract,self.name,symbol],"get","currency").out_msg).replace("\n","")
 
-
+    def getCode(self):
+        keys = "ABCDEFGHIJKLMNOPQRSDUVWXYZ"
+        code = ''
+        for i in range(7):
+            index = randint(0,len(keys)-1)
+            code += keys[index]
+        return code
+        
     def show_action(
             self, action, data, permission=None,
             expiration_sec=None,
@@ -909,7 +917,7 @@ def new_account(
         delay_sec=0,
         buy_ram_kbytes=8, buy_ram="",
         transfer=False,
-        restore=False,factory=False,new=False):
+        restore=False,factory=False,new=False) -> Account:
     '''Create account object in caller's global namespace.
 
     Wraps the account factory function :func:`create_account` so that the
