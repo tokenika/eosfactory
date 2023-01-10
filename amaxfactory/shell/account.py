@@ -1,4 +1,5 @@
 from random import randint
+from decimal import Decimal
 import sys
 import json
 import inspect
@@ -432,6 +433,27 @@ class Account():
                 raise "symbol type error"
         return str(cleos.Cleos(["balance",contract,self.name,symbol],"get","currency").out_msg).replace("\n","")
 
+    def assertBalance(self,AMAX=None,MUSDT=None,METH=None,MBTC=None,MUSDC=None,APL=None,MBNB=None):
+        def getAmount(symbol) -> Decimal:
+            return Decimal(self.getBalance(symbol).split(" ")[0])
+            
+        if AMAX != None:
+            assert getAmount("AMAX") == Decimal(str(AMAX))
+        elif APL != None:
+            assert getAmount("APL") == Decimal(str(APL))
+        elif MBTC != None:
+            assert getAmount("MBTC") == Decimal(str(MBTC))
+        elif MBNB != None:
+            assert getAmount("MBNB") == Decimal(str(MBNB))
+        elif METH != None:
+            assert getAmount("METH") == Decimal(str(METH))
+        elif MUSDT != None:
+            assert getAmount("MUSDT") == Decimal(str(MUSDT))
+        elif MUSDC != None:
+            assert getAmount("MUSDC") == Decimal(str(MUSDC))
+        else:
+            raise "symbol type error"
+            
     def getCode(self):
         keys = "ABCDEFGHIJKLMNOPQRSDUVWXYZ"
         code = ''
