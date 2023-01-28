@@ -51,8 +51,8 @@ class NFT_REDPACK(CreateAccount):
 	def delredpacks(self,code='user1',submitter_="admin",expect_asset=True):
 		self.pushaction("delredpacks",{"code":code,},submitter_,expect_asset=expect_asset) 
 
-	def setconf(self,admin='user1',hours=1,enable_did='true',submitter_="admin",expect_asset=True):
-		self.pushaction("setconf",{"admin":admin,"hours":hours,"enable_did":enable_did,},submitter_,expect_asset=expect_asset) 
+	def setconf(self,admin='user1',hours=1,submitter_="admin",expect_asset=True):
+		self.pushaction("setconf",{"admin":admin,"hours":hours,},submitter_,expect_asset=expect_asset) 
 
 	def get_claims(self,scope):
 		return self.table("claims",scope).json

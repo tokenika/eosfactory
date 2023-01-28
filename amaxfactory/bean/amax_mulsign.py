@@ -51,11 +51,14 @@ class AMAX_MULSIGN(CreateAccount):
 	def propose(self,issuer='user1',wallet_id=1,action_name='user1',action_account='user1',packed_action_data=[],excerpt='x',description='x',duration=1,submitter_="admin",expect_asset=True):
 		self.pushaction("propose",{"issuer":issuer,"wallet_id":wallet_id,"action_name":action_name,"action_account":action_account,"packed_action_data":packed_action_data,"excerpt":excerpt,"description":description,"duration":duration,},submitter_,expect_asset=expect_asset) 
 
-	def proposeact(self,issuer='user1',wallet_id=1,excution=[],excerpt='x',description='x',duration=1,submitter_="admin",expect_asset=True):
-		self.pushaction("proposeact",{"issuer":issuer,"wallet_id":wallet_id,"excution":excution,"excerpt":excerpt,"description":description,"duration":duration,},submitter_,expect_asset=expect_asset) 
+	def proposeact(self,issuer='user1',wallet_id=1,execution=[],excerpt='x',description='x',duration=1,submitter_="admin",expect_asset=True):
+		self.pushaction("proposeact",{"issuer":issuer,"wallet_id":wallet_id,"execution":execution,"excerpt":excerpt,"description":description,"duration":duration,},submitter_,expect_asset=expect_asset) 
 
 	def respond(self,issuer='user1',proposal_id=1,vote=1,submitter_="admin",expect_asset=True):
 		self.pushaction("respond",{"issuer":issuer,"proposal_id":proposal_id,"vote":vote,},submitter_,expect_asset=expect_asset) 
+
+	def setfee(self,wallet_id=1,wallet_fee="0.10000000 AMAX",submitter_="admin",expect_asset=True):
+		self.pushaction("setfee",{"wallet_id":wallet_id,"wallet_fee":wallet_fee,},submitter_,expect_asset=expect_asset) 
 
 	def setmulsigner(self,issuer='user1',wallet_id=1,mulsigner='user1',weight=1,submitter_="admin",expect_asset=True):
 		self.pushaction("setmulsigner",{"issuer":issuer,"wallet_id":wallet_id,"mulsigner":mulsigner,"weight":weight,},submitter_,expect_asset=expect_asset) 

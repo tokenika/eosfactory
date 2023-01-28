@@ -45,6 +45,12 @@ class MDAO_INFO(CreateAccount):
 	def deldao(self,admin='user1',code='user1',submitter_="admin",expect_asset=True):
 		self.pushaction("deldao",{"admin":admin,"code":code,},submitter_,expect_asset=expect_asset) 
 
+	def deltag(self,code='user1',tag='x',submitter_="admin",expect_asset=True):
+		self.pushaction("deltag",{"code":code,"tag":tag,},submitter_,expect_asset=expect_asset) 
+
+	def settags(self,code='user1',tags=[],submitter_="admin",expect_asset=True):
+		self.pushaction("settags",{"code":code,"tags":tags,},submitter_,expect_asset=expect_asset) 
+
 	def transferdao(self,owner='user1',code='user1',receiver='user1',submitter_="admin",expect_asset=True):
 		self.pushaction("transferdao",{"owner":owner,"code":code,"receiver":receiver,},submitter_,expect_asset=expect_asset) 
 

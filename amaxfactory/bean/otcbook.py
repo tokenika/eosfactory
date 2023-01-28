@@ -132,6 +132,9 @@ class OTCBOOK(CreateAccount):
 	def get_global(self,scope):
 		return self.table("global",scope).json
 
+	def get_global1(self,scope):
+		return self.table("global1",scope).json
+
 	def get_merchants(self,scope):
 		return self.table("merchants",scope).json
 

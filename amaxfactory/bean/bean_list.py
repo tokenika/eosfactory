@@ -40,3 +40,4 @@ from amaxfactory.bean.amax_token import AMAX_TOKEN
 from amaxfactory.bean.amax_wrap import AMAX_WRAP
 from amaxfactory.bean.verso_ntoken import VERSO_NTOKEN
 from amaxfactory.bean.did_ntoken import DID_NTOKEN
+from amaxfactory.bean.mdao_stake import MDAO_STAKE
