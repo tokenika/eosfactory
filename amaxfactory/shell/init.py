@@ -420,10 +420,7 @@ class {str(obj_name).upper()}(CreateAccount):
 		self.set_account_permission(add_code=True)
     
 	def setup(self):
-		try:
-			{obj_name}_init(self)
-		except:
-			print("{obj_name} setup function not implemented!!")
+		{obj_name}_init(self)
 		return self
 
 	def __str__(self):

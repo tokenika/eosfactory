@@ -191,7 +191,7 @@ class Contract(ContractBuilder):
                 json=False)
 
         except errors.LowRamError as e:
-            logger.TRACE('''
+            logger.DEBUG('''
             * RAM needed is {}.kByte, buying RAM {}.kByte.
             '''.format(
                 e.needs_kbyte,

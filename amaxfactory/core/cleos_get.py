@@ -56,8 +56,8 @@ class GetActions(cleos.Cleos):
 
         args = [interface.account_arg(account), str(pos), str(offset)]
         
-        if json:
-            args.append("--json")
+        # if json:
+        #     args.append("--json")
         if full:
             args.append("--full")
         if pretty:
@@ -92,17 +92,17 @@ def get_block_trx_data(block_num):
     block = GetBlock(block_num, is_verbose=False)
     trxs = block.json["transactions"]
     if not len(trxs):
-        logger.OUT("No transactions in block {}.".format(block_num))
+        logger.DEBUG("No transactions in block {}.".format(block_num))
     else:
         for trx in trxs:
-            logger.OUT(trx["trx"]["transaction"]["actions"][0]["data"])
+            logger.DEBUG(trx["trx"]["transaction"]["actions"][0]["data"])
 
 
 def get_block_trx_count(block_num):
     block = GetBlock(block_num, is_verbose=False)
     trxs = block.json["transactions"]
     if not len(trxs):
-        logger.OUT("No transactions in block {}.".format(block_num))    
+        logger.DEBUG("No transactions in block {}.".format(block_num))    
     return len(trxs)
 
 

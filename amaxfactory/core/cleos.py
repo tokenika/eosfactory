@@ -66,9 +66,10 @@ class Cleos():
         if setup.is_save_command_lines:
             setup.add_to__command_line_file(" ".join(cl))
         if setup.is_print_command_lines:
-            print("\n######## command line sent to cleos:")
+            logger.DEBUG("\n######## command line sent to cleos:")
             command_str = str(" ".join(cl)).replace("{","'{").replace("}","}'")
-            print(command_str)
+        if is_verbose:
+            logger.OUT(command_str)
 
         while True:
             process = subprocess.run(
@@ -90,15 +91,14 @@ class Cleos():
             if not self.err_msg or self.err_msg and \
                     not "Transaction took too long" in self.err_msg:
                 break
-        
-        print("——————— Command execution completed ———————\n")
+        logger.DEBUG("——————— Command execution completed ———————\n")
 
         errors.validate(self)
 
         if not self.err_msg \
                     and (setup.is_print_request or setup.is_print_response):
-            print("######## cleos request and response:")
-            print(self.out_msg_details)
+            logger.DEBUG("######## cleos request and response:")
+            logger.DEBUG(self.out_msg_details)
 
         try:
             self.json = json.loads(self.out_msg)
@@ -120,7 +120,8 @@ class Cleos():
             self.is_verbose = is_verbose
 
         if self.is_verbose:
-            logger.OUT(self.__str__())
+            logger.INFO(self.__str__())
+            print('\n')
 
     def __str__(self):
         if self.err_msg:
@@ -201,7 +202,7 @@ class GetAccount(interface.Account, Cleos):
             self,
             [self.name] if is_info else [self.name, "--json"],
             "get", "account", is_verbose)
-
+        is_verbose = False
         self.owner_key = None
         self.active_key = None
         try:
@@ -478,7 +479,7 @@ class CreateKey(interface.Key, Cleos):
     '''
     def __init__(
             self, key_public=None, key_private=None, r1=False,
-            is_verbose=True):
+            is_verbose=False):
         interface.Key.__init__(self, key_public, key_private)
 
         if self.key_public or self.key_private:
@@ -546,7 +547,7 @@ class CreateAccount(interface.Account, Cleos):
             max_net_usage=0,
             ref_block=None,
             delay_sec=0,
-            is_verbose=True
+            is_verbose=False
             ):
 
         if name is None:
@@ -569,7 +570,7 @@ class CreateAccount(interface.Account, Cleos):
                 owner_key_public, active_key_public
             ]
 
-        args.append("--json")
+        # args.append("--json")
         if not permission is None:
             p = interface.permission_arg(permission)
             for perm in p:
@@ -680,8 +681,8 @@ class PushAction(Cleos):
         self.account_name = interface.account_arg(account)
 
         args = [self.account_name, action, data]
-        if json:
-            args.append("--json")
+        # if json:
+        #     args.append("--json")
         if not permission is None:
             p = interface.permission_arg(permission)
             for perm in p:
@@ -708,20 +709,20 @@ class PushAction(Cleos):
 
         self.console = ""
         self.act = ""
-        if not dont_broadcast:
+        # if not dont_broadcast:
 
-            for act in self.json["processed"]["action_traces"]:
-                self.console += gather_console_output(act)
+        #     for act in self.json["processed"]["action_traces"]:
+        #         self.console += gather_console_output(act)
 
-            for trace in self.json["processed"]["action_traces"]:
-                if trace["act"]["data"]:
-                    if self.act:
-                        self.act += "\n"
-                    self.act += "{} <= {}::{} {}".format(
-                                                        trace["act"]["account"],
-                                                        trace["act"]["account"],
-                                                        trace["act"]["name"],
-                                                        trace["act"]["data"])
+        #     for trace in self.json["processed"]["action_traces"]:
+        #         if trace["act"]["data"]:
+        #             if self.act:
+        #                 self.act += "\n"
+        #             self.act += "{} <= {}::{} {}".format(
+        #                                                 trace["act"]["account"],
+        #                                                 trace["act"]["account"],
+        #                                                 trace["act"]["name"],
+        #                                                 trace["act"]["data"])
         self.printself()
 
 def gather_console_output(act, padding=""):
@@ -735,3 +736,79 @@ def gather_console_output(act, padding=""):
         for inline in act["inline_traces"]:
             console += gather_console_output(inline, padding + PADDING)
     return (console + "\n").rstrip()
+
+
+
+
+
+class SystemActivate(Cleos):
+    def __init__(
+            self, data,
+            is_verbose=True,
+        ):
+        self.is_verbose = is_verbose
+        Cleos.__init__(self, [data], "system", "activate", is_verbose)
+        self.printself()
+
+class SetContract(Cleos):
+    def __init__(
+            self, account,
+            path,
+            is_verbose=True,
+        ):
+        self.is_verbose = is_verbose
+
+        full_path = os.getenv("FACTORY_DIR") + path
+        Cleos.__init__(self, [account.name,full_path], "set", "contract", is_verbose)
+        self.printself()
+
+
+
+
+class SystemaRegproducer(Cleos):
+    def __init__(
+            self, name, publicKey, url,location="0",reward_shared_ratio="8000",
+            is_verbose=True,
+        ):
+        self.is_verbose = is_verbose
+        args = [name, publicKey, url, location,reward_shared_ratio]
+        Cleos.__init__(self, args, "system", "regproducer", is_verbose)
+        self.printself()
+        
+        
+            # cleos.Cleos([name,publicKey,"http://www.baidu.com","0","8000"],"system","regproducer")
+            # cleos.Cleos([voter.name,voter.name,f"{10000000-i}.00000000 AMAX","0 AMAX"],"system","delegatebw")
+            # cleos.Cleos(["prods",voter.name,name],"system","voteproducer")
+            
+
+class SystemDelegatebw(Cleos):
+    def __init__(
+            self, from_, receiver, stake_net_quantity, stake_cpu_quantity,
+            is_verbose=True,
+        ):
+        self.is_verbose = is_verbose
+        args = [from_, receiver, stake_net_quantity, stake_cpu_quantity]
+        Cleos.__init__(self, args, "system", "delegatebw", is_verbose)
+        self.printself()
+        
+
+class SystemVoteproducer(Cleos):
+    def __init__(
+            self,voter,producer,
+            is_verbose=True,
+        ):
+        self.is_verbose = is_verbose
+        args = ["prods",voter,producer]
+        Cleos.__init__(self, args, "system", "voteproducer", is_verbose)
+        self.printself()
+
+
+class SystemClaimrewards(Cleos):
+    def __init__(
+            self, name,
+            is_verbose=True,
+        ):
+        self.is_verbose = is_verbose
+        args = [name]
+        Cleos.__init__(self, args, "system", "claimrewards", is_verbose)
+        self.printself()

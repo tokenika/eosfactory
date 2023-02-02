@@ -58,8 +58,8 @@ class SetContract(cleos.Cleos):
 
         if clear:
             args.append("--clear")
-        if json:
-            args.append("--json")
+        # if json:
+        #     args.append("--json")
         if not permission is None:
             p = interface.permission_arg(permission)
             for perm in p:
@@ -181,8 +181,8 @@ class SetAccountPermission(cleos.Cleos):
                 parent_permission_name)[0]
             args.append(parent_permission_name)
 
-        if json:
-            args.append("--json")
+        # if json:
+        #     args.append("--json")
 
         if permission:
             p = interface.permission_arg(permission)
@@ -271,8 +271,8 @@ class SetActionPermission(cleos.Cleos):
         else:
             args.append("NULL")
 
-        if json:
-            args.append("--json")
+        # if json:
+        #     args.append("--json")
         if not permission is None:
             p = interface.permission_arg(permission)
             for perm in p:

@@ -24,14 +24,17 @@ class Verbosity(enum.Enum):
     COMMENT = ['green', None, []]
     INFO = ['blue', None, []]
     TRACE = ['cyan', None, []]
-    ERROR = ['white', 'on_blue', []]    
+    ERROR = ['yellow', 'on_blue', []]    
     OUT = [None, None, []]
-    DEBUG = ['yellow', None, []]
+    DEBUG = ['white', None, []]
     NONE = None
 
 
-__verbosity = [Verbosity.TRACE, Verbosity.OUT, 
-                                        Verbosity.DEBUG, Verbosity.ERROR]
+__verbosity = [
+    Verbosity.TRACE,
+    Verbosity.OUT, 
+    # Verbosity.DEBUG, 
+    Verbosity.ERROR]
 def verbosity(set_verbosity):
     global __verbosity
     __verbosity = set_verbosity

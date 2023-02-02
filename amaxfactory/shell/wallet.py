@@ -74,9 +74,9 @@ class Wallet(cleos.WalletCreate):
                     '''.format(setup.password_map)
                 )
             else:
-                logger.OUT(self.out_msg)
+                logger.DEBUG(self.out_msg)
         else:
-            logger.TRACE('''
+            logger.DEBUG('''
                     Opened wallet ``{}``
                     '''.format(self.name))            
 
@@ -85,14 +85,14 @@ class Wallet(cleos.WalletCreate):
         Returns `cleos.WalletList` object
         ''' 
         result = cleos.WalletList(is_verbose=0)
-        logger.OUT(result.out_msg)
+        logger.DEBUG(result.out_msg)
     
     def open(self):
         ''' Opens the wallet.
         Returns `WalletOpen` object
         '''
         cleos.WalletOpen(self.name, is_verbose=False)
-        logger.TRACE('''
+        logger.DEBUG('''
         * Wallet ``{}`` opened.
         '''.format(self.name))
 
@@ -101,14 +101,14 @@ class Wallet(cleos.WalletCreate):
         Returns `cleos.WalletLock` object.
         '''
         cleos.WalletLock(self.name, is_verbose=False)
-        logger.TRACE("Wallet `{}` locked.".format(self.name))
+        logger.DEBUG("Wallet `{}` locked.".format(self.name))
 
     def lock_all(self):
         ''' Lock the wallet.
         Returns `cleos.WalletLock` object.
         '''
         cleos.WalletLockAll(is_verbose=False)
-        logger.TRACE("All wallets locked.")
+        logger.DEBUG("All wallets locked.")
 
     def unlock(self):
         ''' Unlock the wallet.
@@ -116,7 +116,7 @@ class Wallet(cleos.WalletCreate):
         '''
         cleos.WalletUnlock(
             self.name, self.password, is_verbose=False)
-        logger.TRACE('''
+        logger.DEBUG('''
         * Wallet ``{}`` unlocked.
         '''.format(self.name))
 
@@ -163,13 +163,13 @@ class Wallet(cleos.WalletCreate):
 
         if account_name is None:
             if len(removed_keys) > 0:
-                logger.TRACE('''
+                logger.DEBUG('''
                     Removing key '{}' 
                     from the wallet '{}'
                     '''.format(removed_keys[0], self.name)
                             )
         else:            
-            logger.TRACE('''
+            logger.DEBUG('''
                 Removing keys of the account '{}' from the wallet '{}'
                 '''.format(account_name, self.name)
                         )        
@@ -182,7 +182,7 @@ class Wallet(cleos.WalletCreate):
                 Failed to remove key '{}' from the wallet '{}'
                 '''.format(key, self.name))
 
-        logger.TRACE('''
+        logger.DEBUG('''
         * Cross-checked: all listed keys removed from the wallet.
         ''')
         return True
@@ -216,7 +216,7 @@ class Wallet(cleos.WalletCreate):
                 self.name, is_verbose=False)
             imported_keys.append(interface.key_arg(
                     account_or_key, is_owner_key=False, is_private_key=False))
-            logger.TRACE('''
+            logger.DEBUG('''
                 * Importing keys of the account ``{}`` 
                     into the wallet ``{}``
                 '''.format(account_name, self.name)
@@ -226,7 +226,7 @@ class Wallet(cleos.WalletCreate):
                 interface.key_arg(account_or_key, is_private_key=True), 
                 self.name, is_verbose=False)
 
-            logger.TRACE('''
+            logger.DEBUG('''
                 * Importing keys into the wallet ``{}``
                 '''.format(self.name)
                         )
@@ -249,7 +249,7 @@ class Wallet(cleos.WalletCreate):
                     account_name if account_name else "n/a", self.name))
 
         if ok:
-            logger.TRACE('''
+            logger.DEBUG('''
             * Cross-checked: all account keys are in the wallet.
             ''')
         return True
@@ -321,7 +321,7 @@ class Wallet(cleos.WalletCreate):
         '''
         self.open_unlock()
         wallet_keys = cleos.WalletKeys(is_verbose=False)
-        logger.TRACE('''
+        logger.DEBUG('''
             Keys in all open walets:
             {}
             '''.format(wallet_keys.out_msg))
@@ -334,7 +334,7 @@ class Wallet(cleos.WalletCreate):
     #     self.open_unlock()
 
     #     self.wallet_private_keys = cleos.WalletPrivateKeys(is_verbose=False)
-    #     logger.TRACE('''
+    #     logger.DEBUG('''
     #         Keys in all open walets:
     #         {}
     #         '''.format(json.dumps(
@@ -369,7 +369,7 @@ class Wallet(cleos.WalletCreate):
             for name, object_name in account_map_json.items():
                 if object_name == account_object_name:
                     if not name == account_name:
-                        logger.OUT('''
+                        logger.DEBUG('''
                 The given account object name
                 ``{}``
                 points to an existing account, of the name {},
@@ -423,7 +423,7 @@ class Wallet(cleos.WalletCreate):
                 out.write(json.dumps(
                     account_map_json, indent=3, sort_keys=True))
 
-            logger.TRACE('''
+            logger.DEBUG('''
                 * Account object ``{}`` stored in the file 
                     ``{}`` in the wallet directory:
                     {}

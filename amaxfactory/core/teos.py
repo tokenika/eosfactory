@@ -269,7 +269,7 @@ The file path is to be absolute or relative to the project directory.
         abigen_path = os.path.normpath(
                         os.path.join(build_dir, contract_src_name  + ".abi"))
     if is_execute:
-        logger.TRACE('''
+        logger.DEBUG('''
             Executing target
                 {}
         '''.format(target_path))
@@ -325,16 +325,16 @@ The file path is to be absolute or relative to the project directory.
                                                             prompt="eosio-cpp")
     if not compile_only:
         if "wasm" in target_path:
-            logger.TRACE('''
+            logger.DEBUG('''
                 ABI file writen to file:
                     {}
                 '''.format(os.path.normpath(abigen_path)), verbosity)
-            logger.TRACE('''
+            logger.DEBUG('''
                 WASM file writen to file:
                     {}
                 '''.format(os.path.normpath(target_path)), verbosity)
         else:
-            logger.TRACE('''
+            logger.DEBUG('''
                 terget writen to file:
                     {}
                 '''.format(os.path.normpath(target_path)), verbosity)

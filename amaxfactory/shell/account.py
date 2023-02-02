@@ -49,9 +49,9 @@ class Account():
         if not isinstance(account, cls):
             account.__class__.__bases__ += (cls,)
 
-        get_account = cleos.GetAccount(account, is_info=False, is_verbose=0)
+        get_account = cleos.GetAccount(account, is_info=False, is_verbose=False)
 
-        logger.TRACE('''
+        logger.DEBUG('''
         * Cross-checked: account object ``{}`` mapped to an existing
             account ``{}``.
         '''.format(account_object_name, account.name), translate=False)
@@ -77,7 +77,7 @@ class Account():
                 is *False*.
         '''
         result = cleos_get.GetActions(
-            self, pos, offset, json, full, pretty, console, is_verbose=False)
+            self, pos, offset, json, full, pretty, console, is_verbose=True)
         return result
 
     def code(self, code=None, abi=None, wasm=False):
@@ -90,11 +90,11 @@ class Account():
             wasm (bool): Save contract as wasm.
         '''
         stop_if_account_is_not_set(self)
-        result = cleos_get.GetCode(self, is_verbose=False)
+        result = cleos_get.GetCode(self, is_verbose=True)
         logger.INFO('''
         * code()
         ''')
-        logger.OUT(str(result))
+        logger.DEBUG(str(result))
 
     def is_code(self):
         '''Determine whether any contract is set to the account.
@@ -103,7 +103,7 @@ class Account():
             True if the retrieved hash code of the contract code is not null.
         '''
         stop_if_account_is_not_set(self)
-        get_code = cleos_get.GetCode(self.name, is_verbose=False)
+        get_code = cleos_get.GetCode(self.name, is_verbose=True)
         if get_code.code_hash == \
         "0000000000000000000000000000000000000000000000000000000000000000":
             return ""
@@ -146,10 +146,10 @@ class Account():
                     max_cpu_usage, max_net_usage,
                     ref_block,
                     delay_sec,
-                    is_verbose=False, json=True
+                    is_verbose=True, json=False
                 )
 
-        logger.OUT(result)
+        logger.DEBUG(result)
         self.set_contract = result
 
     def set_account_permission(
@@ -212,7 +212,7 @@ class Account():
         :func:`.cleos.common_parameters`.
         '''
         stop_if_account_is_not_set(self)
-        logger.TRACE('''
+        logger.DEBUG('''
             * Set account permission.
             ''')
         result = cleos_set.SetAccountPermission(
@@ -225,7 +225,7 @@ class Account():
                 max_cpu_usage, max_net_usage,
                 ref_block,
                 delay_sec,
-                is_verbose=False, json=True
+                is_verbose=True, json=False
             )
 
         logger.INFO('''
@@ -260,7 +260,7 @@ class Account():
         :func:`.cleos.common_parameters`.
         '''
         stop_if_account_is_not_set(self)
-        logger.TRACE('''
+        logger.DEBUG('''
         * Set action permission.
         ''')
 
@@ -272,8 +272,8 @@ class Account():
                 max_cpu_usage, max_net_usage,
                 ref_block,
                 delay_sec,
-                is_verbose=False,
-                json=True
+                is_verbose=True,
+                json=False
             )
 
         logger.INFO('''
@@ -335,9 +335,9 @@ class Account():
             * push action ``{} {}``:
             '''.format(self.name,action))
 
-        logger.INFO('''
-            {}
-        '''.format(re.sub(' +',' ', data)))
+        # logger.INFO('''
+        #     {}
+        # '''.format(re.sub(' +',' ', data)))
 
         result = cleos.PushAction(
             self, action, data,
@@ -345,7 +345,7 @@ class Account():
             skip_sign, dont_broadcast, force_unique,
             max_cpu_usage, max_net_usage,
             ref_block,
-            is_verbose=False, json=True)
+            is_verbose=True, json=False)
 
 
         self.action = result
@@ -526,7 +526,7 @@ class Account():
                     binary,
                     limit, lower, upper, index,
                     key_type, encode_type, reverse, show_payer,
-                    is_verbose=False)
+                    is_verbose=True)
 
         try:
             account_map = manager.account_map()
@@ -534,7 +534,7 @@ class Account():
         except:
             pass
 
-        logger.OUT(result.out_msg)
+        logger.DEBUG(result.out_msg)
 
         return result
 
@@ -609,7 +609,7 @@ class Account():
         msg = manager.accout_names_2_object_names(
             "Account object name: {}\n{}".format(
             self.account_object_name,
-            str(cleos.GetAccount(self.name, is_verbose=0))),
+            str(cleos.GetAccount(self.name, is_verbose=False))),
             True
         )
         # restore the physical account name
@@ -627,7 +627,7 @@ class Account():
                 rv = "n/a"
             return rv
 
-        json = cleos.GetAccount(self, is_info=False, is_verbose=0).json
+        json = cleos.GetAccount(self, is_info=False, is_verbose=False).json
         json["account_object_name"] = self.account_object_name
 
         output = ""
@@ -638,7 +638,7 @@ class Account():
         if to_string:
             return output
         else:
-            logger.OUT(output, translate=False)
+            logger.DEBUG(output, translate=False)
 
 
     def __str__(self):
@@ -750,12 +750,12 @@ def create_master_account(
             return None
 
         if is_in_globals(account_object_name, globals):
-            logger.INFO('''
+            logger.DEBUG('''
                 ######## Account object ``{}`` restored from the blockchain.
                 '''.format(account_object_name))
             return globals[account_object_name]
 
-    logger.INFO('''
+    logger.DEBUG('''
         ######### Create a master account object ``{}``.
         '''.format(account_object_name))
 
@@ -809,18 +809,18 @@ def create_master_account(
 
         if account_object.exists:
             if account_object.has_keys: # it is your account
-                logger.TRACE('''
+                logger.DEBUG('''
                     * Checking whether the wallet has keys to the account ``{}``
                     '''.format(account_object.name))
 
-                logger.TRACE('''
+                logger.DEBUG('''
                     * The account object is created.
                     ''')
 
                 if account_object_name:
                     if Account.add_methods_and_finalize(
                         account_object_name, account_object):
-                        logger.TRACE('''
+                        logger.DEBUG('''
                             * The account ``{}`` is in the wallet.
                             '''.format(account_object.name))
                         return account_object
@@ -828,7 +828,7 @@ def create_master_account(
                     return account_object
 
             else: # the name is taken by somebody else
-                logger.TRACE('''
+                logger.DEBUG('''
                 ###
                 You can try another name. Do you wish to do this?
                 ''')
@@ -842,7 +842,7 @@ def create_master_account(
             owner_key_new = cleos.CreateKey(is_verbose=False)
             active_key_new = cleos.CreateKey(is_verbose=False)
 
-            logger.OUT('''
+            logger.DEBUG('''
             Use the following data to register a new account on a public testnet:
             Account Name: {}
             Owner Public Key: {}
@@ -917,7 +917,7 @@ def restore_account(
     account_object = account.GetAccount(
                     account_object_name, account_name, owner_key, active_key)
 
-    logger.TRACE('''
+    logger.DEBUG('''
         * The account object '{}' from testnet
             @ {}
         is restored.
@@ -1040,12 +1040,12 @@ def create_account(
     if is_in_globals(account_object_name, globals):
         global_account =  globals[account_object_name]
         if global_account.name == account_name:
-            logger.INFO('''
+            logger.DEBUG('''
                 ######## Account object ``{}`` restored from the blockchain.
                 '''.format(account_object_name))
             return globals[account_object_name]
 
-    logger.INFO('''
+    logger.DEBUG('''
         ######### Create an account object ``{}``.
         '''.format(account_object_name))
 
@@ -1054,7 +1054,7 @@ def create_account(
     '''
     try:
         if account.RestoreAccount(account_name):
-            logger.INFO('''
+            logger.DEBUG('''
                     ... for an existing blockchain account ``{}``
                         mapped as ``{}``.
                     '''.format(account_name, account_object_name),
@@ -1072,7 +1072,7 @@ def create_account(
     if restore:
         if creator:
             account_name = creator
-        logger.INFO('''
+        logger.DEBUG('''
                     ... for an existing blockchain account ``{}``
                         mapped as ``{}``.
                     '''.format(account_name, account_object_name),
@@ -1090,7 +1090,7 @@ def create_account(
             active_key = cleos.CreateKey(is_verbose=False)
 
         if new:
-            logger.INFO('''
+            logger.DEBUG('''
                         ... delegating stake to a new blockchain account ``{}`` mapped as ``{}``.
                         '''.format(account_name, account_object_name))
 
@@ -1107,7 +1107,7 @@ def create_account(
                         ref_block
                         )
             except errors.LowRamError as e:
-                logger.TRACE('''
+                logger.DEBUG('''
                 * RAM needed is {}.kByte, buying RAM {}.kByte.
                 '''.format(
                     e.needs_kbyte,
@@ -1127,7 +1127,7 @@ def create_account(
                         ref_block
                         )
         else:
-            logger.INFO('''
+            logger.DEBUG('''
                         ... for a new blockchain account ``{}``.
                         '''.format(account_name))
             account_object = account.CreateAccount(
@@ -1144,7 +1144,7 @@ def create_account(
         account_object.owner_key = owner_key
         account_object.active_key = active_key
 
-    logger.TRACE('''
+    logger.DEBUG('''
         * The account object is created.
         ''')
     if factory:
@@ -1206,7 +1206,7 @@ def put_account_to_wallet_and_on_stack(
             if wallet_singleton.import_key(account_object):
                 wallet_singleton.map_account(account_object)
             else:
-                logger.TRACE('''
+                logger.DEBUG('''
                 Wrong or missing keys for the account ``{}`` in the wallets.
                 '''.format(account_object.name))
                 return False
@@ -1234,7 +1234,7 @@ def print_stats(
 
     jsons = []
     for account in accounts:
-        json = cleos.GetAccount(account, is_info=False, is_verbose=0).json
+        json = cleos.GetAccount(account, is_info=False, is_verbose=False).json
         json["account_object_name"] = account.account_object_name
         jsons.append(json)
 
@@ -1248,7 +1248,7 @@ def print_stats(
             output = output + col % find(param, json)
         output = output + "  " + last_col % (param) + "\n"
 
-    logger.OUT(output, translate=False)
+    logger.DEBUG(output, translate=False)
 
 
 def is_in_globals(account_object_name, globals):

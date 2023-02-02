@@ -82,7 +82,7 @@ class GetAccount(cleos.GetAccount):
                     active_key, is_owner_key=False, is_private_key=True),
                 is_verbose=0)
 
-        logger.TRACE('''
+        logger.DEBUG('''
             * Account *{}* exists in the blockchain.
             '''.format(self.name))
 

@@ -12,7 +12,6 @@ import amaxfactory.shell.contract as contract
 import amaxfactory.shell.init as init
 
 verbosity =  logger.verbosity
-Verbosity =  logger.Verbosity
 
 SCENARIO =  logger.SCENARIO
 COMMENT =  logger.COMMENT
@@ -27,6 +26,11 @@ MissingRequiredAuthorityError = errors.MissingRequiredAuthorityError
 DuplicateTransactionError = errors.DuplicateTransactionError
 
 CreateKey = cleos.CreateKey
+SystemActivate = cleos.SystemActivate
+SetContract = cleos.SetContract
+SystemaRegproducer = cleos.SystemaRegproducer
+SystemDelegatebw = cleos.SystemDelegatebw
+SystemVoteproducer = cleos.SystemVoteproducer
 Permission = interface.Permission
 
 create_wallet = wallet.create_wallet

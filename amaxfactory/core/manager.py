@@ -29,7 +29,7 @@ def clear_testnet_cache():
     '''
     if not setup.file_prefix():
         return
-    logger.TRACE('''
+    logger.DEBUG('''
     Removing testnet cache for prefix `{}`
     '''.format(setup.file_prefix()))
 
@@ -45,7 +45,7 @@ def clear_testnet_cache():
         Cannot remove testnet cache. The error message is:
         {}
         '''.format(str(e)))
-    logger.TRACE('''
+    logger.DEBUG('''
     Testnet cache successfully removed.
     ''')
 
@@ -289,7 +289,7 @@ editor. Return ``None`` if the the offer is rejected.
             if isinstance(e, FileNotFoundError):
                 return {}
             else:
-                logger.OUT('''
+                logger.DEBUG('''
             The account mapping file is misformed. The error message is:
             {}
 

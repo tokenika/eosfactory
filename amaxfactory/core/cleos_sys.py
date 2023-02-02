@@ -61,7 +61,7 @@ class SystemNewaccount(interface.Account, cleos.Cleos):
                 interface.key_arg(active_key, is_owner_key=False, is_private_key=False)
             ]
 
-        args.append("--json")
+        # args.append("--json")
         args.extend([
             "--stake-net", stake_net, 
             "--stake-cpu", stake_cpu])
@@ -194,8 +194,9 @@ class DelegateBw(cleos.Cleos):
             self.payer, self.receiver,
             "{} EOS".format(self.stake_net_quantity),
             "{} EOS".format(self.stake_cpu_quantity),
-            "--expiration", str(expiration_sec),
-            "--json"]
+            "--expiration", str(expiration_sec)]
+            # ,
+            # "--json"]
 
         if not permission is None:
             p = interface.permission_arg(permission)
