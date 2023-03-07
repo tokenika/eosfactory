@@ -1,0 +1,761 @@
+{
+    "____comment": "This file was generated with amax-abigen. DO NOT EDIT ",
+    "version": "amax::abi/1.1",
+    "types": [
+        {
+            "new_type_name": "order_side_t",
+            "type": "name"
+        },
+        {
+            "new_type_name": "order_type_t",
+            "type": "name"
+        }
+    ],
+    "structs": [
+        {
+            "name": "account_conf_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "account",
+                    "type": "name"
+                },
+                {
+                    "name": "member_fee_grade",
+                    "type": "uint8"
+                }
+            ]
+        },
+        {
+            "name": "addsingldeal",
+            "base": "",
+            "fields": [
+                {
+                    "name": "deal_item",
+                    "type": "deal_item_t"
+                },
+                {
+                    "name": "curr_ts",
+                    "type": "time_point_sec"
+                }
+            ]
+        },
+        {
+            "name": "balance_chg_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "balance_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "user",
+                    "type": "name"
+                },
+                {
+                    "name": "bank",
+                    "type": "name"
+                },
+                {
+                    "name": "quantity",
+                    "type": "asset"
+                },
+                {
+                    "name": "type",
+                    "type": "name"
+                },
+                {
+                    "name": "memo",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "bashcancel",
+            "base": "",
+            "fields": [
+                {
+                    "name": "submitter",
+                    "type": "name"
+                },
+                {
+                    "name": "pair_code",
+                    "type": "name"
+                },
+                {
+                    "name": "type",
+                    "type": "name"
+                },
+                {
+                    "name": "side",
+                    "type": "name"
+                },
+                {
+                    "name": "ids",
+                    "type": "uint64[]"
+                }
+            ]
+        },
+        {
+            "name": "blacklist",
+            "base": "",
+            "fields": [
+                {
+                    "name": "targets",
+                    "type": "name[]"
+                },
+                {
+                    "name": "to_add",
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "blacklist_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "account",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "cancel",
+            "base": "",
+            "fields": [
+                {
+                    "name": "pair_code",
+                    "type": "name"
+                },
+                {
+                    "name": "type",
+                    "type": "name"
+                },
+                {
+                    "name": "side",
+                    "type": "name"
+                },
+                {
+                    "name": "order_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "cancelall",
+            "base": "",
+            "fields": [
+                {
+                    "name": "pair_code",
+                    "type": "name"
+                },
+                {
+                    "name": "type",
+                    "type": "name"
+                },
+                {
+                    "name": "side",
+                    "type": "name"
+                },
+                {
+                    "name": "count",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "config",
+            "base": "",
+            "fields": [
+                {
+                    "name": "dex_enabled",
+                    "type": "bool"
+                },
+                {
+                    "name": "dex_admin",
+                    "type": "name"
+                },
+                {
+                    "name": "dex_fee_collector",
+                    "type": "name"
+                },
+                {
+                    "name": "max_match_count",
+                    "type": "uint32"
+                },
+                {
+                    "name": "quote_symbols",
+                    "type": "extended_symbol[]"
+                },
+                {
+                    "name": "price_offset_ratio",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "deal_item_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "sympair_code",
+                    "type": "name"
+                },
+                {
+                    "name": "buy_order_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "sell_order_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "buyer",
+                    "type": "name"
+                },
+                {
+                    "name": "seller",
+                    "type": "name"
+                },
+                {
+                    "name": "deal_base_quant",
+                    "type": "asset"
+                },
+                {
+                    "name": "deal_quote_quant",
+                    "type": "asset"
+                },
+                {
+                    "name": "deal_price",
+                    "type": "asset"
+                },
+                {
+                    "name": "taker_side",
+                    "type": "order_side_t"
+                },
+                {
+                    "name": "buy_fee",
+                    "type": "asset"
+                },
+                {
+                    "name": "sell_fee",
+                    "type": "asset"
+                },
+                {
+                    "name": "buy_refund_quote_quant",
+                    "type": "asset"
+                },
+                {
+                    "name": "memo",
+                    "type": "string"
+                },
+                {
+                    "name": "deal_time",
+                    "type": "time_point"
+                }
+            ]
+        },
+        {
+            "name": "delmembergrd",
+            "base": "",
+            "fields": [
+                {
+                    "name": "account",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "extended_symbol",
+            "base": "",
+            "fields": [
+                {
+                    "name": "sym",
+                    "type": "symbol"
+                },
+                {
+                    "name": "contract",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "fee_pool_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "fees",
+                    "type": "asset"
+                }
+            ]
+        },
+        {
+            "name": "global",
+            "base": "",
+            "fields": [
+                {
+                    "name": "order_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "sympair_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "deal_item_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "init",
+            "base": "",
+            "fields": []
+        },
+        {
+            "name": "match",
+            "base": "",
+            "fields": [
+                {
+                    "name": "matcher",
+                    "type": "name"
+                },
+                {
+                    "name": "pair_code",
+                    "type": "name"
+                },
+                {
+                    "name": "max_count",
+                    "type": "uint32"
+                },
+                {
+                    "name": "memo",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "opensympair",
+            "base": "",
+            "fields": [
+                {
+                    "name": "sympair_code",
+                    "type": "name"
+                },
+                {
+                    "name": "on_off",
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "order_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "order_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "ext_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "owner",
+                    "type": "name"
+                },
+                {
+                    "name": "sympair_code",
+                    "type": "name"
+                },
+                {
+                    "name": "order_side",
+                    "type": "order_side_t"
+                },
+                {
+                    "name": "order_type",
+                    "type": "order_type_t"
+                },
+                {
+                    "name": "price",
+                    "type": "asset"
+                },
+                {
+                    "name": "total_base_quant",
+                    "type": "asset"
+                },
+                {
+                    "name": "total_frozen_quant",
+                    "type": "asset"
+                },
+                {
+                    "name": "taker_fee_ratio",
+                    "type": "int64"
+                },
+                {
+                    "name": "maker_fee_ratio",
+                    "type": "int64"
+                },
+                {
+                    "name": "matched_base_quant",
+                    "type": "asset"
+                },
+                {
+                    "name": "matched_quote_quant",
+                    "type": "asset"
+                },
+                {
+                    "name": "matched_fee",
+                    "type": "asset"
+                },
+                {
+                    "name": "created_at",
+                    "type": "time_point"
+                },
+                {
+                    "name": "last_updated_at",
+                    "type": "time_point"
+                },
+                {
+                    "name": "last_deal_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "orderchange",
+            "base": "",
+            "fields": [
+                {
+                    "name": "order_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "order",
+                    "type": "order_t"
+                }
+            ]
+        },
+        {
+            "name": "residuenote",
+            "base": "",
+            "fields": [
+                {
+                    "name": "order_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "quant",
+                    "type": "asset"
+                },
+                {
+                    "name": "curr_ts",
+                    "type": "time_point_sec"
+                }
+            ]
+        },
+        {
+            "name": "setconfig",
+            "base": "",
+            "fields": [
+                {
+                    "name": "conf",
+                    "type": "config"
+                }
+            ]
+        },
+        {
+            "name": "setmembergrd",
+            "base": "",
+            "fields": [
+                {
+                    "name": "account",
+                    "type": "name"
+                },
+                {
+                    "name": "grade",
+                    "type": "int8"
+                }
+            ]
+        },
+        {
+            "name": "setsympair",
+            "base": "",
+            "fields": [
+                {
+                    "name": "sympair_code",
+                    "type": "name"
+                },
+                {
+                    "name": "base_symbol",
+                    "type": "extended_symbol"
+                },
+                {
+                    "name": "quote_symbol",
+                    "type": "extended_symbol"
+                },
+                {
+                    "name": "min_base_quant",
+                    "type": "asset"
+                },
+                {
+                    "name": "min_quote_quant",
+                    "type": "asset"
+                },
+                {
+                    "name": "max_base_quant",
+                    "type": "asset"
+                },
+                {
+                    "name": "max_quote_quant",
+                    "type": "asset"
+                },
+                {
+                    "name": "taker_fee_ratio",
+                    "type": "uint64"
+                },
+                {
+                    "name": "maker_fee_ratio",
+                    "type": "uint64"
+                },
+                {
+                    "name": "min_deal_base_quant",
+                    "type": "asset"
+                },
+                {
+                    "name": "min_deal_quote_quant",
+                    "type": "asset"
+                }
+            ]
+        },
+        {
+            "name": "symbol_pair_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "sympair_code",
+                    "type": "name"
+                },
+                {
+                    "name": "sympair_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "base_symbol",
+                    "type": "extended_symbol"
+                },
+                {
+                    "name": "quote_symbol",
+                    "type": "extended_symbol"
+                },
+                {
+                    "name": "latest_deal_price",
+                    "type": "asset"
+                },
+                {
+                    "name": "taker_fee_ratio",
+                    "type": "int64"
+                },
+                {
+                    "name": "maker_fee_ratio",
+                    "type": "int64"
+                },
+                {
+                    "name": "enabled",
+                    "type": "bool"
+                },
+                {
+                    "name": "min_base_quant",
+                    "type": "asset"
+                },
+                {
+                    "name": "min_quote_quant",
+                    "type": "asset"
+                },
+                {
+                    "name": "max_base_quant",
+                    "type": "asset"
+                },
+                {
+                    "name": "max_quote_quant",
+                    "type": "asset"
+                },
+                {
+                    "name": "min_deal_base_quant",
+                    "type": "asset"
+                },
+                {
+                    "name": "min_deal_quote_quant",
+                    "type": "asset"
+                }
+            ]
+        },
+        {
+            "name": "withdraw",
+            "base": "",
+            "fields": [
+                {
+                    "name": "bank",
+                    "type": "name"
+                },
+                {
+                    "name": "quant",
+                    "type": "asset"
+                },
+                {
+                    "name": "memo",
+                    "type": "string"
+                }
+            ]
+        }
+    ],
+    "actions": [
+        {
+            "name": "addsingldeal",
+            "type": "addsingldeal",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "bashcancel",
+            "type": "bashcancel",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "blacklist",
+            "type": "blacklist",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "cancel",
+            "type": "cancel",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "cancelall",
+            "type": "cancelall",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "delmembergrd",
+            "type": "delmembergrd",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "init",
+            "type": "init",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "match",
+            "type": "match",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "opensympair",
+            "type": "opensympair",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "orderchange",
+            "type": "orderchange",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "residuenote",
+            "type": "residuenote",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setconfig",
+            "type": "setconfig",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setmembergrd",
+            "type": "setmembergrd",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setsympair",
+            "type": "setsympair",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "withdraw",
+            "type": "withdraw",
+            "ricardian_contract": ""
+        }
+    ],
+    "tables": [
+        {
+            "name": "accountconfs",
+            "type": "account_conf_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "balances",
+            "type": "balance_chg_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "blacklist",
+            "type": "blacklist_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "config",
+            "type": "config",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "deals",
+            "type": "deal_item_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "feepool",
+            "type": "fee_pool_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "global",
+            "type": "global",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "order",
+            "type": "order_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "sympair",
+            "type": "symbol_pair_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        }
+    ],
+    "ricardian_clauses": [],
+    "variants": []
+}
