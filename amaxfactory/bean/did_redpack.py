@@ -23,10 +23,7 @@ class DID_REDPACK(CreateAccount):
 		self.set_account_permission(add_code=True)
     
 	def setup(self):
-		try:
-			did_redpack_init(self)
-		except:
-			print("did_redpack setup function not implemented!!")
+		did_redpack_init(self)
 		return self
 
 	def __str__(self):

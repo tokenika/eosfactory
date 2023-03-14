@@ -23,10 +23,7 @@ class AMAX_PROXY(CreateAccount):
 		self.set_account_permission(add_code=True)
     
 	def setup(self):
-		try:
-			amax_proxy_init(self)
-		except:
-			print("amax_proxy setup function not implemented!!")
+		amax_proxy_init(self)
 		return self
 
 	def __str__(self):

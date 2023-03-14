@@ -23,10 +23,7 @@ class PASS_MART(CreateAccount):
 		self.set_account_permission(add_code=True)
     
 	def setup(self):
-		try:
-			pass_mart_init(self)
-		except:
-			print("pass_mart setup function not implemented!!")
+		pass_mart_init(self)
 		return self
 
 	def __str__(self):

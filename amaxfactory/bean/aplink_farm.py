@@ -23,10 +23,7 @@ class APLINK_FARM(CreateAccount):
 		self.set_account_permission(add_code=True)
     
 	def setup(self):
-		try:
-			aplink_farm_init(self)
-		except:
-			print("aplink_farm setup function not implemented!!")
+		aplink_farm_init(self)
 		return self
 
 	def __str__(self):

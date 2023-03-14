@@ -23,10 +23,7 @@ class MDAO_GOV(CreateAccount):
 		self.set_account_permission(add_code=True)
     
 	def setup(self):
-		try:
-			mdao_gov_init(self)
-		except:
-			print("mdao_gov setup function not implemented!!")
+		mdao_gov_init(self)
 		return self
 
 	def __str__(self):

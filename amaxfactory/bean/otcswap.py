@@ -23,10 +23,7 @@ class OTCSWAP(CreateAccount):
 		self.set_account_permission(add_code=True)
     
 	def setup(self):
-		try:
-			otcswap_init(self)
-		except:
-			print("otcswap setup function not implemented!!")
+		otcswap_init(self)
 		return self
 
 	def __str__(self):

@@ -23,10 +23,7 @@ class AMAX_TOKEN(CreateAccount):
 		self.set_account_permission(add_code=True)
     
 	def setup(self):
-		try:
-			amax_token_init(self)
-		except:
-			print("amax_token setup function not implemented!!")
+		amax_token_init(self)
 		return self
 
 	def __str__(self):

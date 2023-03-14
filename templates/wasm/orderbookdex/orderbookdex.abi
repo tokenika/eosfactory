@@ -89,15 +89,15 @@
             "base": "",
             "fields": [
                 {
-                    "name": "dex_enabled",
+                    "name": "enabled",
                     "type": "bool"
                 },
                 {
-                    "name": "dex_admin",
+                    "name": "admin",
                     "type": "name"
                 },
                 {
-                    "name": "dex_fee_collector",
+                    "name": "fee_collector",
                     "type": "name"
                 },
                 {
@@ -492,7 +492,7 @@
             ]
         },
         {
-            "name": "setsympair",
+            "name": "settradepair",
             "base": "",
             "fields": [
                 {
@@ -663,8 +663,8 @@
             "ricardian_contract": ""
         },
         {
-            "name": "setsympair",
-            "type": "setsympair",
+            "name": "settradepair",
+            "type": "settradepair",
             "ricardian_contract": ""
         },
         {

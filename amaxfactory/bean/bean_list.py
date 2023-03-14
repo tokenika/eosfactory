@@ -13,10 +13,8 @@ from amaxfactory.bean.mdao_propose import MDAO_PROPOSE
 from amaxfactory.bean.amax_system import AMAX_SYSTEM
 from amaxfactory.bean.pass_custody import PASS_CUSTODY
 from amaxfactory.bean.aplink_farm import APLINK_FARM
-from amaxfactory.bean.otcfeesplit import OTCFEESPLIT
 from amaxfactory.bean.mdao_conf import MDAO_CONF
 from amaxfactory.bean.mdao_gov import MDAO_GOV
-from amaxfactory.bean.nft_redpack import NFT_REDPACK
 from amaxfactory.bean.orderbookdex import ORDERBOOKDEX
 from amaxfactory.bean.did_redpack import DID_REDPACK
 from amaxfactory.bean.tg_bind import TG_BIND
@@ -26,6 +24,7 @@ from amaxfactory.bean.nftone_mart import NFTONE_MART
 from amaxfactory.bean.otcswap import OTCSWAP
 from amaxfactory.bean.amax_mulsign import AMAX_MULSIGN
 from amaxfactory.bean.amax_ntoken import AMAX_NTOKEN
+from amaxfactory.bean.dex_spot import DEX_SPOT
 from amaxfactory.bean.otcsettle import OTCSETTLE
 from amaxfactory.bean.amax_auth import AMAX_AUTH
 from amaxfactory.bean.otcbook import OTCBOOK
@@ -40,4 +39,3 @@ from amaxfactory.bean.amax_token import AMAX_TOKEN
 from amaxfactory.bean.amax_wrap import AMAX_WRAP
 from amaxfactory.bean.verso_ntoken import VERSO_NTOKEN
 from amaxfactory.bean.did_ntoken import DID_NTOKEN
-from amaxfactory.bean.mdao_stake import MDAO_STAKE

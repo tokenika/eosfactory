@@ -23,10 +23,7 @@ class PASS_CUSTODY(CreateAccount):
 		self.set_account_permission(add_code=True)
     
 	def setup(self):
-		try:
-			pass_custody_init(self)
-		except:
-			print("pass_custody setup function not implemented!!")
+		pass_custody_init(self)
 		return self
 
 	def __str__(self):

@@ -23,10 +23,7 @@ class AMAX_XCHAIN(CreateAccount):
 		self.set_account_permission(add_code=True)
     
 	def setup(self):
-		try:
-			amax_xchain_init(self)
-		except:
-			print("amax_xchain setup function not implemented!!")
+		amax_xchain_init(self)
 		return self
 
 	def __str__(self):

@@ -23,10 +23,7 @@ class TG_REDPACK(CreateAccount):
 		self.set_account_permission(add_code=True)
     
 	def setup(self):
-		try:
-			tg_redpack_init(self)
-		except:
-			print("tg_redpack setup function not implemented!!")
+		tg_redpack_init(self)
 		return self
 
 	def __str__(self):

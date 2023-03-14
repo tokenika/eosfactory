@@ -23,10 +23,7 @@ class RNDNFT_SWAP(CreateAccount):
 		self.set_account_permission(add_code=True)
     
 	def setup(self):
-		try:
-			rndnft_swap_init(self)
-		except:
-			print("rndnft_swap setup function not implemented!!")
+		rndnft_swap_init(self)
 		return self
 
 	def __str__(self):

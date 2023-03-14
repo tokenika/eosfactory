@@ -23,10 +23,7 @@ class RNDNFT_MART(CreateAccount):
 		self.set_account_permission(add_code=True)
     
 	def setup(self):
-		try:
-			rndnft_mart_init(self)
-		except:
-			print("rndnft_mart setup function not implemented!!")
+		rndnft_mart_init(self)
 		return self
 
 	def __str__(self):

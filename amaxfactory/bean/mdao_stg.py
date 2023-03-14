@@ -23,10 +23,7 @@ class MDAO_STG(CreateAccount):
 		self.set_account_permission(add_code=True)
     
 	def setup(self):
-		try:
-			mdao_stg_init(self)
-		except:
-			print("mdao_stg setup function not implemented!!")
+		mdao_stg_init(self)
 		return self
 
 	def __str__(self):

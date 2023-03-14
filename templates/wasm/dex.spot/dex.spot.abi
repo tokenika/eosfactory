@@ -7,11 +7,25 @@
             "type": "name"
         },
         {
-            "new_type_name": "order_type_t",
+            "new_type_name": "price_type_t",
             "type": "name"
         }
     ],
     "structs": [
+        {
+            "name": "account",
+            "base": "",
+            "fields": [
+                {
+                    "name": "available_balance",
+                    "type": "asset"
+                },
+                {
+                    "name": "frozen_balance",
+                    "type": "asset"
+                }
+            ]
+        },
         {
             "name": "account_conf_t",
             "base": "",
@@ -27,7 +41,7 @@
             ]
         },
         {
-            "name": "addsingldeal",
+            "name": "addonedeal",
             "base": "",
             "fields": [
                 {
@@ -71,7 +85,7 @@
             ]
         },
         {
-            "name": "bashcancel",
+            "name": "batchcancel",
             "base": "",
             "fields": [
                 {
@@ -125,7 +139,7 @@
             "base": "",
             "fields": [
                 {
-                    "name": "pair_code",
+                    "name": "tpcode",
                     "type": "name"
                 },
                 {
@@ -165,31 +179,63 @@
             ]
         },
         {
+            "name": "cancelnotify",
+            "base": "",
+            "fields": [
+                {
+                    "name": "order_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "cleanall",
+            "base": "",
+            "fields": [
+                {
+                    "name": "pair_code",
+                    "type": "name"
+                },
+                {
+                    "name": "count",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
             "name": "config",
             "base": "",
             "fields": [
                 {
-                    "name": "dex_enabled",
+                    "name": "enabled",
                     "type": "bool"
                 },
                 {
-                    "name": "dex_admin",
+                    "name": "admin",
                     "type": "name"
                 },
                 {
-                    "name": "dex_fee_collector",
+                    "name": "fee_collector",
                     "type": "name"
+                },
+                {
+                    "name": "treasure_acnt",
+                    "type": "name"
+                },
+                {
+                    "name": "treasure_ratio",
+                    "type": "uint64"
                 },
                 {
                     "name": "max_match_count",
                     "type": "uint32"
                 },
                 {
-                    "name": "quote_symbols",
-                    "type": "extended_symbol[]"
+                    "name": "price_offset_ratio",
+                    "type": "uint64"
                 },
                 {
-                    "name": "price_offset_ratio",
+                    "name": "order_timeout_duration",
                     "type": "uint64"
                 }
             ]
@@ -203,7 +249,7 @@
                     "type": "uint64"
                 },
                 {
-                    "name": "sympair_code",
+                    "name": "tpcode",
                     "type": "name"
                 },
                 {
@@ -271,6 +317,20 @@
             ]
         },
         {
+            "name": "entradepair",
+            "base": "",
+            "fields": [
+                {
+                    "name": "tpcode",
+                    "type": "name"
+                },
+                {
+                    "name": "on_off",
+                    "type": "bool"
+                }
+            ]
+        },
+        {
             "name": "extended_symbol",
             "base": "",
             "fields": [
@@ -299,15 +359,11 @@
             "base": "",
             "fields": [
                 {
-                    "name": "order_id",
+                    "name": "last_order_id",
                     "type": "uint64"
                 },
                 {
-                    "name": "sympair_id",
-                    "type": "uint64"
-                },
-                {
-                    "name": "deal_item_id",
+                    "name": "last_deal_id",
                     "type": "uint64"
                 }
             ]
@@ -318,6 +374,110 @@
             "fields": []
         },
         {
+            "name": "limitbuy",
+            "base": "",
+            "fields": [
+                {
+                    "name": "submitter",
+                    "type": "name"
+                },
+                {
+                    "name": "ext_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "tpcode",
+                    "type": "name"
+                },
+                {
+                    "name": "pay_quote_quant",
+                    "type": "asset"
+                },
+                {
+                    "name": "base_quant",
+                    "type": "asset"
+                },
+                {
+                    "name": "price",
+                    "type": "asset"
+                }
+            ]
+        },
+        {
+            "name": "limitsell",
+            "base": "",
+            "fields": [
+                {
+                    "name": "submitter",
+                    "type": "name"
+                },
+                {
+                    "name": "ext_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "tpcode",
+                    "type": "name"
+                },
+                {
+                    "name": "pay_base_quant",
+                    "type": "asset"
+                },
+                {
+                    "name": "price",
+                    "type": "asset"
+                }
+            ]
+        },
+        {
+            "name": "marketbuy",
+            "base": "",
+            "fields": [
+                {
+                    "name": "submitter",
+                    "type": "name"
+                },
+                {
+                    "name": "ext_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "tpcode",
+                    "type": "name"
+                },
+                {
+                    "name": "pay_quote_quant",
+                    "type": "asset"
+                },
+                {
+                    "name": "base_quant",
+                    "type": "asset"
+                }
+            ]
+        },
+        {
+            "name": "marketsell",
+            "base": "",
+            "fields": [
+                {
+                    "name": "submitter",
+                    "type": "name"
+                },
+                {
+                    "name": "ext_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "tpcode",
+                    "type": "name"
+                },
+                {
+                    "name": "pay_base_quant",
+                    "type": "asset"
+                }
+            ]
+        },
+        {
             "name": "match",
             "base": "",
             "fields": [
@@ -326,7 +486,7 @@
                     "type": "name"
                 },
                 {
-                    "name": "pair_code",
+                    "name": "tpcode",
                     "type": "name"
                 },
                 {
@@ -340,25 +500,11 @@
             ]
         },
         {
-            "name": "opensympair",
-            "base": "",
-            "fields": [
-                {
-                    "name": "sympair_code",
-                    "type": "name"
-                },
-                {
-                    "name": "on_off",
-                    "type": "bool"
-                }
-            ]
-        },
-        {
             "name": "order_t",
             "base": "",
             "fields": [
                 {
-                    "name": "order_id",
+                    "name": "id",
                     "type": "uint64"
                 },
                 {
@@ -370,7 +516,7 @@
                     "type": "name"
                 },
                 {
-                    "name": "sympair_code",
+                    "name": "tpcode",
                     "type": "name"
                 },
                 {
@@ -378,8 +524,8 @@
                     "type": "order_side_t"
                 },
                 {
-                    "name": "order_type",
-                    "type": "order_type_t"
+                    "name": "price_type",
+                    "type": "price_type_t"
                 },
                 {
                     "name": "price",
@@ -442,24 +588,6 @@
             ]
         },
         {
-            "name": "residuenote",
-            "base": "",
-            "fields": [
-                {
-                    "name": "order_id",
-                    "type": "uint64"
-                },
-                {
-                    "name": "quant",
-                    "type": "asset"
-                },
-                {
-                    "name": "curr_ts",
-                    "type": "time_point_sec"
-                }
-            ]
-        },
-        {
             "name": "setconfig",
             "base": "",
             "fields": [
@@ -484,20 +612,38 @@
             ]
         },
         {
-            "name": "setsympair",
+            "name": "setsymbol",
             "base": "",
             "fields": [
                 {
-                    "name": "sympair_code",
+                    "name": "trade_symbol",
+                    "type": "symbol"
+                },
+                {
+                    "name": "deposit_symbol",
+                    "type": "extended_symbol"
+                },
+                {
+                    "name": "withdrawable",
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "settradepair",
+            "base": "",
+            "fields": [
+                {
+                    "name": "tpcode",
                     "type": "name"
                 },
                 {
                     "name": "base_symbol",
-                    "type": "extended_symbol"
+                    "type": "symbol"
                 },
                 {
                     "name": "quote_symbol",
-                    "type": "extended_symbol"
+                    "type": "symbol"
                 },
                 {
                     "name": "min_base_quant",
@@ -524,38 +670,48 @@
                     "type": "uint64"
                 },
                 {
-                    "name": "min_deal_base_quant",
+                    "name": "min_trade_base_quant",
                     "type": "asset"
                 },
                 {
-                    "name": "min_deal_quote_quant",
+                    "name": "min_trade_quote_quant",
                     "type": "asset"
                 }
             ]
         },
         {
-            "name": "symbol_pair_t",
+            "name": "symbol_conf_t",
             "base": "",
             "fields": [
                 {
-                    "name": "sympair_code",
+                    "name": "trade_symbol",
+                    "type": "symbol"
+                },
+                {
+                    "name": "deposit_symbol",
+                    "type": "extended_symbol"
+                },
+                {
+                    "name": "withdrawable",
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "trade_pair_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "code",
                     "type": "name"
                 },
                 {
-                    "name": "sympair_id",
-                    "type": "uint64"
-                },
-                {
                     "name": "base_symbol",
-                    "type": "extended_symbol"
+                    "type": "symbol"
                 },
                 {
                     "name": "quote_symbol",
-                    "type": "extended_symbol"
-                },
-                {
-                    "name": "latest_deal_price",
-                    "type": "asset"
+                    "type": "symbol"
                 },
                 {
                     "name": "taker_fee_ratio",
@@ -564,10 +720,6 @@
                 {
                     "name": "maker_fee_ratio",
                     "type": "int64"
-                },
-                {
-                    "name": "enabled",
-                    "type": "bool"
                 },
                 {
                     "name": "min_base_quant",
@@ -586,11 +738,29 @@
                     "type": "asset"
                 },
                 {
-                    "name": "min_deal_base_quant",
+                    "name": "min_trade_base_quant",
                     "type": "asset"
                 },
                 {
-                    "name": "min_deal_quote_quant",
+                    "name": "min_trade_quote_quant",
+                    "type": "asset"
+                },
+                {
+                    "name": "enabled",
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "trade_price_t",
+            "base": "",
+            "fields": [
+                {
+                    "name": "tpcode",
+                    "type": "name"
+                },
+                {
+                    "name": "last_trade_price",
                     "type": "asset"
                 }
             ]
@@ -600,7 +770,7 @@
             "base": "",
             "fields": [
                 {
-                    "name": "bank",
+                    "name": "owner",
                     "type": "name"
                 },
                 {
@@ -612,17 +782,31 @@
                     "type": "string"
                 }
             ]
+        },
+        {
+            "name": "withdrawfee",
+            "base": "",
+            "fields": [
+                {
+                    "name": "sym",
+                    "type": "symbol"
+                },
+                {
+                    "name": "memo",
+                    "type": "string"
+                }
+            ]
         }
     ],
     "actions": [
         {
-            "name": "addsingldeal",
-            "type": "addsingldeal",
+            "name": "addonedeal",
+            "type": "addonedeal",
             "ricardian_contract": ""
         },
         {
-            "name": "bashcancel",
-            "type": "bashcancel",
+            "name": "batchcancel",
+            "type": "batchcancel",
             "ricardian_contract": ""
         },
         {
@@ -641,8 +825,23 @@
             "ricardian_contract": ""
         },
         {
+            "name": "cancelnotify",
+            "type": "cancelnotify",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "cleanall",
+            "type": "cleanall",
+            "ricardian_contract": ""
+        },
+        {
             "name": "delmembergrd",
             "type": "delmembergrd",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "entradepair",
+            "type": "entradepair",
             "ricardian_contract": ""
         },
         {
@@ -651,23 +850,33 @@
             "ricardian_contract": ""
         },
         {
+            "name": "limitbuy",
+            "type": "limitbuy",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "limitsell",
+            "type": "limitsell",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "marketbuy",
+            "type": "marketbuy",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "marketsell",
+            "type": "marketsell",
+            "ricardian_contract": ""
+        },
+        {
             "name": "match",
             "type": "match",
             "ricardian_contract": ""
         },
         {
-            "name": "opensympair",
-            "type": "opensympair",
-            "ricardian_contract": ""
-        },
-        {
             "name": "orderchange",
             "type": "orderchange",
-            "ricardian_contract": ""
-        },
-        {
-            "name": "residuenote",
-            "type": "residuenote",
             "ricardian_contract": ""
         },
         {
@@ -681,13 +890,23 @@
             "ricardian_contract": ""
         },
         {
-            "name": "setsympair",
-            "type": "setsympair",
+            "name": "setsymbol",
+            "type": "setsymbol",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "settradepair",
+            "type": "settradepair",
             "ricardian_contract": ""
         },
         {
             "name": "withdraw",
             "type": "withdraw",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "withdrawfee",
+            "type": "withdrawfee",
             "ricardian_contract": ""
         }
     ],
@@ -695,6 +914,13 @@
         {
             "name": "accountconfs",
             "type": "account_conf_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "accounts",
+            "type": "account",
             "index_type": "i64",
             "key_names": [],
             "key_types": []
@@ -749,8 +975,22 @@
             "key_types": []
         },
         {
-            "name": "sympair",
-            "type": "symbol_pair_t",
+            "name": "symbolconfs",
+            "type": "symbol_conf_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "tradepairs",
+            "type": "trade_pair_t",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "tradeprices",
+            "type": "trade_price_t",
             "index_type": "i64",
             "key_names": [],
             "key_types": []

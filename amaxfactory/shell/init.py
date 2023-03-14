@@ -1,6 +1,7 @@
 
 import json
 import os
+import subprocess
 import amaxfactory.core.logger as logger
 import amaxfactory.core.errors as errors
 import amaxfactory.core.teos as teos
@@ -12,7 +13,7 @@ import amaxfactory.shell.wallet as wallet
 import amaxfactory.shell.account as account
 import amaxfactory.shell.contract as contract
 from amaxfactory.bean.bean_list import *
-from amaxfactory.bean.test_create_bean import Testx
+from amaxfactory.bean.test_create_bean import Create
 
 verbosity =  logger.verbosity
 Verbosity =  logger.Verbosity
@@ -60,42 +61,35 @@ Testnet =  testnet.Testnet
 get_testnet =  testnet.get_testnet
 testnets =  testnet.testnets
 
-verbosity([Verbosity.INFO, Verbosity.OUT, Verbosity.TRACE, Verbosity.DEBUG])
 
-CONTRACT_WORKSPACE = "_wslqwjvacdyugodewiyd"
+from amaxfactory.config import *
 
-FACTORY_DIR = os.getenv("FACTORY_DIR")
-
-CONTRACT_WASM_PATH = FACTORY_DIR + "/templates/wasm/"
+verbosity([Verbosity.INFO, Verbosity.OUT,Verbosity.ERROR])
 
 
-def build(contracts_dir,git_pull=False):
-    FACTORY_DIR = os.getenv("FACTORY_DIR")
+def build(contracts_dir=None,build=True,git_pull=False):
+    build_sh_path = FACTORY_DIR + "/templates/build_temp.sh"
+    if contracts_dir:
+        if CONTRACT_WORKSPACE != None:
+            contracts_dir = CONTRACT_WORKSPACE + contracts_dir
+        
+        if git_pull:
+            build_commond = "cd " + contracts_dir + " && git stash save 'xx'&& git pull "
+            print(build_commond)
+            res = os.popen(build_commond).read()
+            print(res)
 
-    build_path = FACTORY_DIR + "/templates/build_temp.sh"
-
-    if git_pull:
-        build_commond = "cd " + contracts_dir + " && git stash save 'xx'&& git pull "
+        build_commond = "cd " + contracts_dir 
+        if build:
+            # build_commond += " && cp -rf {} .  && ./build_temp.sh && rm build_temp.sh".format(build_sh_path)
+            build_commond += "&& ./build.sh -y"
+        build_commond += f"&&cp -rf build/contracts/* {CONTRACT_WASM_PATH}"
         print(build_commond)
-        res = os.popen(build_commond).read()
-        print(res)
-
-    # with open(contracts_dir+'/contracts/CMakeLists.txt', 'a+') as f:
-    #     f.seek(0)
-    #     lines = f.readlines()
-    #     add_str = "add_subdirectory({})".format(contract_name)
-    #     if add_str in str(lines):
-    #         pass
-    #     else:
-    #         f.write('\n{}'.format(add_str))
-
-    build_commond = "cd " + contracts_dir + " && cp {} . && sudo chmod -R 777 build_temp.sh && ./build_temp.sh && rm build_temp.sh".format(build_path)
-    build_commond += f"&&cp -rf build/contracts/* {CONTRACT_WASM_PATH}"
-    print(build_commond)
-    res = os.popen(build_commond).read()
-    print(res)
-    assert "Error" not in str(res)
-    Testx().test_5()
+        res = subprocess.call(build_commond,shell=True)
+        if res != 0 : raise Exception("build commond failed")
+        
+        assert "Error" not in str(res)
+    Create().create()
 
 
 def deploy_amax():

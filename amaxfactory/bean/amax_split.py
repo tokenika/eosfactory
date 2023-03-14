@@ -23,10 +23,7 @@ class AMAX_SPLIT(CreateAccount):
 		self.set_account_permission(add_code=True)
     
 	def setup(self):
-		try:
-			amax_split_init(self)
-		except:
-			print("amax_split setup function not implemented!!")
+		amax_split_init(self)
 		return self
 
 	def __str__(self):

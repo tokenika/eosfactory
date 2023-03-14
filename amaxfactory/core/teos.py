@@ -610,6 +610,8 @@ def args(clear=False):
         "--plugin eosio::chain_api_plugin",
         "--plugin eosio::http_plugin",
         "--plugin eosio::history_api_plugin",
+        "--plugin eosio::history_plugin",
+        "--genesis-json /root/.local/share/amax/amnod/config/genesis.json",
 
     ]
     if config.nodeos_config_dir():
@@ -757,7 +759,7 @@ Error message is
         proc = subprocess.Popen(
             " ".join(args_),
             stdin=subprocess.DEVNULL, stdout=std_out_handle,
-            stderr=subprocess.DEVNULL, shell=True)
+            stderr=std_out_handle, shell=True)
         proc.wait()
         onExit()
         return
@@ -767,7 +769,7 @@ Error message is
 
 
 def node_probe():
-    DELAY_TIME = 4
+    DELAY_TIME = 2
     WAIT_TIME = 1
 
     NUMBER_BLOCKS_ADDED = 3

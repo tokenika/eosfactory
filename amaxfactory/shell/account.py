@@ -360,6 +360,8 @@ class Account():
     def transfer(
             self,to,quantity,memo='',expect_asset=True
         ):
+        
+        
         contract = None
         if "AMAX" in quantity:
             amaxtoken = new_account("amax.token",restore=True)
@@ -412,26 +414,59 @@ class Account():
         if error:
             raise "Expected operation failed, actual operation passed"
 
+
+        if to.name == "dex.spot" and memo != "":
+            dexc = new_account("dex.spot",restore=True)
+            params = str(memo).split(":")
+            tpcode = params[0]
+            order_type = params[1]
+            side = params[2]
+            id = params[3]
+            if order_type=="limit":
+                price = params[4]
+                asset = params[5]
+                dexc.push_action(order_type+side,
+                                {"submitter":self,
+                                 "ext_id":id,
+                                "tpcode":tpcode,
+                                "pay_quote_quant":str(quantity).replace("M",""),
+                                "pay_base_quant":str(quantity).replace("M",""),
+                                "base_quant":str(asset).replace("M",""),
+                                "price":str(price).replace("M","")
+                                },permission=(self, Permission.ACTIVE)
+                                ) 
+            else:
+                dexc.push_action(order_type+side,
+                                {"submitter":self,
+                                 "ext_id":id,
+                                "tpcode":tpcode,
+                                "pay_quote_quant":str(quantity).replace("M",""),
+                                "pay_base_quant":str(quantity).replace("M",""),
+                                },permission=(self, Permission.ACTIVE)
+                                )
+            return
+
         
     def getBalance(self,symbol,contract=None):
+        mtoken_list = ["MBTC","MBNB","METH","MUSDT","MUSDC"]
+        dextoken_list = ["BTC","BNB","ETH","USDT","USDC"]
         if contract == None:
             if "AMAX" == symbol:
                 contract = "amax.token"
             elif "APL" == symbol:
                 contract = "aplink.token"
-            elif "MBTC" == symbol:
+            elif symbol in mtoken_list:
                 contract = "amax.mtoken"
-            elif "MBNB" == symbol:
-                contract = "amax.mtoken"
-            elif "METH" == symbol:
-                contract = "amax.mtoken"
-            elif "MUSDT" == symbol:
-                contract = "amax.mtoken"
-            elif "MUSDC" == symbol:
-                contract = "amax.mtoken"
+            elif symbol in dextoken_list:
+                dexc = new_account("dex.spot",restore=True)
+                rs = dexc.table("accounts",self).json
+                for asset in rs["rows"]:
+                        if symbol in str(asset):
+                            return str(asset["available_balance"]).replace(" "," M")
             else:
                 raise "symbol type error"
         return str(cleos.Cleos(["balance",contract,self.name,symbol],"get","currency").out_msg).replace("\n","")
+
 
     def assertBalance(self,AMAX=None,MUSDT=None,METH=None,MBTC=None,MUSDC=None,APL=None,MBNB=None):
         def getAmount(symbol) -> Decimal:

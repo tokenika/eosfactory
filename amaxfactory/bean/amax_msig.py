@@ -23,10 +23,7 @@ class AMAX_MSIG(CreateAccount):
 		self.set_account_permission(add_code=True)
     
 	def setup(self):
-		try:
-			amax_msig_init(self)
-		except:
-			print("amax_msig setup function not implemented!!")
+		amax_msig_init(self)
 		return self
 
 	def __str__(self):

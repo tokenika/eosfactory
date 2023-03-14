@@ -23,10 +23,7 @@ class OTCBOOK(CreateAccount):
 		self.set_account_permission(add_code=True)
     
 	def setup(self):
-		try:
-			otcbook_init(self)
-		except:
-			print("otcbook setup function not implemented!!")
+		otcbook_init(self)
 		return self
 
 	def __str__(self):
@@ -87,12 +84,6 @@ class OTCBOOK(CreateAccount):
 	def setadmin(self,admin='user1',to_add='true',submitter_="admin",expect_asset=True):
 		self.pushaction("setadmin",{"admin":admin,"to_add":to_add,},submitter_,expect_asset=expect_asset) 
 
-	def setarbitcnt(self,count=1,submitter_="admin",expect_asset=True):
-		self.pushaction("setarbitcnt",{"count":count,},submitter_,expect_asset=expect_asset) 
-
-	def setarbiter(self,deal_id=1,arbiter='user1',submitter_="admin",expect_asset=True):
-		self.pushaction("setarbiter",{"deal_id":deal_id,"arbiter":arbiter,},submitter_,expect_asset=expect_asset) 
-
 	def setblacklist(self,account='user1',duration_second=1,submitter_="admin",expect_asset=True):
 		self.pushaction("setblacklist",{"account":account,"duration_second":duration_second,},submitter_,expect_asset=expect_asset) 
 
@@ -131,9 +122,6 @@ class OTCBOOK(CreateAccount):
 
 	def get_global(self,scope):
 		return self.table("global",scope).json
-
-	def get_global1(self,scope):
-		return self.table("global1",scope).json
 
 	def get_merchants(self,scope):
 		return self.table("merchants",scope).json

@@ -23,10 +23,7 @@ class AMAX_WRAP(CreateAccount):
 		self.set_account_permission(add_code=True)
     
 	def setup(self):
-		try:
-			amax_wrap_init(self)
-		except:
-			print("amax_wrap setup function not implemented!!")
+		amax_wrap_init(self)
 		return self
 
 	def __str__(self):

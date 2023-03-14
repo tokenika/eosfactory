@@ -10,6 +10,7 @@ import amaxfactory.shell.wallet as wallet
 import amaxfactory.shell.account as account
 import amaxfactory.shell.contract as contract
 import amaxfactory.shell.init as init
+from amaxfactory.shell.util import *
 
 verbosity =  logger.verbosity
 

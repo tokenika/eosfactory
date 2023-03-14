@@ -23,10 +23,7 @@ class OTCSETTLE(CreateAccount):
 		self.set_account_permission(add_code=True)
     
 	def setup(self):
-		try:
-			otcsettle_init(self)
-		except:
-			print("otcsettle setup function not implemented!!")
+		otcsettle_init(self)
 		return self
 
 	def __str__(self):

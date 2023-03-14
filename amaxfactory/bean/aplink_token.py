@@ -23,10 +23,7 @@ class APLINK_TOKEN(CreateAccount):
 		self.set_account_permission(add_code=True)
     
 	def setup(self):
-		try:
-			aplink_token_init(self)
-		except:
-			print("aplink_token setup function not implemented!!")
+		aplink_token_init(self)
 		return self
 
 	def __str__(self):

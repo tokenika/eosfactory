@@ -23,10 +23,7 @@ class TG_BIND(CreateAccount):
 		self.set_account_permission(add_code=True)
     
 	def setup(self):
-		try:
-			tg_bind_init(self)
-		except:
-			print("tg_bind setup function not implemented!!")
+		tg_bind_init(self)
 		return self
 
 	def __str__(self):

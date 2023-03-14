@@ -23,10 +23,7 @@ class APLINK_NEWBIE(CreateAccount):
 		self.set_account_permission(add_code=True)
     
 	def setup(self):
-		try:
-			aplink_newbie_init(self)
-		except:
-			print("aplink_newbie setup function not implemented!!")
+		aplink_newbie_init(self)
 		return self
 
 	def __str__(self):

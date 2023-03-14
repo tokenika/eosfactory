@@ -23,10 +23,7 @@ class AMAX_MULSIGN(CreateAccount):
 		self.set_account_permission(add_code=True)
     
 	def setup(self):
-		try:
-			amax_mulsign_init(self)
-		except:
-			print("amax_mulsign setup function not implemented!!")
+		amax_mulsign_init(self)
 		return self
 
 	def __str__(self):

@@ -23,10 +23,7 @@ class DID_NTOKEN(CreateAccount):
 		self.set_account_permission(add_code=True)
     
 	def setup(self):
-		try:
-			did_ntoken_init(self)
-		except:
-			print("did_ntoken setup function not implemented!!")
+		did_ntoken_init(self)
 		return self
 
 	def __str__(self):

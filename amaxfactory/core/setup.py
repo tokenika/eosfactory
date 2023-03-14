@@ -5,14 +5,14 @@ import re
 is_print_command_lines = True
 is_save_command_lines = False
 command_line_file = "command_lines.txt"
-is_raise_error = False
+is_raise_error = True
 is_print_request = False
 is_print_response = False
-is_translating = True
+is_translating = False
 account_map = "accounts.json"
 password_map = "passwords.json"
 wallet_default_name = "default"
-is_local_address = False
+is_local_address = True
 
 __nodeos_address = None
 __file_prefix = None

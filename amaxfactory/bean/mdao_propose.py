@@ -23,10 +23,7 @@ class MDAO_PROPOSE(CreateAccount):
 		self.set_account_permission(add_code=True)
     
 	def setup(self):
-		try:
-			mdao_propose_init(self)
-		except:
-			print("mdao_propose setup function not implemented!!")
+		mdao_propose_init(self)
 		return self
 
 	def __str__(self):

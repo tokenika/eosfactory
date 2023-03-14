@@ -23,10 +23,7 @@ class AMAX_DID(CreateAccount):
 		self.set_account_permission(add_code=True)
     
 	def setup(self):
-		try:
-			amax_did_init(self)
-		except:
-			print("amax_did setup function not implemented!!")
+		amax_did_init(self)
 		return self
 
 	def __str__(self):

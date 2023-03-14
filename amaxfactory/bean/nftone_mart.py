@@ -23,10 +23,7 @@ class NFTONE_MART(CreateAccount):
 		self.set_account_permission(add_code=True)
     
 	def setup(self):
-		try:
-			nftone_mart_init(self)
-		except:
-			print("nftone_mart setup function not implemented!!")
+		nftone_mart_init(self)
 		return self
 
 	def __str__(self):

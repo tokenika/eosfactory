@@ -23,10 +23,7 @@ class AMAX_BIOS(CreateAccount):
 		self.set_account_permission(add_code=True)
     
 	def setup(self):
-		try:
-			amax_bios_init(self)
-		except:
-			print("amax_bios setup function not implemented!!")
+		amax_bios_init(self)
 		return self
 
 	def __str__(self):

@@ -23,10 +23,7 @@ class AMAX_MTOKEN(CreateAccount):
 		self.set_account_permission(add_code=True)
     
 	def setup(self):
-		try:
-			amax_mtoken_init(self)
-		except:
-			print("amax_mtoken setup function not implemented!!")
+		amax_mtoken_init(self)
 		return self
 
 	def __str__(self):

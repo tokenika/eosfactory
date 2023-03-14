@@ -23,10 +23,7 @@ class AMAX_RECOVER(CreateAccount):
 		self.set_account_permission(add_code=True)
     
 	def setup(self):
-		try:
-			amax_recover_init(self)
-		except:
-			print("amax_recover setup function not implemented!!")
+		amax_recover_init(self)
 		return self
 
 	def __str__(self):

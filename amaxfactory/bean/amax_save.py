@@ -23,10 +23,7 @@ class AMAX_SAVE(CreateAccount):
 		self.set_account_permission(add_code=True)
     
 	def setup(self):
-		try:
-			amax_save_init(self)
-		except:
-			print("amax_save setup function not implemented!!")
+		amax_save_init(self)
 		return self
 
 	def __str__(self):

@@ -6,14 +6,14 @@ from amaxfactory.core.account import CreateAccount
 import unittest
 from amaxfactory.shell import init
 
-class Testx(unittest.TestCase):
+class Create(unittest.TestCase):
     
     
     # def test_4(self):
     #     dir = os.path.dirname(os.path.abspath(__file__))
     #     init.create_bean("amax.recover","/root/contracts/joss/amax.contracts/src_tools/build/contracts/amax.recover/amax.token.abi",dir)
 
-    def test_5(self):
+    def create(self):
  
         wasm_path = os.getenv("FACTORY_DIR") + "/templates/wasm/"
         file_dir = os.path.dirname(os.path.abspath(__file__))

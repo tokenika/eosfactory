@@ -23,10 +23,7 @@ class VERSO_ITOKEN(CreateAccount):
 		self.set_account_permission(add_code=True)
     
 	def setup(self):
-		try:
-			verso_itoken_init(self)
-		except:
-			print("verso_itoken setup function not implemented!!")
+		verso_itoken_init(self)
 		return self
 
 	def __str__(self):
