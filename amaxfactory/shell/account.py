@@ -426,7 +426,8 @@ class Account():
                 price = params[4]
                 asset = params[5]
                 dexc.push_action(order_type+side,
-                                {"submitter":self,
+                                {"owner":self,
+                                 "delegated":False,
                                  "ext_id":id,
                                 "tpcode":tpcode,
                                 "pay_quote_quant":str(quantity).replace("M",""),
@@ -437,7 +438,8 @@ class Account():
                                 ) 
             else:
                 dexc.push_action(order_type+side,
-                                {"submitter":self,
+                                {"owner":self,
+                                 "delegated":False,
                                  "ext_id":id,
                                 "tpcode":tpcode,
                                 "pay_quote_quant":str(quantity).replace("M",""),

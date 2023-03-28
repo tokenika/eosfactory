@@ -13,6 +13,7 @@ from amaxfactory.bean.mdao_propose import MDAO_PROPOSE
 from amaxfactory.bean.amax_system import AMAX_SYSTEM
 from amaxfactory.bean.pass_custody import PASS_CUSTODY
 from amaxfactory.bean.aplink_farm import APLINK_FARM
+from amaxfactory.bean.amax_ido import AMAX_IDO
 from amaxfactory.bean.mdao_conf import MDAO_CONF
 from amaxfactory.bean.mdao_gov import MDAO_GOV
 from amaxfactory.bean.orderbookdex import ORDERBOOKDEX
@@ -26,11 +27,13 @@ from amaxfactory.bean.amax_mulsign import AMAX_MULSIGN
 from amaxfactory.bean.amax_ntoken import AMAX_NTOKEN
 from amaxfactory.bean.dex_spot import DEX_SPOT
 from amaxfactory.bean.otcsettle import OTCSETTLE
+from amaxfactory.bean.amax_one import AMAX_ONE
 from amaxfactory.bean.amax_auth import AMAX_AUTH
 from amaxfactory.bean.otcbook import OTCBOOK
 from amaxfactory.bean.rndnft_swap import RNDNFT_SWAP
 from amaxfactory.bean.amax_split import AMAX_SPLIT
 from amaxfactory.bean.amax_msig import AMAX_MSIG
+from amaxfactory.bean.amax_two import AMAX_TWO
 from amaxfactory.bean.aplink_newbie import APLINK_NEWBIE
 from amaxfactory.bean.amax_proxy import AMAX_PROXY
 from amaxfactory.bean.amax_bios import AMAX_BIOS

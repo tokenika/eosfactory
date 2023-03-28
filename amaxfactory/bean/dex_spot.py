@@ -30,65 +30,74 @@ class DEX_SPOT(CreateAccount):
 		return self.name
             
 
-	def addonedeal(self,deal_item=[],curr_ts=[],submitter_="admin",expect_asset=True):
-		self.pushaction("addonedeal",{"deal_item":deal_item,"curr_ts":curr_ts,},submitter_,expect_asset=expect_asset) 
+	def addbalance(self,owner='user1',quant="0.10000000 AMAX",submitter_="admin",expect_asset=True):
+		self.pushaction("addbalance",{"owner":owner,"quant":quant,},submitter_,expect_asset=expect_asset) 
 
-	def batchcancel(self,submitter='user1',pair_code='user1',type='user1',side='user1',ids=1,submitter_="admin",expect_asset=True):
-		self.pushaction("batchcancel",{"submitter":submitter,"pair_code":pair_code,"type":type,"side":side,"ids":ids,},submitter_,expect_asset=expect_asset) 
+	def addsymbol(self,trade_symbol='8,AMAX',deposit_symbol=[],submitter_="admin",expect_asset=True):
+		self.pushaction("addsymbol",{"trade_symbol":trade_symbol,"deposit_symbol":deposit_symbol,},submitter_,expect_asset=expect_asset) 
 
-	def blacklist(self,targets=[],to_add='true',submitter_="admin",expect_asset=True):
-		self.pushaction("blacklist",{"targets":targets,"to_add":to_add,},submitter_,expect_asset=expect_asset) 
+	def batchcancel(self,owner='user1',delegated='true',tpcode='user1',type='user1',side='user1',ids=1,submitter_="admin",expect_asset=True):
+		self.pushaction("batchcancel",{"owner":owner,"delegated":delegated,"tpcode":tpcode,"type":type,"side":side,"ids":ids,},submitter_,expect_asset=expect_asset) 
 
-	def cancel(self,tpcode='user1',type='user1',side='user1',order_id=1,submitter_="admin",expect_asset=True):
-		self.pushaction("cancel",{"tpcode":tpcode,"type":type,"side":side,"order_id":order_id,},submitter_,expect_asset=expect_asset) 
+	def batchcancelx(self,owner='user1',delegated='true',tpcode='user1',type='user1',side='user1',ids=1,submitter_="admin",expect_asset=True):
+		self.pushaction("batchcancelx",{"owner":owner,"delegated":delegated,"tpcode":tpcode,"type":type,"side":side,"ids":ids,},submitter_,expect_asset=expect_asset) 
 
-	def cancelall(self,pair_code='user1',type='user1',side='user1',count=1,submitter_="admin",expect_asset=True):
-		self.pushaction("cancelall",{"pair_code":pair_code,"type":type,"side":side,"count":count,},submitter_,expect_asset=expect_asset) 
+	def blacklist(self,accounts=[],to_add='true',submitter_="admin",expect_asset=True):
+		self.pushaction("blacklist",{"accounts":accounts,"to_add":to_add,},submitter_,expect_asset=expect_asset) 
 
-	def cancelnotify(self,order_id=1,submitter_="admin",expect_asset=True):
-		self.pushaction("cancelnotify",{"order_id":order_id,},submitter_,expect_asset=expect_asset) 
-
-	def cleanall(self,pair_code='user1',count=1,submitter_="admin",expect_asset=True):
-		self.pushaction("cleanall",{"pair_code":pair_code,"count":count,},submitter_,expect_asset=expect_asset) 
+	def cancelall(self,owner='user1',delegated='true',tpcode='user1',count=1,submitter_="admin",expect_asset=True):
+		self.pushaction("cancelall",{"owner":owner,"delegated":delegated,"tpcode":tpcode,"count":count,},submitter_,expect_asset=expect_asset) 
 
 	def delmembergrd(self,account='user1',submitter_="admin",expect_asset=True):
 		self.pushaction("delmembergrd",{"account":account,},submitter_,expect_asset=expect_asset) 
 
-	def entradepair(self,tpcode='user1',on_off='true',submitter_="admin",expect_asset=True):
-		self.pushaction("entradepair",{"tpcode":tpcode,"on_off":on_off,},submitter_,expect_asset=expect_asset) 
-
 	def init(self,submitter_="admin",expect_asset=True):
 		self.pushaction("init",{},submitter_,expect_asset=expect_asset) 
 
-	def limitbuy(self,submitter='user1',ext_id=1,tpcode='user1',pay_quote_quant="0.10000000 AMAX",base_quant="0.10000000 AMAX",price="0.10000000 AMAX",submitter_="admin",expect_asset=True):
-		self.pushaction("limitbuy",{"submitter":submitter,"ext_id":ext_id,"tpcode":tpcode,"pay_quote_quant":pay_quote_quant,"base_quant":base_quant,"price":price,},submitter_,expect_asset=expect_asset) 
+	def limitbuy(self,owner='user1',delegated='true',ext_id=1,tpcode='user1',base_quant="0.10000000 AMAX",price="0.10000000 AMAX",submitter_="admin",expect_asset=True):
+		self.pushaction("limitbuy",{"owner":owner,"delegated":delegated,"ext_id":ext_id,"tpcode":tpcode,"base_quant":base_quant,"price":price,},submitter_,expect_asset=expect_asset) 
 
-	def limitsell(self,submitter='user1',ext_id=1,tpcode='user1',pay_base_quant="0.10000000 AMAX",price="0.10000000 AMAX",submitter_="admin",expect_asset=True):
-		self.pushaction("limitsell",{"submitter":submitter,"ext_id":ext_id,"tpcode":tpcode,"pay_base_quant":pay_base_quant,"price":price,},submitter_,expect_asset=expect_asset) 
+	def limitsell(self,owner='user1',delegated='true',ext_id=1,tpcode='user1',pay_base_quant="0.10000000 AMAX",price="0.10000000 AMAX",submitter_="admin",expect_asset=True):
+		self.pushaction("limitsell",{"owner":owner,"delegated":delegated,"ext_id":ext_id,"tpcode":tpcode,"pay_base_quant":pay_base_quant,"price":price,},submitter_,expect_asset=expect_asset) 
 
-	def marketbuy(self,submitter='user1',ext_id=1,tpcode='user1',pay_quote_quant="0.10000000 AMAX",base_quant="0.10000000 AMAX",submitter_="admin",expect_asset=True):
-		self.pushaction("marketbuy",{"submitter":submitter,"ext_id":ext_id,"tpcode":tpcode,"pay_quote_quant":pay_quote_quant,"base_quant":base_quant,},submitter_,expect_asset=expect_asset) 
+	def marketbuy(self,owner='user1',delegated='true',ext_id=1,tpcode='user1',pay_quote_quant="0.10000000 AMAX",submitter_="admin",expect_asset=True):
+		self.pushaction("marketbuy",{"owner":owner,"delegated":delegated,"ext_id":ext_id,"tpcode":tpcode,"pay_quote_quant":pay_quote_quant,},submitter_,expect_asset=expect_asset) 
 
-	def marketsell(self,submitter='user1',ext_id=1,tpcode='user1',pay_base_quant="0.10000000 AMAX",submitter_="admin",expect_asset=True):
-		self.pushaction("marketsell",{"submitter":submitter,"ext_id":ext_id,"tpcode":tpcode,"pay_base_quant":pay_base_quant,},submitter_,expect_asset=expect_asset) 
+	def marketsell(self,owner='user1',delegated='true',ext_id=1,tpcode='user1',pay_base_quant="0.10000000 AMAX",submitter_="admin",expect_asset=True):
+		self.pushaction("marketsell",{"owner":owner,"delegated":delegated,"ext_id":ext_id,"tpcode":tpcode,"pay_base_quant":pay_base_quant,},submitter_,expect_asset=expect_asset) 
 
 	def match(self,matcher='user1',tpcode='user1',max_count=1,memo='x',submitter_="admin",expect_asset=True):
 		self.pushaction("match",{"matcher":matcher,"tpcode":tpcode,"max_count":max_count,"memo":memo,},submitter_,expect_asset=expect_asset) 
 
-	def orderchange(self,order_id=1,order=[],submitter_="admin",expect_asset=True):
-		self.pushaction("orderchange",{"order_id":order_id,"order":order,},submitter_,expect_asset=expect_asset) 
+	def notifycancel(self,order_id=1,submitter_="admin",expect_asset=True):
+		self.pushaction("notifycancel",{"order_id":order_id,},submitter_,expect_asset=expect_asset) 
+
+	def notifyneword(self,order_id=1,order=[],submitter_="admin",expect_asset=True):
+		self.pushaction("notifyneword",{"order_id":order_id,"order":order,},submitter_,expect_asset=expect_asset) 
+
+	def notifysettle(self,deal_item=[],curr_ts=[],submitter_="admin",expect_asset=True):
+		self.pushaction("notifysettle",{"deal_item":deal_item,"curr_ts":curr_ts,},submitter_,expect_asset=expect_asset) 
+
+	def purgeall(self,tpcode='user1',type='user1',side='user1',count=1,submitter_="admin",expect_asset=True):
+		self.pushaction("purgeall",{"tpcode":tpcode,"type":type,"side":side,"count":count,},submitter_,expect_asset=expect_asset) 
 
 	def setconfig(self,conf=[],submitter_="admin",expect_asset=True):
 		self.pushaction("setconfig",{"conf":conf,},submitter_,expect_asset=expect_asset) 
 
-	def setmembergrd(self,account='user1',grade=[],submitter_="admin",expect_asset=True):
-		self.pushaction("setmembergrd",{"account":account,"grade":grade,},submitter_,expect_asset=expect_asset) 
+	def setmembergrd(self,account='user1',grade=[],delegated_trader='user1',submitter_="admin",expect_asset=True):
+		self.pushaction("setmembergrd",{"account":account,"grade":grade,"delegated_trader":delegated_trader,},submitter_,expect_asset=expect_asset) 
 
-	def setsymbol(self,trade_symbol='8,AMAX',deposit_symbol=[],withdrawable='true',submitter_="admin",expect_asset=True):
-		self.pushaction("setsymbol",{"trade_symbol":trade_symbol,"deposit_symbol":deposit_symbol,"withdrawable":withdrawable,},submitter_,expect_asset=expect_asset) 
+	def setsymbol(self,trade_symbol='8,AMAX',on_off='true',submitter_="admin",expect_asset=True):
+		self.pushaction("setsymbol",{"trade_symbol":trade_symbol,"on_off":on_off,},submitter_,expect_asset=expect_asset) 
 
-	def settradepair(self,tpcode='user1',base_symbol='8,AMAX',quote_symbol='8,AMAX',min_base_quant="0.10000000 AMAX",min_quote_quant="0.10000000 AMAX",max_base_quant="0.10000000 AMAX",max_quote_quant="0.10000000 AMAX",taker_fee_ratio=1,maker_fee_ratio=1,min_trade_base_quant="0.10000000 AMAX",min_trade_quote_quant="0.10000000 AMAX",submitter_="admin",expect_asset=True):
-		self.pushaction("settradepair",{"tpcode":tpcode,"base_symbol":base_symbol,"quote_symbol":quote_symbol,"min_base_quant":min_base_quant,"min_quote_quant":min_quote_quant,"max_base_quant":max_base_quant,"max_quote_quant":max_quote_quant,"taker_fee_ratio":taker_fee_ratio,"maker_fee_ratio":maker_fee_ratio,"min_trade_base_quant":min_trade_base_quant,"min_trade_quote_quant":min_trade_quote_quant,},submitter_,expect_asset=expect_asset) 
+	def settpcode(self,tpcode='user1',on_off='true',submitter_="admin",expect_asset=True):
+		self.pushaction("settpcode",{"tpcode":tpcode,"on_off":on_off,},submitter_,expect_asset=expect_asset) 
+
+	def settradepair(self,base_symbol='8,AMAX',quote_symbol='8,AMAX',info=[],submitter_="admin",expect_asset=True):
+		self.pushaction("settradepair",{"base_symbol":base_symbol,"quote_symbol":quote_symbol,"info":info,},submitter_,expect_asset=expect_asset) 
+
+	def settrader(self,owner='user1',delegated_trader='user1',submitter_="admin",expect_asset=True):
+		self.pushaction("settrader",{"owner":owner,"delegated_trader":delegated_trader,},submitter_,expect_asset=expect_asset) 
 
 	def withdraw(self,owner='user1',quant="0.10000000 AMAX",memo='x',submitter_="admin",expect_asset=True):
 		self.pushaction("withdraw",{"owner":owner,"quant":quant,"memo":memo,},submitter_,expect_asset=expect_asset) 
@@ -101,9 +110,6 @@ class DEX_SPOT(CreateAccount):
 
 	def get_accounts(self,scope):
 		return self.table("accounts",scope).json
-
-	def get_balances(self,scope):
-		return self.table("balances",scope).json
 
 	def get_blacklist(self,scope):
 		return self.table("blacklist",scope).json
